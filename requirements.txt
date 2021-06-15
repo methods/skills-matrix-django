@@ -18,3 +18,4 @@ pytest-django==4.4.0
 pytz==2021.1
 sqlparse==0.4.1
 toml==0.10.2
+selenium==3.141.0
