@@ -1,22 +1,24 @@
 from django.test import LiveServerTestCase
-# from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium import webdriver
-# from selenium.webdriver.firefox.options import Options
-# options = Options()
-# options.headless = True
-# driver = webdriver.Firefox(options=options
 
 
 class GeneralFunctionalTests(LiveServerTestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         fireFoxOptions = webdriver.FirefoxOptions()
         fireFoxOptions.headless = True
-        self.browser = webdriver.Firefox(options=fireFoxOptions)
-        self.browser.implicitly_wait(3)
+        cls.browser = webdriver.Firefox(options=fireFoxOptions)
+        cls.browser.implicitly_wait(3)
 
-    def tearDown(self):
-        self.browser.quit()
+    @classmethod
+    def tearDownClass(cls):
+        fireFoxOptions = webdriver.FirefoxOptions()
+        fireFoxOptions.headless = True
+        cls.browser = webdriver.Firefox(options=fireFoxOptions)
+        cls.browser.quit()
+        super().tearDownClass()
 
     def complete_url(self, url):
         return self.live_server_url + url
