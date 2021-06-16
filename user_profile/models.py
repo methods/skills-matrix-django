@@ -19,3 +19,6 @@ class NewUser(AbstractBaseUser):
     objects = CustomAccountManager()
 
     USERNAME_FIELD = 'email'
+
+    def __str__(self):
+        return f"{self.email}, {self.first_name}, {self.team}, {self.job_role}"

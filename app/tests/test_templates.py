@@ -1,5 +1,6 @@
 from django.test import LiveServerTestCase
 from selenium import webdriver
+from django.contrib.auth import get_user_model
 
 
 class GeneralFunctionalTests(LiveServerTestCase):
@@ -37,4 +38,11 @@ class GeneralFunctionalTests(LiveServerTestCase):
         button.click()
         assert self.complete_url('/edit-skills') == self.browser.current_url
 
+    def test_user_details(self):
+        db = get_user_model()
+        user = db.objects.create_user('ss@user.com', 'userfirstname', 'userteam', 'userjobrole')
+        response = self.client.get('/')
+        assert "userfirstname" in response.content.decode()
+        assert "userteam" in response.content.decode()
+        assert "userjobrole" in response.content.decode()
 
