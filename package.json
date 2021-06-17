@@ -1,0 +1,25 @@
+{
+  "name": "skills_matrix",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/methods/skills-matrix-django.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/methods/skills-matrix-django/issues"
+  },
+  "homepage": "https://github.com/methods/skills-matrix-django#readme",
+  "dependencies": {
+    "govuk-frontend": "^3.12.0"
+  }
+}
