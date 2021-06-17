@@ -24,24 +24,19 @@ class AddNameSignup(LiveServerTestCase):
     def complete_url(self, url):
         return self.live_server_url + url
 
-    def test_signup_name_page_status_code(self):
+    def test_signup_add_name_page_status_code(self):
         response = self.client.get('/signup/name')
         assert response.status_code == 200
 
-    # def test_home_page_body_resp(self):
-    #     response = self.client.get('/')
-    #     assert "Welcome" in response.content.decode()
+    def test_signup_add_name_body_resp(self):
+        response = self.client.get('/signup/name')
+        assert "What is your name?" in response.content.decode()
 
-    # def test_edit_skills_button(self):
-    #     self.browser.get(self.complete_url('/'))
-    #     button = self.browser.find_element_by_class_name('govuk-button')
-    #     button.click()
-    #     assert self.complete_url('/edit-skills') == self.browser.current_url
-
-    # def test_user_details(self):
-    #     db = get_user_model()
-    #     db.objects.create_user('ss@user.com', 'userfirstname', 'userteam', 'userjobrole')
-    #     response = self.client.get('/')
-    #     assert "userfirstname" in response.content.decode()
-    #     assert "userteam" in response.content.decode()
-    #     assert "userjobrole" in response.content.decode()
+    def test_add_name_form_submission(self):
+        self.browser.get(self.complete_url('/signup/name'))
+        self.browser.find_element_by_id('firstName').send_keys("user_first_name")
+        self.browser.find_element_by_id('surname').send_keys("user_surname")
+        self.browser.find_element_by_class_name("govuk-button").click()
+        session = self.client.session
+        assert "user_first_name" in session.temp_profile
+        assert "user_surname" in session.temp_profile

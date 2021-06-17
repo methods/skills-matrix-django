@@ -6,4 +6,4 @@ htmlcov/
 .coverage
 geckodriver.log
 node_modules/
-*.css
+**/*.css*
