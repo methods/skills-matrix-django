@@ -4,8 +4,15 @@
   <link href="{% sass_src 'scss/global.scss' %}" rel="stylesheet" type="text/css" />
 </head>
 
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-xl">What is your name?</h1>
 <form action="name" method="post">
   {% csrf_token %}
   {{ form }}
   <input type="submit" value="Submit" class='govuk-button'>
 </form>
+
+          </div>
+  </div>
