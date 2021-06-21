@@ -33,9 +33,9 @@ class AddNameSignup(LiveServerTestCase):
 
     def test_add_name_form_submission(self):
         self.browser.get(self.complete_url('/signup/name'))
-        self.browser.find_element_by_id('firstName').send_keys("user_first_name")
-        self.browser.find_element_by_id('surname').send_keys("user_surname")
+        self.browser.find_element_by_id('id_first_name').send_keys("user_first_name")
+        self.browser.find_element_by_id('id_surname').send_keys("user_surname")
         self.browser.find_element_by_class_name("govuk-button").click()
         session = self.client.session
-        assert "user_first_name" in session.temp_profile
-        assert "user_surname" in session.temp_profile
+        assert "user_first_name" in session['first_name']
+        assert "user_surname" in session['surname']
