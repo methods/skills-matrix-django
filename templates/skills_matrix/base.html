@@ -9,7 +9,8 @@
       {% endblock %}
     </title>
 
-    <link href="scss/global.scss" rel="stylesheet" type="text/css">
+    {% load static %}
+    <link href="{% static 'scss/global.css' %}" rel="stylesheet" type="text/css">
     {% block extra_css %}
       {# Override this in templates to add extra stylesheets #}
     {% endblock %}
