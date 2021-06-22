@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'skills_matrix',
     'user_profile',
     'signup',
+    'app',
 ]
 
 MIDDLEWARE = [
