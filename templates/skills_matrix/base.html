@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>
+      {% block title %}
+        Methods skills matrix
+      {% endblock %}
+    </title>
+
+    {% load static %}
+    <link href="{% static 'scss/global.css' %}" rel="stylesheet" type="text/css">
+    {% block extra_css %}
+      {# Override this in templates to add extra stylesheets #}
+    {% endblock %}
+  </head>
+
+  <body class="{% block body_class %}{% endblock %}">
+    {% include 'skills_matrix/header.html' %}
+    <main id="main-content" tabindex="-1">
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>
+
+
+
+
+
+

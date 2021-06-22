@@ -1,0 +1,18 @@
+{% extends "signup/signup_base.html" %}
+{% load sass_tags %}
+
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-xl">What is your name?</h1>
+<form action="name" method="post">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit" value="Submit" class='govuk-button'>
+</form>
+
+          </div>
+  </div>
+{% endblock %}
