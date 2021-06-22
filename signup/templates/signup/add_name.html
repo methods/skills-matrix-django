@@ -1,9 +1,8 @@
+{% extends "signup/signup_base.html" %}
 {% load sass_tags %}
 
-<head>
-  <link href="{% sass_src 'scss/global.scss' %}" rel="stylesheet" type="text/css" />
-</head>
 
+{% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
@@ -16,3 +15,4 @@
 
           </div>
   </div>
+{% endblock %}
