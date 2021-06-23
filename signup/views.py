@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import NameForm
 
-# Create your views here.
-
 
 def add_name(request):
     # if this is a POST request we need to process the form data
@@ -13,8 +11,12 @@ def add_name(request):
             request.session['first_name'] = request.POST['first_name']
             request.session['surname'] = request.POST['surname']
             request.session.save()
-            return redirect(request.path)
+            return redirect('email/')
     else:
         form = NameForm()
 
-    return render(request, 'signup/add_name.html')
+    return render(request, 'signup/add_name.html', {'form': form})
+
+
+def add_email(request):
+    return render(request, 'signup/add_email.html')
