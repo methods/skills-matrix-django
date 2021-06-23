@@ -12,19 +12,42 @@
 
       <h1 class="govuk-heading-xl">What is your email address?</h1>
 
-      <form class="form" action="/email" method="post">
+      {% if error %}
 
+      <div class="govuk-form-group govuk-form-group--error">
+        <form class="form" method="post">
+        {% csrf_token %}
           <div class="govuk-form-group govuk-hint govuk-!-margin-bottom-5">
-            <label class="govuk-hint" for="event-name">
-              Enter your Methods email address in the correct format, like name@example.com.
+            <label class="govuk-hint">
+              Email address
             </label>
-            <input class="govuk-input" id="email" name="email" type="email" required>
-          
+            <span id="email-error" class="govuk-error-message">
+          <span class="govuk-visually-hidden">Error:</span>
+              Enter your Methods email address in the correct format, like name@example.com.
+        </span>
+             <input class="govuk-input govuk-input--error" id="email_address" name="email" type="email"
+                    spellcheck="false" aria-describedby="email-hint email-error"
+                    autocomplete="email">
           </div>
-
         <button class="govuk-button" data-module="govuk-button">Continue</button>
-
       </form>
+      </div>
+
+      {% else %}
+
+      <form class="form" method="post">
+        {% csrf_token %}
+          <div class="govuk-form-group govuk-hint govuk-!-margin-bottom-5">
+            <label class="govuk-hint">
+              Email address
+            </label>
+            <input class="govuk-input" id="email_address" name="email" type="text" autocomplete="email"
+                   spellcheck="false" required>
+          </div>
+        <button class="govuk-button" data-module="govuk-button">Continue</button>
+      </form>
+
+      {% endif %}
 
     </div>
   </div>
