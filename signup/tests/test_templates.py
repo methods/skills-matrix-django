@@ -38,3 +38,11 @@ class AddNameSignup(LiveServerTestCase):
         self.browser.find_element_by_id('id_surname').send_keys("user_surname")
         self.browser.find_element_by_class_name("govuk-button").click()
         assert self.complete_url('/signup/email/') == self.browser.current_url
+
+    def test_add_email_page_status_code(self):
+        response = self.client.get('/signup/email/')
+        assert response.status_code == 200
+
+    def test_add_email_template_rendering(self):
+        response = self.client.get('/signup/email/')
+        assert "What is your email address?" in response.content.decode()
