@@ -17,4 +17,4 @@ def add_name(request):
     else:
         form = NameForm()
 
-    return render(request, 'signup/add_name.html', {'form': form})
+    return render(request, 'signup/add_name.html')
