@@ -7,9 +7,19 @@
     <div class="govuk-grid-column-two-thirds">
 
       <h1 class="govuk-heading-xl">What is your name?</h1>
-<form action="name" method="post">
+<form action="name" class="form" method="post">
   {% csrf_token %}
-  {{ form }}
+<div class="govuk-form-group govuk-hint">
+          <label class="govuk-hint">
+            First name
+          </label>
+          <input class="govuk-input" id="id_first_name" name="first_name" type="text" required></div>
+
+          <div class="govuk-form-group govuk-hint">
+            <label class="govuk-hint">
+              Surname
+            </label>
+            <input class="govuk-input" id="id_surname" name="surname" type="text" required></div>
   <input type="submit" value="Submit" class='govuk-button'>
 </form>
 

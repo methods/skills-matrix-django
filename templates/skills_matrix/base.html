@@ -16,12 +16,17 @@
     {% endblock %}
   </head>
 
-  <body class="{% block body_class %}{% endblock %}">
+
+    <body class="govuk-template__body  js-enabled">
     {% include 'skills_matrix/header.html' %}
-    <main id="main-content" tabindex="-1">
-      {% block content %}{% endblock %}
-    </main>
+    <div class="govuk-width-container">
+      <main id="main-content" tabindex="-1" class="govuk-main-wrapper govuk-main-wrapper--auto-spacing">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
   </body>
+
+
 </html>
 
 
