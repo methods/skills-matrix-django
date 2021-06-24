@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import NameForm
+from .forms import NameForm, JobForm
 
 
 def add_name(request):
@@ -23,4 +23,14 @@ def add_email(request):
 
 
 def add_job(request):
-    return render(request, 'signup/add_job.html')
+    if request.method == 'POST':
+        form = JobForm(request.POST)
+        if form.is_valid():
+            request.session['team'] = request.POST['team']
+            request.session['job'] = request.POST['job']
+            request.session.save()
+            return redirect('password/')
+    else:
+        form = JobForm()
+
+    return render(request, 'signup/add_job.html', {'form': form})
