@@ -20,3 +20,7 @@ def add_name(request):
 
 def add_email(request):
     return render(request, 'signup/add_email.html')
+
+
+def add_job(request):
+    return render(request, 'signup/add_job.html')
