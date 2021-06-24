@@ -29,7 +29,7 @@ def add_job(request):
             request.session['team'] = request.POST['team']
             request.session['job'] = request.POST['job']
             request.session.save()
-            return redirect('password/')
+            return redirect(create_password)
     else:
         form = JobForm()
 
