@@ -24,14 +24,15 @@ def add_email(request):
     if request.method == 'POST':
         form = EmailForm(request.POST)
         if form.is_valid():
-            print('valid')
             request.session['email_address'] = request.POST['email_address']
             request.session.save()
-            print(request.session['email_address'])
             return redirect(add_job)
         else:
-            print('invalid')
             return render(request, 'signup/add_email.html', {'form': form, 'error': True})
     else:
         form = EmailForm()
     return render(request, 'signup/add_email.html', {'form': form})
+
+
+def add_job(request):
+    return render(request, 'signup/add_job.html')
