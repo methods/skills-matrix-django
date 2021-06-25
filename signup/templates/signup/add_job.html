@@ -14,7 +14,20 @@
 
       <form class="form" method="post">
           {% csrf_token %}
-      {{form}}
+
+        <div class="govuk-form-group">
+            <label class="govuk-label" for="id_team">
+              Select your team
+            </label>
+          {{form.team}}
+        </div>
+
+        <div class="govuk-form-group">
+            <label class="govuk-label" for="id_job">
+              Select your job role
+            </label>
+          {{form.job}}
+        </div>
 
                 <button class="govuk-button" data-module="govuk-button">Continue</button>
         </form>

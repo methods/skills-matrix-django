@@ -33,4 +33,4 @@ def add_job(request):
     else:
         form = JobForm()
 
-    return render(request, 'signup/add_job.html', {'form': form})
+    return render(request, 'signup/add_job.html', {'form': form, 'teamSelect': form.fields['team']})
