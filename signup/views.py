@@ -1,7 +1,5 @@
 from django.shortcuts import render, redirect
 from .forms import NameForm, EmailForm
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 
 
 def add_name(request):
@@ -12,8 +10,6 @@ def add_name(request):
             request.session['first_name'] = request.POST['first_name']
             request.session['surname'] = request.POST['surname']
             request.session.save()
-            print(request.session['first_name'])
-            print(request.session['surname'])
             return redirect(add_email)
     else:
         form = NameForm()
