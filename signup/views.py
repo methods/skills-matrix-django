@@ -6,13 +6,11 @@ def add_name(request):
     # if this is a POST request we need to process the form data
     form = NameForm()
     if request.method == 'POST':
-        print('post request')
         form = NameForm(request.POST)
         if form.is_valid():
             request.session['first_name'] = request.POST['first_name']
             request.session['surname'] = request.POST['surname']
             request.session.save()
-            print('redirected')
             return redirect('email/')
     else:
         form = NameForm()
@@ -26,12 +24,8 @@ def add_email(request):
 
 def add_job(request):
     if request.method == 'POST':
-        print('post')
-        print(request.body)
-        print(request.POST)
         form = JobForm(request.POST)
         if form.is_valid():
-            print('valid')
             request.session['team'] = request.POST['team']
             request.session['job'] = request.POST['job']
             request.session.save()
