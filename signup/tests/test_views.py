@@ -1,4 +1,7 @@
 from django.test import TestCase
+from django.apps import apps
+
+
 
 
 class AddNameSignup(TestCase):
@@ -25,5 +28,14 @@ class AddJobSignup(TestCase):
         assert "Information about your job" in response.content.decode()
 
     def test_add_job_submit_redirects_to_password_page(self):
+        Team = apps.get_model('super_admin', 'Team')
+        team=Team()
+        team.team_name="OPC"
+        team.save()
+        Job = apps.get_model('admin_user', 'Job')
+        job = Job()
+        job.job_title = 'Junior Developer'
+        job.save()
+        print(Team.objects.all())
         response = self.client.post('/signup/job/', {'team': 'OPC', 'job': 'Junior Developer'})
         self.assertRedirects(response, '/signup/create-password/')
