@@ -24,3 +24,17 @@ class JobForm(forms.Form):
 class EmailForm(forms.Form):
     email_address = forms.EmailField(label='Email address', max_length=100,
                                      widget=forms.TextInput(attrs={'class': 'govuk-input'}))
+
+
+class PasswordForm(forms.Form):
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'govuk-input'}), max_length=25)
+    password_confirm = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'govuk-input'}), max_length=25)
+
+    def clean_password_confirm(self):
+        password = self.cleaned_data.get('password')
+        password_confirm = self.cleaned_data.get('password_confirm')
+        if password != password_confirm:
+            raise forms.ValidationError('Passwords must match')
+        return password_confirm
+
+
