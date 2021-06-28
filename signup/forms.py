@@ -3,8 +3,10 @@ from django.apps import apps
 
 
 class NameForm(forms.Form):
-    first_name = forms.CharField(label='First Name', max_length=100)
-    surname = forms.CharField(label='Surname', max_length=100)
+    first_name = forms.CharField(label='First Name', max_length=100,
+                                 widget=forms.TextInput(attrs={'class': 'govuk-input'}))
+    surname = forms.CharField(label='Surname', max_length=100,
+                              widget=forms.TextInput(attrs={'class': 'govuk-input'}))
 
 
 class JobForm(forms.Form):
@@ -17,3 +19,8 @@ class JobForm(forms.Form):
         Job = apps.get_model('admin_user', 'Job')
         self.fields['team'].choices = [(team.team_name, team.team_name) for team in Team.objects.all()]
         self.fields['job'].choices = [(job.job_title, job.job_title) for job in Job.objects.all()]
+
+
+class EmailForm(forms.Form):
+    email_address = forms.EmailField(label='Email address', max_length=100,
+                                     widget=forms.TextInput(attrs={'class': 'govuk-input'}))

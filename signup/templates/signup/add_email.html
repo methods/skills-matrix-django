@@ -1,1 +1,55 @@
-<h1>hello</h1>
+{% extends "signup/signup_base.html" %}
+{% load sass_tags %}
+
+{% block beforeContent %}
+  <a class="govuk-back-link" href="/name">Back</a>
+{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-xl">What is your email address?</h1>
+
+      {% if error %}
+
+      <div class="govuk-form-group govuk-form-group--error">
+        <form class="form" method="post">
+        {% csrf_token %}
+          <div class="govuk-form-group govuk-hint govuk-!-margin-bottom-5">
+            <label class="govuk-hint">
+              Email address
+            </label>
+            <span id="email-error" class="govuk-error-message">
+          <span class="govuk-visually-hidden">Error:</span>
+              Enter your Methods email address in the correct format, like name@example.com.
+        </span>
+             <input class="govuk-input govuk-input--error" id="email_address" name="email_address" type="email"
+                    spellcheck="false" aria-describedby="email-hint email-error"
+                    autocomplete="email">
+          </div>
+        <button class="govuk-button" data-module="govuk-button">Continue</button>
+      </form>
+      </div>
+
+      {% else %}
+
+      <form class="form" method="post">
+        {% csrf_token %}
+          <div class="govuk-form-group govuk-hint govuk-!-margin-bottom-5">
+            <label class="govuk-hint">
+              Email address
+            </label>
+            <input class="govuk-input" id="email_address" name="email_address" type="text" autocomplete="email"
+                   spellcheck="false" required>
+          </div>
+        <button class="govuk-button" data-module="govuk-button">Continue</button>
+      </form>
+
+      {% endif %}
+
+    </div>
+  </div>
+
+{% endblock %}

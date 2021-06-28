@@ -137,3 +137,4 @@ STATIC_ROOT = BASE_DIR/'static'
 
 AUTH_USER_MODEL = 'user_profile.NewUser'
 SESSION_SAVE_EVERY_REQUEST = True
+
