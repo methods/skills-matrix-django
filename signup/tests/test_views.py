@@ -41,12 +41,41 @@ class AddJobSignup(TestCase):
         self.assertRedirects(response, '/signup/create-password/')
 
 
-class CheckDetailsSummary(TestCase):
+# class CheckDetailsSummary(TestCase):
+#     def test_check_details_page_status_code(self):
+#         response = self.client.get('/signup/summary/')
+#         assert response.status_code == 200
+#
+#     def test_check_details_body_resp(self):
+#         response = self.client.get('/signup/summary/')
+#         assert "Check your answers" in response.content.decode()
 
-    def test_check_details_page_status_code(self):
-        response = self.client.get('/signup/summary/')
+
+class EditName(TestCase):
+    def test_edit_name_page_status_code(self):
+        response = self.client.get('/signup/edit-name/')
         assert response.status_code == 200
 
-    def test_check_details_body_resp(self):
-        response = self.client.get('/signup/summary/')
-        assert "Check your answers" in response.content.decode()
+    def test_edit_name_body_resp(self):
+        response = self.client.get('/signup/edit-name/')
+        assert "Edit your name" in response.content.decode()
+
+
+class EditEmail(TestCase):
+    def test_edit_email_page_status_code(self):
+        response = self.client.get('/signup/edit-email-address/')
+        assert response.status_code == 200
+
+    def test_edit_email_body_resp(self):
+        response = self.client.get('/signup/edit-email-address/')
+        assert "Edit your name" in response.content.decode()
+
+
+class EditJobInformation(TestCase):
+    def test_edit_email_page_status_code(self):
+        response = self.client.get('/signup/edit-job-information/')
+        assert response.status_code == 200
+
+    def test_edit_email_body_resp(self):
+        response = self.client.get('/signup/edit-job-information/')
+        assert "Edit your name" in response.content.decode()

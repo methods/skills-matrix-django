@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 
 
 def add_name(request):
-    form = NameForm()
     if request.method == 'POST':
         form = NameForm(request.POST)
         if form.is_valid():
@@ -61,3 +60,47 @@ def summary(request):
         return redirect('/')
     return render(request, 'signup/summary.html', {'full_name': full_name, 'email_address': email_address,
                                                    'team': team, 'job': job})
+
+
+def edit_name(request):
+    if request.method == 'POST':
+        form = NameForm(request.POST)
+        if form.is_valid():
+            request.session['first_name'] = request.POST['first_name']
+            request.session['surname'] = request.POST['surname']
+            request.session.save()
+            return redirect(summary)
+    else:
+        form = NameForm()
+        first_name = request.session['first_name']
+        surname = request.session['surname']
+    return render(request, 'signup/add_name.html', {'form': form, 'edit': True, 'first_name': first_name,
+                                                    'surname': surname})
+
+
+def edit_email_address(request):
+    if request.method == 'POST':
+        form = EmailForm(request.POST)
+        if form.is_valid():
+            request.session['email_address'] = request.POST['email_address']
+            request.session.save()
+            return redirect(summary)
+    else:
+        form = EmailForm()
+        email_address = request.session['email_address']
+    return render(request, 'signup/add_email.html', {'form': form, 'edit': True, 'email_address': email_address})
+
+
+def edit_job_information(request):
+    if request.method == 'POST':
+        form = JobForm(request.POST)
+        if form.is_valid():
+            request.session['team'] = request.POST['team']
+            request.session['job'] = request.POST['job']
+            request.session.save()
+            return redirect(summary)
+    else:
+        form = JobForm()
+        team = request.session['team']
+        job = request.session['job']
+    return render(request, 'signup/add_job.html', {'form': form, 'edit': True, 'team': team, 'job': job})
