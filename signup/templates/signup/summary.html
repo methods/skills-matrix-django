@@ -1,0 +1,88 @@
+{% extends "signup/signup_base.html" %}
+{% load sass_tags %}
+
+{% block pageTitle %}
+  Check your answers
+{% endblock %}
+
+{% block beforeContent %}
+  <a class="govuk-back-link" href="/password">Back</a>
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+
+
+              <h1 class="govuk-heading-l">Check your answers</h1>
+
+              <h2 class="govuk-heading-m">Personal details</h2>
+
+              <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
+                    Name
+                  </dt>
+                  <dd class="govuk-summary-list__value">
+                    {{full_name}}
+                  </dd>
+                  <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="/signup/edit-name/">
+                      Change<span class="govuk-visually-hidden"> name</span>
+                    </a>
+                  </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
+                    Email address
+                  </dt>
+                  <dd class="govuk-summary-list__value">
+                    {{email_address}}
+                  </dd>
+                  <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="/signup/edit-email/">
+                      Change<span class="govuk-visually-hidden"> email address</span>
+                    </a>
+                  </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
+                    Your team
+                  </dt>
+                  <dd class="govuk-summary-list__value">
+                    <p class="govuk-body">{{team}}</p>
+                  </dd>
+                  <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="/signup/edit-job/">
+                      Change<span class="govuk-visually-hidden"> your team</span>
+                    </a>
+                  </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
+                    Your job
+                  </dt>
+                  <dd class="govuk-summary-list__value">
+                    {{job}}
+                  </dd>
+                  <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="/signup/edit-job/">
+                      Change<span class="govuk-visually-hidden"> your job</span>
+                    </a>
+                  </dd>
+                </div>
+
+              </dl>
+
+                <a class="govuk-button" data-module="govuk-button" href='/index'>
+                  Register
+                </a>
+
+            </div>
+          </div>
+        </main>
+      </div>
+
+    </div>
+  </div>
+{% endblock %}

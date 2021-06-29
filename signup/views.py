@@ -45,3 +45,14 @@ def add_job(request):
 
 def create_password(request):
     return render(request, 'signup/create_password.html')
+
+
+def summary(request):
+    first_name = request.session['first_name']
+    surname = request.session['surname']
+    full_name = f'{first_name} {surname}'
+    email_address = request.session['email_address']
+    team = request.session['team']
+    job = request.session['job']
+    return render(request, 'signup/summary.html', {'full_name': full_name, 'email_address': email_address,
+                                                   'team': team, 'job': job})

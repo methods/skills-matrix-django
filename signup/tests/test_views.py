@@ -39,3 +39,13 @@ class AddJobSignup(TestCase):
         print(Team.objects.all())
         response = self.client.post('/signup/job/', {'team': 'OPC', 'job': 'Junior Developer'})
         self.assertRedirects(response, '/signup/create-password/')
+
+
+class CheckDetailsSummary(TestCase):
+    def test_check_details_page_status_code(self):
+        response = self.client.get('/signup/summary/')
+        assert response.status_code == 200
+
+    def test_check_details_body_resp(self):
+        response = self.client.get('/signup/summary/')
+        assert "Check your answers" in response.content.decode()
