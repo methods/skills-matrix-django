@@ -27,8 +27,9 @@ class EmailForm(forms.Form):
 
 
 class PasswordForm(forms.Form):
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'govuk-input'}), max_length=25)
-    password_confirm = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'govuk-input'}), max_length=25)
+    error_css_class='govuk-form-group-error'
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'govuk-input'}), min_length=8, max_length=25, error_messages={'required':'Enter Your Password'})
+    password_confirm = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'govuk-input'}),min_length=8, max_length=25, error_messages={'required':'Please Confirm Your Password'})
 
     def clean_password_confirm(self):
         password = self.cleaned_data.get('password')
@@ -36,5 +37,4 @@ class PasswordForm(forms.Form):
         if password != password_confirm:
             raise forms.ValidationError('Passwords must match')
         return password_confirm
-
 
