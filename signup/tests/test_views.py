@@ -29,8 +29,8 @@ class AddJobSignup(TestCase):
 
     def test_add_job_submit_redirects_to_password_page(self):
         Team = apps.get_model('super_admin', 'Team')
-        team=Team()
-        team.team_name="OPC"
+        team = Team()
+        team.team_name = "OPC"
         team.save()
         Job = apps.get_model('admin_user', 'Job')
         job = Job()
@@ -42,6 +42,7 @@ class AddJobSignup(TestCase):
 
 
 class CheckDetailsSummary(TestCase):
+
     def test_check_details_page_status_code(self):
         response = self.client.get('/signup/summary/')
         assert response.status_code == 200

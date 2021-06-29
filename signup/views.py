@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import NameForm, JobForm, EmailForm
+from django.contrib.auth import get_user_model
 
 
 def add_name(request):
@@ -54,5 +55,9 @@ def summary(request):
     email_address = request.session['email_address']
     team = request.session['team']
     job = request.session['job']
+    if request.method == 'POST':
+        user = get_user_model()
+        user.objects.create_user(email_address, first_name, surname, team, job)
+        return redirect('/')
     return render(request, 'signup/summary.html', {'full_name': full_name, 'email_address': email_address,
                                                    'team': team, 'job': job})

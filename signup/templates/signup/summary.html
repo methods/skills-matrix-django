@@ -73,10 +73,12 @@
                 </div>
 
               </dl>
-
-                <a class="govuk-button" data-module="govuk-button" href='/index'>
+          <form method="post">
+              {% csrf_token %}
+                <button class="govuk-button" data-module="govuk-button" href='/index'>
                   Register
-                </a>
+                </button>
+          </form>
 
             </div>
           </div>
