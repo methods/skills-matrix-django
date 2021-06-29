@@ -1,5 +1,7 @@
 from django import forms
 from django.apps import apps
+from django.forms.widgets import PasswordInput
+from signup.widgets import GdsStyleInput
 
 
 class NameForm(forms.Form):
@@ -27,9 +29,17 @@ class EmailForm(forms.Form):
 
 
 class PasswordForm(forms.Form):
-    error_css_class='govuk-form-group-error'
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'govuk-input'}), min_length=8, max_length=25, error_messages={'required':'Enter Your Password'})
-    password_confirm = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'govuk-input'}),min_length=8, max_length=25, error_messages={'required':'Please Confirm Your Password'})
+    password = forms.CharField(widget=GdsStyleInput(),label='You will use this password to log in securely to the platform.', min_length=8, max_length=25,error_messages={'required':'Please Enter Your Password'})
+    password_confirm = forms.CharField(widget=GdsStyleInput(),label='Confirm password',min_length=8, max_length=25, error_messages={'required':'Please Confirm Your Password'})
+
+    # def __init__(self, *args, **kwargs):
+    #     super(PasswordForm, self).__init__(*args, **kwargs)    
+    #     attrs = {}
+    #     print(self.fields['password'].error_messages)
+    #     if self.fields['password'].error_messages != None:
+    #         attrs['class'] = 'govuk-input--error'
+    #     self.fields['password'].widget = GdsStyleInput(attrs=attrs)
+        # self.fields['password_confirm'].widget = GdsStyleInput(attrs=attrs)
 
     def clean_password_confirm(self):
         password = self.cleaned_data.get('password')
