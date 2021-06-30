@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from .forms import NameForm, JobForm, EmailForm
+from .forms import NameForm, JobForm, EmailForm, PasswordForm
+import hashlib
 from django.contrib.auth import get_user_model
 
 
@@ -44,8 +45,20 @@ def add_job(request):
 
 
 def create_password(request):
-    return render(request, 'signup/create_password.html')
-
+    if request.method == 'POST':
+        form = PasswordForm(request.POST)
+        if form.is_valid():
+            password = request.POST['password']
+            hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+            request.session['hashed_password'] = hashed_password
+            request.session.save()
+            return render(request, 'signup/create_password.html')
+        else:
+            render(request, 'signup/create_password.html', {'form': form})
+    else:
+        form = PasswordForm()
+    return render(request, 'signup/create_password.html', {'form': form})
+  
 
 def summary(request):
     first_name = request.session['first_name'] if 'first_name' in request.session else ""

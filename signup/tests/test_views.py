@@ -1,6 +1,6 @@
 from django.test import TestCase
-from django.apps import apps
-
+from super_admin.models import Team
+from admin_user.models import Job
 
 
 
@@ -28,11 +28,9 @@ class AddJobSignup(TestCase):
         assert "Information about your job" in response.content.decode()
 
     def test_add_job_submit_redirects_to_password_page(self):
-        Team = apps.get_model('super_admin', 'Team')
-        team = Team()
-        team.team_name = "OPC"
+        team=Team()
+        team.team_name="OPC"
         team.save()
-        Job = apps.get_model('admin_user', 'Job')
         job = Job()
         job.job_title = 'Junior Developer'
         job.save()
@@ -41,6 +39,22 @@ class AddJobSignup(TestCase):
         self.assertRedirects(response, '/signup/create-password/')
 
 
+class CreatePasswordView(TestCase):
+    def test_create_password_status_code(self):
+        response = self.client.get('/signup/create-password/')
+        assert response.status_code == 200
+
+    def test_create_password_body_resp(self):
+        response = self.client.get('/signup/create-password/')
+        assert "Create a password" in response.content.decode()
+
+    def test_password_hashing(self):
+        self.client.post('/signup/create-password/', {'password': 'password',
+                                                                 'password_confirm': 'password'})
+        session = self.client.session
+        assert session['hashed_password'] == '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'
+        
+        
 class CheckDetailsSummary(TestCase):
     def test_check_details_page_status_code(self):
         response = self.client.get('/signup/summary/')
