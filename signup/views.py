@@ -71,11 +71,10 @@ def edit_name(request):
             request.session.save()
             return redirect(summary)
     else:
-        form = NameForm()
         first_name = request.session['first_name']
         surname = request.session['surname']
-    return render(request, 'signup/add_name.html', {'form': form, 'edit': True, 'first_name': first_name,
-                                                    'surname': surname})
+        form = NameForm(initial={'first_name': first_name, 'surname': surname})
+    return render(request, 'signup/add_name.html', {'form': form, 'edit': True})
 
 
 def edit_email_address(request):
@@ -87,8 +86,8 @@ def edit_email_address(request):
             return redirect(summary)
     else:
         form = EmailForm()
-        email_address = request.session['email_address']
-    return render(request, 'signup/add_email.html', {'form': form, 'edit': True, 'email_address': email_address})
+        form.fields['email_address'].initial = request.session['email_address']
+    return render(request, 'signup/add_email.html', {'form': form, 'edit': True})
 
 
 def edit_job_information(request):
@@ -101,6 +100,6 @@ def edit_job_information(request):
             return redirect(summary)
     else:
         form = JobForm()
-        team = request.session['team']
-        job = request.session['job']
-    return render(request, 'signup/add_job.html', {'form': form, 'edit': True, 'team': team, 'job': job})
+        form.fields['team'].initial = request.session['team']
+        form.fields['job'].initial = request.session['job']
+    return render(request, 'signup/add_job.html', {'form': form, 'edit': True})

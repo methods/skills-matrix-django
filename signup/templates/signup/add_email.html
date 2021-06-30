@@ -30,9 +30,7 @@
           <span class="govuk-visually-hidden">Error:</span>
               Enter your Methods email address in the correct format, like name@example.com.
         </span>
-             <input class="govuk-input govuk-input--error" id="email_address" name="email_address" type="email"
-                    spellcheck="false" aria-describedby="email-hint email-error"
-                    autocomplete="email">
+            {{form.email_address}}
           </div>
         <button class="govuk-button" data-module="govuk-button">Continue</button>
       </form>
@@ -46,8 +44,7 @@
             <label class="govuk-hint">
               Email address
             </label>
-            <input class="govuk-input" id="email_address" name="email_address" type="text" autocomplete="email"
-                   spellcheck="false" required>
+            {{form.email_address}}
           </div>
         <button class="govuk-button" data-module="govuk-button">Continue</button>
       </form>
