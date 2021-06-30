@@ -1,14 +1,22 @@
 from django import forms
 from django.apps import apps
-from django.forms.widgets import PasswordInput
-from signup.widgets import GdsStyleInput
+from signup.widgets import GdsStylePasswordInput,GdsStyleTextInput
 
 
 class NameForm(forms.Form):
     first_name = forms.CharField(label='First Name', max_length=100,
-                                 widget=forms.TextInput(attrs={'class': 'govuk-input'}))
+                                 widget=GdsStyleTextInput(attrs={'class': 'govuk-input'}),error_messages={'required': 'Please Enter Your First Name'})
     surname = forms.CharField(label='Surname', max_length=100,
-                              widget=forms.TextInput(attrs={'class': 'govuk-input'}))
+                              widget=GdsStyleTextInput(attrs={'class': 'govuk-input'}),error_messages={'required': 'Please Enter Your Surname'})
+
+    def __init__(self, *args, **kwargs):
+        super(NameForm, self).__init__(*args, **kwargs,use_required_attribute=False)
+        attrs = {}
+        attrs.update({"errors": True})
+        attrs['class'] = 'govuk-input--error'
+        for field in self.fields:
+            if field in self.errors:  
+                self.fields[field].widget = GdsStyleTextInput(attrs=attrs)
 
 
 class JobForm(forms.Form):
@@ -29,10 +37,10 @@ class EmailForm(forms.Form):
 
 
 class PasswordForm(forms.Form):
-    password = forms.CharField(widget=GdsStyleInput(), label='You will use this password to '
+    password = forms.CharField(widget=GdsStylePasswordInput(), label='You will use this password to '
                                                              'log in securely to the platform.',
                                min_length=8, max_length=25, error_messages={'required': 'Please Enter Your Password'})
-    password_confirm = forms.CharField(widget=GdsStyleInput(), label='Confirm password',min_length=8, max_length=25,
+    password_confirm = forms.CharField(widget=GdsStylePasswordInput(), label='Confirm password',min_length=8, max_length=25,
                                        error_messages={'required': 'Please Confirm Your Password'})
 
     def clean_password_confirm(self):
@@ -49,4 +57,4 @@ class PasswordForm(forms.Form):
         attrs['class'] = 'govuk-input--error'
         for field in self.fields:
             if field in self.errors:  
-                self.fields[field].widget = GdsStyleInput(attrs=attrs)
+                self.fields[field].widget = GdsStylePasswordInput(attrs=attrs)
