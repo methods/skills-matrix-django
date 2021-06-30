@@ -1,8 +1,7 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from super_admin.models import Team
 from admin_user.models import Job
-from importlib import import_module
-from django.conf import settings
+
 
 
 class AddNameSignup(TestCase):
