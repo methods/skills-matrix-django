@@ -51,7 +51,7 @@ def summary(request):
     first_name = request.session['first_name'] if 'first_name' in request.session else ""
     surname = request.session['surname'] if 'surname' in request.session else ""
     full_name = f'{first_name} {surname}'
-    email_address = request.session['email_address'] if 'email address' in request.session else ''
+    email_address = request.session['email_address'] if 'email_address' in request.session else ''
     team = request.session['team'] if 'team' in request.session else ''
     job = request.session['job'] if 'job' in request.session else ''
     if request.method == 'POST':
@@ -87,7 +87,7 @@ def edit_email_address(request):
     else:
         form = EmailForm()
         form.fields['email_address'].initial = request.session[
-            'email_address'] if 'email address' in request.session else ''
+            'email_address'] if 'email_address' in request.session else ''
     return render(request, 'signup/add_email.html', {'form': form, 'edit': True})
 
 
