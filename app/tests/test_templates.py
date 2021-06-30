@@ -40,7 +40,7 @@ class GeneralFunctionalTests(LiveServerTestCase):
 
     def test_user_details(self):
         db = get_user_model()
-        db.objects.create_user('ss@user.com', 'userfirstname', 'usersurname', 'userteam', 'userjobrole')
+        db.objects.create_user('ss@user.com', 'userfirstname', 'usersurname', 'userteam', 'userjobrole', 'password')
         response = self.client.get('/')
         assert "userfirstname" in response.content.decode()
         assert "userteam" in response.content.decode()

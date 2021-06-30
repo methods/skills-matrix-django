@@ -3,9 +3,10 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class CustomAccountManager(BaseUserManager):
-    def create_user(self, email, first_name, surname, team, job_role):
+    def create_user(self, email, first_name, surname, team, job_role, password):
         email = self.normalize_email(email)
-        user = self.model(email=email, first_name=first_name, surname=surname, team=team, job_role=job_role)
+        user = self.model(email=email, first_name=first_name, surname=surname, team=team, job_role=job_role,
+                          password=password)
         user.save()
         return user
 
@@ -16,6 +17,7 @@ class NewUser(AbstractBaseUser):
     surname = models.CharField(max_length=100)
     team = models.CharField(max_length=100)
     job_role = models.CharField(max_length=100)
+    password = models.CharField(max_length=100)
 
     objects = CustomAccountManager()
 

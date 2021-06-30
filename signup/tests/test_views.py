@@ -18,6 +18,21 @@ class AddNameSignup(TestCase):
         self.assertRedirects(response, '/signup/email/')
 
 
+class AddEmailSignup(TestCase):
+    def test_signup_add_email_page_status_code(self):
+        response = self.client.get('/signup/email/')
+        assert response.status_code == 200
+
+    def test_signup_add_email_body_resp(self):
+        response = self.client.get('/signup/email/')
+        assert "What is your email address?" in response.content.decode()
+
+    def test_email_session_storage(self):
+        self.client.post('/signup/email/', {'email_address': 'test@test.com'})
+        session = self.client.session
+        assert session['email_address'] == 'test@test.com'
+
+
 class AddJobSignup(TestCase):
     def test_signup_add_job_page_status_code(self):
         response = self.client.get('/signup/job/')
@@ -34,7 +49,6 @@ class AddJobSignup(TestCase):
         job = Job()
         job.job_title = 'Junior Developer'
         job.save()
-        print(Team.objects.all())
         response = self.client.post('/signup/job/', {'team': 'OPC', 'job': 'Junior Developer'})
         self.assertRedirects(response, '/signup/create-password/')
 
@@ -74,6 +88,12 @@ class EditName(TestCase):
         response = self.client.get('/signup/edit-name/')
         assert "Edit your name" in response.content.decode()
 
+    def test_edit_name_post_request(self):
+        self.client.post('/signup/edit-name/', {'first_name': 'Test', 'surname': 'Test Surname'})
+        session = self.client.session
+        assert session['first_name'] == 'Test'
+        assert session['surname'] == 'Test Surname'
+
 
 class EditEmail(TestCase):
     def test_edit_email_page_status_code(self):
@@ -84,6 +104,11 @@ class EditEmail(TestCase):
         response = self.client.get('/signup/edit-email-address/')
         assert "Edit your email address" in response.content.decode()
 
+    def test_edit_email_session_storage(self):
+        self.client.post('/signup/edit-email-address/', {'email_address': 'test@test.com'})
+        session = self.client.session
+        assert session['email_address'] == 'test@test.com'
+
 
 class EditJobInformation(TestCase):
     def test_edit_email_page_status_code(self):
@@ -93,3 +118,15 @@ class EditJobInformation(TestCase):
     def test_edit_email_body_resp(self):
         response = self.client.get('/signup/edit-job-information/')
         assert "Edit your job information" in response.content.decode()
+
+    def test_edit_job_information_post_request(self):
+        team = Team()
+        team.team_name = "OPC"
+        team.save()
+        job = Job()
+        job.job_title = 'Junior Developer'
+        job.save()
+        self.client.post('/signup/edit-job-information/', {'team': 'OPC', 'job': 'Junior Developer'})
+        session = self.client.session
+        assert session['job'] == 'Junior Developer'
+        assert session['team'] == 'OPC'
