@@ -10,6 +10,4 @@ class GdsStyleInput(Input):
     def get_context(self, name, value, attrs):
         if not self.render_value:
             value = None
-        context = super().get_context(name, value, attrs)
-        print(context)
-        return context
+        return super().get_context(name, value, attrs)

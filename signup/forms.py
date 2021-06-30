@@ -44,10 +44,8 @@ class PasswordForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(PasswordForm, self).__init__(*args, **kwargs,use_required_attribute=False)    
         attrs = {}
-        print(dir(self.fields['password']))
-        print(self.fields['password'])
-        if self.errors:
-            attrs.update({"errors":"True"})
-            attrs['class'] = 'govuk-input--error'
-        self.fields['password'].widget = GdsStyleInput(attrs=attrs)
-        self.fields['password_confirm'].widget = GdsStyleInput(attrs=attrs)
+        attrs.update({"errors":"True"})
+        attrs['class'] = 'govuk-input--error'
+        for field in self.fields:
+            if field in self.errors:  
+                self.fields[field].widget = GdsStyleInput(attrs=attrs)
