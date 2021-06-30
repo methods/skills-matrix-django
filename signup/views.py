@@ -48,12 +48,12 @@ def create_password(request):
 
 
 def summary(request):
-    first_name = request.session['first_name']
-    surname = request.session['surname']
+    first_name = request.session['first_name'] if 'first_name' in request.session else ""
+    surname = request.session['surname'] if 'surname' in request.session else ""
     full_name = f'{first_name} {surname}'
-    email_address = request.session['email_address']
-    team = request.session['team']
-    job = request.session['job']
+    email_address = request.session['email_address'] if 'email address' in request.session else ''
+    team = request.session['team'] if 'team' in request.session else ''
+    job = request.session['job'] if 'job' in request.session else ''
     if request.method == 'POST':
         user = get_user_model()
         user.objects.create_user(email_address, first_name, surname, team, job)
@@ -71,8 +71,8 @@ def edit_name(request):
             request.session.save()
             return redirect(summary)
     else:
-        first_name = request.session['first_name']
-        surname = request.session['surname']
+        first_name = request.session['first_name'] if 'first_name' in request.session else ""
+        surname = request.session['surname'] if 'surname' in request.session else ""
         form = NameForm(initial={'first_name': first_name, 'surname': surname})
     return render(request, 'signup/add_name.html', {'form': form, 'edit': True})
 
@@ -86,7 +86,8 @@ def edit_email_address(request):
             return redirect(summary)
     else:
         form = EmailForm()
-        form.fields['email_address'].initial = request.session['email_address']
+        form.fields['email_address'].initial = request.session[
+            'email_address'] if 'email address' in request.session else ''
     return render(request, 'signup/add_email.html', {'form': form, 'edit': True})
 
 
@@ -100,6 +101,6 @@ def edit_job_information(request):
             return redirect(summary)
     else:
         form = JobForm()
-        form.fields['team'].initial = request.session['team']
-        form.fields['job'].initial = request.session['job']
+        form.fields['team'].initial = request.session['team'] if 'team' in request.session else ''
+        form.fields['job'].initial = request.session['job'] if 'job' in request.session else ''
     return render(request, 'signup/add_job.html', {'form': form, 'edit': True})

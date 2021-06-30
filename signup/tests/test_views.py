@@ -68,7 +68,7 @@ class EditEmail(TestCase):
 
     def test_edit_email_body_resp(self):
         response = self.client.get('/signup/edit-email-address/')
-        assert "Edit your name" in response.content.decode()
+        assert "Edit your email address" in response.content.decode()
 
 
 class EditJobInformation(TestCase):
@@ -78,4 +78,4 @@ class EditJobInformation(TestCase):
 
     def test_edit_email_body_resp(self):
         response = self.client.get('/signup/edit-job-information/')
-        assert "Edit your name" in response.content.decode()
+        assert "Edit your job information" in response.content.decode()
