@@ -10,7 +10,7 @@ class NameForm(forms.Form):
                               widget=GdsStyleTextInput(attrs={'class': 'govuk-input'}),error_messages={'required': 'Please Enter Your Surname'})
 
     def __init__(self, *args, **kwargs):
-        super(NameForm, self).__init__(*args, **kwargs,use_required_attribute=False)
+        super(NameForm, self).__init__(*args, **kwargs)
         attrs = {}
         attrs.update({"errors": True})
         attrs['class'] = 'govuk-input--error'
@@ -34,6 +34,16 @@ class JobForm(forms.Form):
 class EmailForm(forms.Form):
     email_address = forms.EmailField(label='Email address', max_length=100,
                                      widget=GdsStyleEmailInput(attrs={'class': 'govuk-input'}))
+
+
+    def __init__(self, *args, **kwargs):
+        super(EmailForm, self).__init__(*args, **kwargs,use_required_attribute=False)
+        attrs = {}
+        attrs.update({"errors": True})
+        attrs['class'] = 'govuk-input--error'
+        for field in self.fields:
+            if field in self.errors:  
+                self.fields[field].widget = GdsStyleEmailInput(attrs=attrs)
 
 
 class PasswordForm(forms.Form):
