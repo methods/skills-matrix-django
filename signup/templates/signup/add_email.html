@@ -1,57 +1,43 @@
 {% extends "signup/signup_base.html" %}
 {% load sass_tags %}
 
-{% block beforeContent %}
-  <a class="govuk-back-link" href="/name">Back</a>
-{% endblock %}
 
 {% block content %}
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
 
-      {% if edit %}
-        <h1 class="govuk-heading-xl">Edit your email address</h1>
-        {% else %}
-      <h1 class="govuk-heading-xl">What is your email address?</h1>
-        {% endif %}
-
-
-      {% if form.errors %}
-
-      <div class="govuk-form-group govuk-form-group--error">
-        <form class="form" method="post">
-        {% csrf_token %}
-          <div class="govuk-form-group govuk-hint govuk-!-margin-bottom-5">
-            <label class="govuk-hint">
-              Email address
-            </label>
-            <span id="email-error" class="govuk-error-message">
-          <span class="govuk-visually-hidden">Error:</span>
-              Enter your Methods email address in the correct format, like name@example.com.
-        </span>
-            {{form.email_address}}
-          </div>
-        <button class="govuk-button" data-module="govuk-button">Continue</button>
-      </form>
-      </div>
-
-      {% else %}
-
+    {% if edit %}
+    <h1 class="govuk-heading-xl">Edit your email address</h1>
+    {% else %}
+    <h1 class="govuk-heading-xl">What is your email address?</h1>
+    {% endif %}
+    <div class="govuk-form-group {% if form.errors %} govuk-form-group--error {% endif %}">
       <form class="form" method="post">
         {% csrf_token %}
-          <div class="govuk-form-group govuk-hint govuk-!-margin-bottom-5">
-            <label class="govuk-hint">
-              Email address
-            </label>
-            {{form.email_address}}
+        {{form.non_field_errors}}
+        {% for field in form %}
+        <div>
+          <div>
+            {% for error in field.errors %}
+            <span id="addemail-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span>
+              {{error}}
+            </span>
+            {% endfor %}
           </div>
+          <label class="govuk-hint" for="{{field.id_for_label}}">
+            {{field.label}}
+          </label>
+          {{field}}
+        </div>
+        {% endfor %}
         <button class="govuk-button" data-module="govuk-button">Continue</button>
       </form>
 
-      {% endif %}
-
     </div>
+
   </div>
+</div>
 
 {% endblock %}
