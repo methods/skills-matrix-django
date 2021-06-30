@@ -51,9 +51,9 @@ def create_password(request):
         if form.is_valid():
             password = request.POST['password']
             hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
-            request.session['password'] = hashed_password
+            request.session['hashed_password'] = hashed_password
             request.session.save()
-            return redirect(check_your_details)
+            return render(request, 'signup/create_password.html')
         else:
             render(request, 'signup/create_password.html', {'form': form})
     else:
