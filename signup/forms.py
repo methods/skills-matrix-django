@@ -1,6 +1,7 @@
 from django import forms
 from django.apps import apps
 from signup.widgets import GdsStylePasswordInput,GdsStyleTextInput,GdsStyleEmailInput
+from .validators import validate_domain_email
 
 
 class NameForm(forms.Form):
@@ -32,8 +33,8 @@ class JobForm(forms.Form):
 
 
 class EmailForm(forms.Form):
-    email_address = forms.EmailField(label='Email address', max_length=100,
-                                     widget=GdsStyleEmailInput(attrs={'class': 'govuk-input'}))
+    email_address = forms.EmailField(validators=[validate_domain_email],label='Email address', max_length=100,
+                                     widget=GdsStyleEmailInput(attrs={'class': 'govuk-input'}),error_messages={'required': 'Please Enter Your Email Address'})
 
 
     def __init__(self, *args, **kwargs):
