@@ -1,6 +1,6 @@
 from django import forms
 from django.apps import apps
-from signup.widgets import GdsStylePasswordInput,GdsStyleTextInput
+from signup.widgets import GdsStylePasswordInput,GdsStyleTextInput,GdsStyleEmailInput
 
 
 class NameForm(forms.Form):
@@ -33,7 +33,7 @@ class JobForm(forms.Form):
 
 class EmailForm(forms.Form):
     email_address = forms.EmailField(label='Email address', max_length=100,
-                                     widget=forms.TextInput(attrs={'class': 'govuk-input'}))
+                                     widget=GdsStyleEmailInput(attrs={'class': 'govuk-input'}))
 
 
 class PasswordForm(forms.Form):

@@ -15,4 +15,7 @@ class GdsStylePasswordInput(Input):
 class GdsStyleTextInput(Input):
     template_name="signup/gds_input.html"
     input_type = 'text'
-    
+
+class GdsStyleEmailInput(Input):
+    input_type = 'email'
+    template_name = 'signup/gds_input.html'
