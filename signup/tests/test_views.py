@@ -1,8 +1,8 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from super_admin.models import Team
 from admin_user.models import Job
-
-
+from importlib import import_module
+from django.conf import settings
 
 
 class AddNameSignup(TestCase):
@@ -49,3 +49,8 @@ class CreatePasswordView(TestCase):
         response = self.client.get('/signup/create-password/')
         assert "Create a password" in response.content.decode()
 
+    def test_password_hashing(self):
+        self.client.post('/signup/create-password/', {'password': 'password',
+                                                                 'password_confirm': 'password'})
+        session = self.client.session
+        assert session['hashed_password'] == '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'
