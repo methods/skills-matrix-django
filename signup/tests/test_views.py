@@ -53,3 +53,43 @@ class CreatePasswordView(TestCase):
                                                                  'password_confirm': 'password'})
         session = self.client.session
         assert session['hashed_password'] == '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'
+        
+        
+class CheckDetailsSummary(TestCase):
+    def test_check_details_page_status_code(self):
+        response = self.client.get('/signup/summary/')
+        assert response.status_code == 200
+
+    def test_check_details_body_resp(self):
+        response = self.client.get('/signup/summary/')
+        assert "Check your answers" in response.content.decode()
+
+
+class EditName(TestCase):
+    def test_edit_name_page_status_code(self):
+        response = self.client.get('/signup/edit-name/')
+        assert response.status_code == 200
+
+    def test_edit_name_body_resp(self):
+        response = self.client.get('/signup/edit-name/')
+        assert "Edit your name" in response.content.decode()
+
+
+class EditEmail(TestCase):
+    def test_edit_email_page_status_code(self):
+        response = self.client.get('/signup/edit-email-address/')
+        assert response.status_code == 200
+
+    def test_edit_email_body_resp(self):
+        response = self.client.get('/signup/edit-email-address/')
+        assert "Edit your email address" in response.content.decode()
+
+
+class EditJobInformation(TestCase):
+    def test_edit_email_page_status_code(self):
+        response = self.client.get('/signup/edit-job-information/')
+        assert response.status_code == 200
+
+    def test_edit_email_body_resp(self):
+        response = self.client.get('/signup/edit-job-information/')
+        assert "Edit your job information" in response.content.decode()
