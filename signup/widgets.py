@@ -1,6 +1,6 @@
 from django.forms.widgets import Input
 
-class GdsStyleInput(Input):
+class GdsStylePasswordInput(Input):
     template_name="signup/gds_input.html"
     input_type = 'password'
     def __init__(self, attrs=None, render_value=False):
@@ -11,3 +11,11 @@ class GdsStyleInput(Input):
         if not self.render_value:
             value = None
         return super().get_context(name, value, attrs)
+
+class GdsStyleTextInput(Input):
+    template_name="signup/gds_input.html"
+    input_type = 'text'
+
+class GdsStyleEmailInput(Input):
+    input_type = 'email'
+    template_name = 'signup/gds_input.html'
