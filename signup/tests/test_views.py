@@ -66,7 +66,7 @@ class CreatePasswordView(TestCase):
         self.client.post('/signup/create-password/', {'password': 'password',
                                                                  'password_confirm': 'password'})
         session = self.client.session
-        assert session['hashed_password'] == '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'
+        assert not session['hashed_password'] == 'password'
         
         
 class CheckDetailsSummary(TestCase):

@@ -2,10 +2,6 @@ from django.shortcuts import render
 from django.contrib.auth import get_user_model
 
 
-def index(request):
-    return render(request, 'app/login.html')
-
-
 def dashboard(request):
     db = get_user_model()
     all_users = db.objects.all()
