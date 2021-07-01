@@ -28,9 +28,9 @@ class AddEmailSignup(TestCase):
         assert "What is your email address?" in response.content.decode()
 
     def test_email_session_storage(self):
-        self.client.post('/signup/email', {'email_address': 'test@test.com'})
+        self.client.post('/signup/email', {'email_address': 'test@methods.co.uk'})
         session = self.client.session
-        assert session['email_address'] == 'test@test.com'
+        assert session['email_address'] == 'test@methods.co.uk'
 
 
 class AddJobSignup(TestCase):
@@ -105,9 +105,9 @@ class EditEmail(TestCase):
         assert "Edit your email address" in response.content.decode()
 
     def test_edit_email_session_storage(self):
-        self.client.post('/signup/edit-email-address', {'email_address': 'test@test.com'})
+        self.client.post('/signup/edit-email-address', {'email_address': 'test@methods.co.uk'})
         session = self.client.session
-        assert session['email_address'] == 'test@test.com'
+        assert session['email_address'] == 'test@methods.co.uk'
 
 
 class EditJobInformation(TestCase):
