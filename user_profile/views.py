@@ -7,7 +7,6 @@ from django.shortcuts import redirect, render
 class LoginView(auth_views.LoginView):
     form_class = LoginForm
     template_name = 'user_profile/login.html'
-    redirect_field_name = 'dashboard/'
     redirect_authenticated_user = True
 
 
