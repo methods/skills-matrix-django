@@ -40,8 +40,6 @@ class EmailForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(EmailForm, self).__init__(*args, **kwargs)
         attrs = {}
-        print(self.fields['email_address'].error_messages)
-        print(self.errors)
         attrs.update({"errors": True})
         attrs['class'] = 'govuk-input--error'
         for field in self.fields:
