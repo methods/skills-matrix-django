@@ -140,3 +140,5 @@ AUTHENTICATION_BACKENDS = ['user_profile.backends.EmailAuthBackend']
 SESSION_SAVE_EVERY_REQUEST = True
 
 LOGIN_REDIRECT_URL = '/dashboard'
+
+APPEND_SLASH = False
