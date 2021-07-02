@@ -3,7 +3,6 @@ from super_admin.models import Team
 from admin_user.models import Job
 
 
-
 class AddNameSignup(TestCase):
     def test_signup_add_name_page_status_code(self):
         response = self.client.get('/signup/name')

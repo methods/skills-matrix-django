@@ -1,6 +1,7 @@
 from django.test import SimpleTestCase
 from ..forms import NameForm, EmailForm, PasswordForm
 
+
 class TestForms(SimpleTestCase):
     def test_name_form_valid_data(self):
         form = NameForm(data={
