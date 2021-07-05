@@ -6,7 +6,7 @@ def dashboard(request):
     db = get_user_model()
     all_users = db.objects.all()
     context = {"users": all_users}
-    return render(request, "app/home.html", context)
+    return render(request, "app/dashboard.html", context)
 
 
 def edit_skills(request):
