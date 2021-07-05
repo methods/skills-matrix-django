@@ -1,8 +1,10 @@
 {% extends "signup/signup_base.html" %}
 {% load sass_tags %}
 
+
 {% block beforeContent %}
-  <a class="govuk-back-link" href="/email">Back</a>
+  {% if edit %}<a class="govuk-back-link" href="{% url 'summary' %}" >{% else %}
+    <a class="govuk-back-link" href="{% url 'add email' %}" >{% endif %} Back</a>
 {% endblock %}
 
 {% block content %}

@@ -2,6 +2,10 @@
 {% load sass_tags %}
 
 
+{% block beforeContent %}
+    {% if edit %}<a class="govuk-back-link" href="{% url 'summary' %}" >{% else %}
+    <a class="govuk-back-link" href="{% url 'add name' %}" >{% endif %} Back</a>
+{% endblock %}
 {% block content %}
 
 <div class="govuk-grid-row">
