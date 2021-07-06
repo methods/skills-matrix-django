@@ -11,3 +11,7 @@ def dashboard(request):
 
 def edit_skills(request):
     return render(request, "app/edit_skills.html")
+
+
+def job_roles(request):
+    return render(request, "app/job-roles.html")

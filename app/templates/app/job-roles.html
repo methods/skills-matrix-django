@@ -1,0 +1,44 @@
+{% extends "app/app_base.html" %}
+{% load sass_tags %}
+
+{% block pageTitle %}
+Job roles
+{% endblock %}
+
+{% block content %}
+
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <form action="/job-roles" method="post">
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Job roles</h1>
+      <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+        {% for jobrole in jobroles %}
+        <div class="govuk-accordion__section ">
+          <div class="govuk-accordion__section-header">
+            <h2 class="govuk-accordion__section-heading">
+              <span class="govuk-accordion__section-button" id="accordion-with-summary-sections-heading-1">
+                {{jobrole.jobroletitle}}
+              </span>
+            </h2>
+            <div class="govuk-accordion__section-summary govuk-body" id="accordion-with-summary-sections-summary-1">
+              Job requirements.
+            </div>
+          </div>
+          <div id="accordion-with-summary-sections-content-1" class="govuk-accordion__section-content"
+            aria-labelledby="accordion-with-summary-sections-heading-1">
+            <ul class="govuk-list">
+              <li>
+                <a class="govuk-link" href="/view-job-role/{{jobrole.jobroletitle}}">View job role</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <button class="govuk-button" data-module="govuk-button">Add a job role</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
