@@ -19,8 +19,11 @@ class CustomAccountManager(BaseUserManager):
         
         if other_fields.get('is_staff') is not True:
             raise ValueError('Superuser must be assigned to is_staff=True.')
-
-        return self.create_user(email=self.normalize_email(email), first_name=first_name, surname=surname, team=team, job_role=job_role, password=password, **other_fields)
+        user=self.create_user(email=self.normalize_email(email), first_name=first_name, surname=surname, team=team, job_role=job_role,password=password, **other_fields)
+        user.set_password(password)
+        user.save()
+        return user
+        
 
     def create_user(self, email, first_name, surname, team, job_role, password,**other_fields):
 
