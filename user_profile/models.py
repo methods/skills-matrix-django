@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class CustomAccountManager(BaseUserManager):
@@ -27,14 +27,13 @@ class CustomAccountManager(BaseUserManager):
         if not email:
             raise ValueError('You must provide and email address')
         email = self.normalize_email(email)
-        user = self.model(email=email, first_name=first_name, surname=surname, team=team, job_role=job_role,**other_fields)
-        user.set_password(password)
+        user = self.model(email=email, first_name=first_name, surname=surname, team=team, job_role=job_role,password=password,**other_fields)
         user.save()
         return user
 
     
 
-class NewUser(AbstractBaseUser,PermissionsMixin):
+class NewUser(AbstractBaseUser):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
@@ -42,11 +41,10 @@ class NewUser(AbstractBaseUser,PermissionsMixin):
     job_role = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
-    last_login = models.DateTimeField(verbose_name='last login',auto_now=True)
     is_admin = models.BooleanField(default=False)
     is_superuser=models.BooleanField(default=False)
     is_staff = models. BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    
 
     objects = CustomAccountManager()
 
@@ -56,3 +54,9 @@ class NewUser(AbstractBaseUser,PermissionsMixin):
 
     def __str__(self):
         return f"{self.email}, {self.first_name}, {self.team}, {self.job_role}"
+
+    def has_perm(self,perm,obj=None):
+        return True
+
+    def has_module_perms(self, app_label):
+       return True 
