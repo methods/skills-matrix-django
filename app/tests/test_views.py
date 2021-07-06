@@ -47,3 +47,8 @@ class GeneralFunctionalTests(LiveServerTestCase):
         assert "userjobrole" in response.content.decode()
 
 
+class JobRolePageTests(TestCase):
+    def test_page_GET(self):
+        response = self.client.get('/job-roles')
+        assert response.status_code == 200
+        self.assertTemplateUsed(response, 'app/job-roles.html')
