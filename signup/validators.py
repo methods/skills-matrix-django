@@ -16,6 +16,6 @@ def password_validation(value):
     if not any(char.isdigit() for char in value):
         raise ValidationError('Password must contain at least %(min_length)d digit.'% {'min_length': 1})
     if not any(char.isalpha() for char in value):
-        raise ValidationError('Password must contain at least %(min_length)d letter.' % {'min_length': 1})
+        raise ValidationError('Password must contain at least %(min_length)d letter.' % {'min_length': 6})
     if not any(char in special_characters for char in value):
         raise ValidationError('Password must contain at least %(min_length)d special character.' % {'min_length': 1})
