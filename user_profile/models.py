@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from signup.validators import validate_domain_email
 
 
 class CustomAccountManager(BaseUserManager):
@@ -37,7 +38,7 @@ class CustomAccountManager(BaseUserManager):
     
 
 class NewUser(AbstractBaseUser):
-    email = models.EmailField(unique=True)
+    email = models.EmailField(validators=[validate_domain_email],unique=True)
     first_name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
     team = models.CharField(max_length=100)
