@@ -42,9 +42,6 @@ class GeneralFunctionalTests(LiveServerTestCase):
         db = get_user_model()
         db.objects.create_user('ss@user.com', 'userfirstname', 'usersurname', 'userteam', 'userjobrole', 'password')
         response = self.client.get('/dashboard')
-        # assert "userfirstname" in response.content.decode()
-        # assert "userteam" in response.content.decode()
-        # assert "userjobrole" in response.content.decode()
         assert "userfirstname" in response.content.decode()
         assert "usersurname" in response.content.decode()
 
