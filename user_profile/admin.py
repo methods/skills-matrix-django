@@ -3,9 +3,8 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 from .models import NewUser
 
-# Register your models here.
-
 admin.site.unregister(Group)
+
 
 class UserAdminConfig(UserAdmin):
     search_fields=['email','first_name','surname','team', 'job_role']
@@ -27,5 +26,4 @@ class UserAdminConfig(UserAdmin):
     )
 
 
-
-admin.site.register(NewUser)
+admin.site.register(NewUser, UserAdminConfig)
