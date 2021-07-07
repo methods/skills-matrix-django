@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group
 from signup.validators import validate_domain_email
 
 
@@ -48,7 +48,8 @@ class NewUser(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     is_superuser=models.BooleanField(default=False)
     is_staff = models. BooleanField(default=False)
-    
+
+    groups = models.ManyToManyField(Group)
 
     objects = CustomAccountManager()
 
