@@ -1,0 +1,42 @@
+{% extends "app/app_base.html" %}
+{% load sass_tags %}
+
+{% block pageTitle %}
+Create job role
+{% endblock %}
+
+{% block beforeContent %}
+<div class="govuk-breadcrumbs">
+  <ol class="govuk-breadcrumbs__list">
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="/home">Home</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="/job-roles/">Job Roles</a>
+    </li>
+  </ol>
+</div>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-xl">Add a new job role</h1>
+
+    <form class="form" action="/add-job-role-title" method="post">
+      <div class="govuk-form-group">
+        <div id="jobroletitle-hint" class="govuk-hint">
+          Enter a new job title, e.g. 'Junior Developer'.
+        </div>
+        <input class="govuk-input govuk-!-width-full" id="jobroletitle" name="jobroletitle" type="text"
+          value="{{jobroletitle}}" aria-describedby="jobroletitle-hint">
+      </div>
+      <button class="govuk-button" data-module="govuk-button">Save and continue</button>
+
+    </form>
+  </div>
+</div>
+{% endblock %}
