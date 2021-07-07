@@ -57,7 +57,7 @@ class NewUser(AbstractBaseUser):
 
 
     def __str__(self):
-        return f"{self.email}, {self.first_name}, {self.team}, {self.job_role}"
+        return f'{self.first_name} {self.surname}'
 
     def has_perm(self,perm,obj=None):
         return True
