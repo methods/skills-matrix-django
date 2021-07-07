@@ -1,6 +1,8 @@
 from django.test import TestCase
 from super_admin.models import Team
 from admin_user.models import Job
+from django.core.exceptions import ValidationError
+from ..validators import validate_domain_email,password_validation
 
 
 class AddNameSignup(TestCase):
@@ -30,6 +32,11 @@ class AddEmailSignup(TestCase):
         self.client.post('/signup/email', {'email_address': 'test@methods.co.uk'})
         session = self.client.session
         assert session['email_address'] == 'test@methods.co.uk'
+
+    def test_email_domain_validation(self):
+        with self.assertRaises(ValidationError):validate_domain_email('test@test.com')
+        with self.assertRaises(ValidationError):validate_domain_email('test@test.co.uk')
+           
 
 
 class AddJobSignup(TestCase):
@@ -66,7 +73,16 @@ class CreatePasswordView(TestCase):
                                                                  'password_confirm': 'password'})
         session = self.client.session
         assert not session['hashed_password'] == 'password'
-        
+    
+    def test_password_validation(self):
+        with self.assertRaisesRegex(ValidationError, 'Password length must be greater than 8 character.'):
+            password_validation('test')
+        with self.assertRaisesRegex(ValidationError, 'Password must contain at least 1 digit.'):
+            password_validation('testtest')
+        with self.assertRaisesRegex(ValidationError, 'Password must contain at least 6 letter.'):
+            password_validation('11221123311')
+        with self.assertRaisesRegex(ValidationError, 'Password must contain at least 1 special character.'):
+            password_validation('aaasbj22')
         
 class CheckDetailsSummary(TestCase):
     def test_check_details_page_status_code(self):
