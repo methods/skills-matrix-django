@@ -32,7 +32,7 @@ class UserAccountTests(TestCase):
         self.assertTrue(super_user.is_superuser)
         self.assertTrue(super_user.is_staff)
         self.assertTrue(super_user.is_active)
-        self.assertIn('superuser@superuser.com',str(super_user))
+        self.assertIn('superuserfirstname',str(super_user))
         self.assertTrue(super_user.has_perm('user_profile.newuser'))
         self.assertTrue(super_user.has_module_perms('user_profile.newuser'))
 
