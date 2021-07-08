@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'super_admin',
     'admin_user',
     'error',
+    'job_roles',
 ]
 
 MIDDLEWARE = [
