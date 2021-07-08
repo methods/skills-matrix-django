@@ -1,4 +1,4 @@
-{% extends "app/app_base.html" %}
+{% extends "job_roles/job_roles_base.html" %}
 {% load sass_tags %}
 
 {% block pageTitle %}
@@ -35,7 +35,7 @@ Job roles
         </div>
         {% endfor %}
       </div>
-    {% if admin %}
+    {% if user.is_staff %}
       <a class="govuk-button" data-module="govuk-button" href="{% url 'add a job role' %}">Add a job role</a>
     {% endif %}
   </div>

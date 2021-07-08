@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'super_admin',
     'admin_user',
     'error',
+    'job_roles',
+    'auth_processes',
 ]
 
 MIDDLEWARE = [
@@ -137,11 +139,11 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR/'static'
 
 AUTH_USER_MODEL = 'user_profile.NewUser'
-AUTHENTICATION_BACKENDS = ['user_profile.backends.EmailAuthBackend']
+AUTHENTICATION_BACKENDS = ['auth_processes.backends.EmailAuthBackend']
 SESSION_SAVE_EVERY_REQUEST = True
 
 LOGIN_REDIRECT_URL = '/dashboard'
-LOGIN_URL = '/'
+LOGIN_URL = '/auth/login'
 
 
 APPEND_SLASH = False

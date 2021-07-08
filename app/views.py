@@ -13,14 +13,3 @@ def dashboard(request):
 
 def edit_skills(request):
     return render(request, "app/edit_skills.html")
-
-
-def job_roles(request):
-    if request.user.is_staff:
-        return render(request, "app/job-roles.html", {"admin": True})
-    return render(request, "app/job-roles.html")
-
-
-@user_passes_test(lambda u: u.is_staff, login_url='/error/not-authorised')
-def add_job_role(request):
-    return render(request, "app/add_job_role.html")

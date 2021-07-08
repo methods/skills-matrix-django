@@ -6,12 +6,12 @@ from django.shortcuts import redirect, render
 
 class LoginView(auth_views.LoginView):
     form_class = LoginForm
-    template_name = 'user_profile/login.html'
+    template_name = 'auth_processes/login.html'
     redirect_authenticated_user = True
 
 
 def logout(request):
     if request.method == 'POST':
         django_logout(request)
-        return redirect('/')
-    return render(request, 'user_profile/logout.html')
+        return redirect('/auth/login')
+    return render(request, 'auth_processes/logout.html')
