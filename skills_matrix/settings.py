@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'app',
     'super_admin',
     'admin_user',
+    'error',
 ]
 
 MIDDLEWARE = [
@@ -140,5 +141,7 @@ AUTHENTICATION_BACKENDS = ['user_profile.backends.EmailAuthBackend']
 SESSION_SAVE_EVERY_REQUEST = True
 
 LOGIN_REDIRECT_URL = '/dashboard'
+LOGIN_URL = '/'
+
 
 APPEND_SLASH = False

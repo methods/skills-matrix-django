@@ -6,4 +6,5 @@ urlpatterns = [
     path('', include('app.urls')),
     path('', include('user_profile.urls')),
     path('admin', admin.site.urls),
+    path('error/', include('error.urls'))
 ]

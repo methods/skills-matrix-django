@@ -10,7 +10,6 @@ Job roles
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <form action="/job-roles" method="post">
       <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Job roles</h1>
       <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
         {% for jobrole in jobroles %}
@@ -36,8 +35,9 @@ Job roles
         </div>
         {% endfor %}
       </div>
-      <button class="govuk-button" data-module="govuk-button">Add a job role</button>
-    </form>
+    {% if admin %}
+      <a class="govuk-button" data-module="govuk-button" href="{% url 'add a job role' %}">Add a job role</a>
+    {% endif %}
   </div>
 </div>
 

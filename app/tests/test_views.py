@@ -51,3 +51,10 @@ class JobRolePageTests(TestCase):
         response = self.client.get('/job-roles')
         assert response.status_code == 200
         self.assertTemplateUsed(response, 'app/job-roles.html')
+
+
+class AddJobRolePageTests(TestCase):
+    def test_page_GET(self):
+        response = self.client.get('/add-a-job-role')
+        assert response.status_code == 200
+        self.assertTemplateUsed(response, 'app/add_job_role.html')
