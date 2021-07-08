@@ -1,6 +1,6 @@
 from django.test import TestCase
 from super_admin.models import Team
-from admin_user.models import Job
+from job_roles.models import Job
 from django.core.exceptions import ValidationError
 from ..validators import validate_domain_email,password_validation
 
