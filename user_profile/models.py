@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group
+from signup.validators import validate_domain_email
 
 
 class CustomAccountManager(BaseUserManager):
@@ -37,7 +38,7 @@ class CustomAccountManager(BaseUserManager):
     
 
 class NewUser(AbstractBaseUser):
-    email = models.EmailField(unique=True)
+    email = models.EmailField(validators=[validate_domain_email],unique=True)
     first_name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
     team = models.CharField(max_length=100)
@@ -47,7 +48,8 @@ class NewUser(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     is_superuser=models.BooleanField(default=False)
     is_staff = models. BooleanField(default=False)
-    
+
+    groups = models.ManyToManyField(Group)
 
     objects = CustomAccountManager()
 
@@ -56,7 +58,7 @@ class NewUser(AbstractBaseUser):
 
 
     def __str__(self):
-        return f"{self.email}, {self.first_name}, {self.team}, {self.job_role}"
+        return f'{self.first_name} {self.surname}'
 
     def has_perm(self,perm,obj=None):
         return True
