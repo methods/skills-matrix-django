@@ -143,7 +143,7 @@ AUTHENTICATION_BACKENDS = ['auth_processes.backends.EmailAuthBackend']
 SESSION_SAVE_EVERY_REQUEST = True
 
 LOGIN_REDIRECT_URL = '/dashboard'
-LOGIN_URL = '/'
+LOGIN_URL = '/auth/login'
 
 
 APPEND_SLASH = False
