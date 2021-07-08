@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import NameForm, JobForm, EmailForm, PasswordForm
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import Group
 
 
 def add_name(request):
@@ -53,8 +54,8 @@ def create_password(request):
             return redirect(summary)
     else:
         form = PasswordForm()
-    return render(request, 'signup/create_password.html', {'form': form})
-  
+    return render(request, 'signup/create_password.html', {'form': form}) 
+
 
 def summary(request):
     first_name = request.session['first_name'] if 'first_name' in request.session else ""
@@ -66,10 +67,11 @@ def summary(request):
     hashed_password = request.session['hashed_password'] if 'hashed_password' in request.session else ''
     if request.method == 'POST':
         user = get_user_model()
-        user.objects.create_user(email_address, first_name, surname, team, job, hashed_password)
+        new_user = user.objects.create_user(email_address, first_name, surname, team, job, hashed_password)
+        group = Group.objects.get(name='staff')
+        new_user.groups.add(group)
         return redirect('/')
-    return render(request, 'signup/summary.html', {'full_name': full_name, 'email_address': email_address,
-                                                   'team': team, 'job': job})
+    return render(request, 'signup/summary.html', {'full_name': full_name, 'email_address': email_address, 'team': team, 'job': job})
 
 
 def edit_name(request):
