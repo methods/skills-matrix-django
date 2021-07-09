@@ -68,7 +68,7 @@ def summary(request):
     if request.method == 'POST':
         user = get_user_model()
         new_user = user.objects.create_user(email_address, first_name, surname, team, job, hashed_password)
-        group = Group.objects.get(name='staff')
+        group = Group.objects.get(name='Staff')
         new_user.groups.add(group)
         return redirect('/')
     return render(request, 'signup/summary.html', {'full_name': full_name, 'email_address': email_address, 'team': team, 'job': job})
