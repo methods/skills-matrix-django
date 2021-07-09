@@ -72,9 +72,9 @@ def summary(request):
         group = Group.objects.get(name='Staff')
         new_user.groups.add(group)
         messages.success(request, 'Your registration was succesful.')
-        return redirect('/')
-    return render(request, 'signup/summary.html', {'full_name': full_name, 'email_address': email_address, 'team': team, 'job': job})
-
+        return redirect('login') 
+    return render(request, 'signup/summary.html', {'full_name': full_name, 'email_address': email_address,
+                                                   'team': team, 'job': job})
 
 def edit_name(request):
     if request.method == 'POST':
@@ -88,7 +88,7 @@ def edit_name(request):
         first_name = request.session['first_name'] if 'first_name' in request.session else ""
         surname = request.session['surname'] if 'surname' in request.session else ""
         form = NameForm(initial={'first_name': first_name, 'surname': surname})
-    return render(request, 'signup/add_name.html', {'form': form, 'edit': True})
+        return render(request, 'signup/add_name.html', {'form': form, 'edit': True})
 
 
 def edit_email_address(request):
