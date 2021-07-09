@@ -19,7 +19,9 @@
         <a href="/" class="govuk-header__link govuk-header__link--service-name">
           Skills matrix
         </a>
+        {% if request.user.is_authenticated %}
               {% include 'skills_matrix/partials/nav.html' %}
+        {% endif%}
       </div>
 
     </div>
