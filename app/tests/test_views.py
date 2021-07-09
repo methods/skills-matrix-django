@@ -1,28 +1,19 @@
-from django.test import LiveServerTestCase, TestCase
-from selenium import webdriver
+from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password
 
 
-class GeneralFunctionalTests(LiveServerTestCase):
+class DashboardTests(TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        fireFoxOptions = webdriver.FirefoxOptions()
-        fireFoxOptions.headless = True
-        cls.browser = webdriver.Firefox(options=fireFoxOptions)
-        cls.browser.implicitly_wait(3)
+    def setUp(self):
+        self.User = get_user_model()
+        password = make_password('password')
+        self.user = self.User.objects.create_user('test@methods.co.uk', 'test_first_name', 'test_surname', 'OPC',
+                                                  'Junior Developer', password)
+        self.client.login(username='test@methods.co.uk', password='password')
 
-    @classmethod
-    def tearDownClass(cls):
-        fireFoxOptions = webdriver.FirefoxOptions()
-        fireFoxOptions.headless = True
-        cls.browser = webdriver.Firefox(options=fireFoxOptions)
-        cls.browser.quit()
-        super().tearDownClass()
-
-    def complete_url(self, url):
-        return self.live_server_url + url
+    def tearDown(self):
+        self.User.objects.all().delete()
 
     def test_home_page_status_code(self):
         response = self.client.get('/dashboard')
@@ -32,15 +23,7 @@ class GeneralFunctionalTests(LiveServerTestCase):
         response = self.client.get('/dashboard')
         assert "Welcome" in response.content.decode()
 
-    def test_edit_skills_button(self):
-        self.browser.get(self.complete_url('/dashboard'))
-        button = self.browser.find_element_by_class_name('govuk-button')
-        button.click()
-        assert self.complete_url('/edit-skills') == self.browser.current_url
-
     def test_user_details(self):
-        db = get_user_model()
-        db.objects.create_user('ss@user.com', 'userfirstname', 'usersurname', 'userteam', 'userjobrole', 'password')
         response = self.client.get('/dashboard')
-        assert "userfirstname" in response.content.decode()
-        assert "usersurname" in response.content.decode()
+        assert "test_first_name" in response.content.decode()
+        assert "test_surname" in response.content.decode()

@@ -53,8 +53,8 @@ def create_password(request):
             return redirect(summary)
     else:
         form = PasswordForm()
-    return render(request, 'signup/create_password.html', {'form': form})
-  
+    return render(request, 'signup/create_password.html', {'form': form}) 
+
 
 def summary(request):
     first_name = request.session['first_name'] if 'first_name' in request.session else ""
@@ -67,7 +67,7 @@ def summary(request):
     if request.method == 'POST':
         user = get_user_model()
         user.objects.create_user(email_address, first_name, surname, team, job, hashed_password)
-        return redirect('/')
+        return redirect('login')
     return render(request, 'signup/summary.html', {'full_name': full_name, 'email_address': email_address,
                                                    'team': team, 'job': job})
 
@@ -84,7 +84,7 @@ def edit_name(request):
         first_name = request.session['first_name'] if 'first_name' in request.session else ""
         surname = request.session['surname'] if 'surname' in request.session else ""
         form = NameForm(initial={'first_name': first_name, 'surname': surname})
-    return render(request, 'signup/add_name.html', {'form': form, 'edit': True})
+        return render(request, 'signup/add_name.html', {'form': form, 'edit': True})
 
 
 def edit_email_address(request):

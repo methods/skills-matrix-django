@@ -8,7 +8,6 @@ class LoginPageTests(TestCase):
         User = get_user_model()
         password = make_password('test_password')
         self.user = User.objects.create_user('test@methods.co.uk', 'Test', 'Test', 'OPC', 'Junior Developer', password)
-        self.user.save()
 
     def test_login_page_GET(self):
         response = self.client.get('/auth/login')
@@ -25,7 +24,22 @@ class LoginPageTests(TestCase):
 
 
 class LogoutPageTests(TestCase):
-    def test_logout_page_GET(self):
+    def setUp(self):
+        self.User = get_user_model()
+        password = make_password('password')
+        self.user = self.User.objects.create_user('test@methods.co.uk', 'test_first_name', 'test_surname', 'OPC',
+                                                  'Junior Developer', password)
+        self.client.login(username='test@methods.co.uk', password='password')
+
+    def tearDown(self):
+        self.User.objects.all().delete()
+
+    def test_logout_page_GET_no_users(self):
+        self.User.objects.all().delete()
+        response = self.client.get('/auth/logout')
+        assert response.status_code == 302
+
+    def test_logout_page_GET_logged_in_users(self):
         response = self.client.get('/auth/logout')
         assert response.status_code == 200
         self.assertTemplateUsed(response, 'auth_processes/logout.html')
@@ -33,4 +47,3 @@ class LogoutPageTests(TestCase):
     def test_user_logout(self):
         response = self.client.post('/auth/logout', {})
         assert response.status_code == 302
-
