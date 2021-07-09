@@ -13,7 +13,6 @@ class DashboardTests(TestCase):
         self.client.login(username='test@methods.co.uk', password='password')
 
     def tearDown(self):
-        self.User = get_user_model()
         self.User.objects.all().delete()
 
     def test_home_page_status_code(self):
