@@ -1,30 +1,17 @@
-from django.test import LiveServerTestCase, TestCase
-from selenium import webdriver
+from django.test import TestCase
 from django.contrib.auth import get_user_model
 
 
-class GeneralFunctionalTests(LiveServerTestCase):
+class GeneralFunctionalTests(TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        fireFoxOptions = webdriver.FirefoxOptions()
-        fireFoxOptions.headless = True
-        cls.browser = webdriver.Firefox(options=fireFoxOptions)
-        cls.browser.implicitly_wait(3)
-
-    @classmethod
-    def tearDownClass(cls):
-        fireFoxOptions = webdriver.FirefoxOptions()
-        fireFoxOptions.headless = True
-        cls.browser = webdriver.Firefox(options=fireFoxOptions)
-        cls.browser.quit()
-        super().tearDownClass()
-
-    def complete_url(self, url):
-        return self.live_server_url + url
+    def setUp(self):
+        self.User = get_user_model()
+        self.user = self.User.objects.create_user('test@methods.co.uk', 'Test', 'Test', 'OPC',
+                                                  'Junior Developer', 'password')
+        self.client.login(username='test@methods.co.uk', password='password')
 
     def test_home_page_status_code(self):
+        # breakpoint()
         response = self.client.get('/dashboard')
         assert response.status_code == 200
 
@@ -32,11 +19,11 @@ class GeneralFunctionalTests(LiveServerTestCase):
         response = self.client.get('/dashboard')
         assert "Welcome" in response.content.decode()
 
-    def test_edit_skills_button(self):
-        self.browser.get(self.complete_url('/dashboard'))
-        button = self.browser.find_element_by_class_name('govuk-button')
-        button.click()
-        assert self.complete_url('/edit-skills') == self.browser.current_url
+    # def test_edit_skills_button(self):
+    #     self.client.get('/dashboard')
+    #     button = self.client.find_element_by_class_name('govuk-button')
+    #     button.click()
+    #     assert '/edit-skills' == self.client.current_url
 
     def test_user_details(self):
         db = get_user_model()

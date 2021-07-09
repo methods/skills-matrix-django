@@ -1,11 +1,13 @@
 {% extends "signup/signup_base.html" %}
 {% load sass_tags %}
 
-{% if edit %}
+
 {% block beforeContent %}
+{% if edit %}
     <a class="govuk-back-link" href="{% url 'summary' %}" >Back</a>
-{% endblock %}
 {% endif %}
+{% endblock %}
+
 
 {% block content %}
 <div class="govuk-grid-row">

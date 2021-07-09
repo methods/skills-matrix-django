@@ -84,7 +84,7 @@ def edit_name(request):
         first_name = request.session['first_name'] if 'first_name' in request.session else ""
         surname = request.session['surname'] if 'surname' in request.session else ""
         form = NameForm(initial={'first_name': first_name, 'surname': surname})
-    return render(request, 'signup/add_name.html', {'form': form, 'edit': True})
+        return render(request, 'signup/add_name.html', {'form': form, 'edit': True})
 
 
 def edit_email_address(request):
