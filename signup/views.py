@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import NameForm, JobForm, EmailForm, PasswordForm
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+from django.contrib import messages
 from django.contrib.auth.models import Group
 
 
@@ -70,6 +71,7 @@ def summary(request):
         new_user = user.objects.create_user(email_address, first_name, surname, team, job, hashed_password)
         group = Group.objects.get(name='Staff')
         new_user.groups.add(group)
+        messages.success(request, 'Your registration was succesful.')
         return redirect('/')
     return render(request, 'signup/summary.html', {'full_name': full_name, 'email_address': email_address, 'team': team, 'job': job})
 

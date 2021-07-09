@@ -3,25 +3,35 @@
 
 {% block content %}
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {% if messages %}
+    <div class="govuk-notification-banner govuk-notification-banner--success" role="alert"
+      aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+      <div class="govuk-notification-banner__header">
+        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+          Success
+        </h2>
+      </div>
+      <div class="govuk-notification-banner__content">
+        {% for message in messages %}
+        <h3 class="govuk-notification-banner__heading">
+          {{ message }}
+        </h3>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
 
-      <h1 class="govuk-heading-xl">Login</h1>
-
-<!--      {% if form.errors %}-->
-<!--      <p>Your username and password didn't match. Please try again.</p>-->
-<!--      {% endif %}-->
-
-
-
-<div class="govuk-form-group {% if form.errors %} govuk-form-group--error {% endif %}">
-<form class="form" method="post">
+    <h1 class="govuk-heading-xl">Login</h1>
+    <div class="govuk-form-group {% if form.errors %} govuk-form-group--error {% endif %}">
+      <form class="form" method="post">
         {% csrf_token %}
-    {% for form_error in form.non_field_errors %}
-    <div class="govuk-error-message">
-        {{form_error}}
+        {% for form_error in form.non_field_errors %}
+        <div class="govuk-error-message">
+          {{form_error}}
         </div>
-    {% endfor %}
+        {% endfor %}
         {% for field in form %}
         <div>
           <div>
@@ -38,19 +48,15 @@
           {{field}}
         </div>
         {% endfor %}
-    <input type="submit" value="Continue" class="govuk-button" data-module="govuk-button">
-<input type="hidden" name="next" value="/dashboard">
+        <input type="submit" value="Continue" class="govuk-button" data-module="govuk-button">
+        <input type="hidden" name="next" value="/dashboard">
       </form>
-</div>
-
-
-            <p class="govuk-body">If you don't have an account yet, you can <a href="/signup/name">create one here</a>.</p>
-
-
-
-
-
     </div>
+
+    {% if not messages %}
+    <p class="govuk-body">If you don't have an account yet, you can <a href="/signup/name">create one here</a>.</p>
+    {% endif %}
   </div>
+</div>
 
 {% endblock %}
