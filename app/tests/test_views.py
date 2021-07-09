@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 
 
-class GeneralFunctionalTests(TestCase):
+class DashboardTests(TestCase):
 
     def setUp(self):
         self.User = get_user_model()
