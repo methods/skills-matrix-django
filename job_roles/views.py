@@ -17,7 +17,6 @@ def add_job_role(request):
         if form.is_valid():
             request.session['job_role_title'] = request.POST['job_role_title']
             request.session.save()
-            print(request.session['job_role_title'])
             return redirect(add_job_role_skills)
     else:
         form = JobTitleForm()

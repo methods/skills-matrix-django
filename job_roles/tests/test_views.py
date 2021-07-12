@@ -39,13 +39,23 @@ class AddJobRolePageTests(TestCase):
     def tearDown(self):
         self.User.objects.all().delete()
 
-    def test_page_GET_non_admin_users(self):
-        response = self.client.get('/job-roles/create-new-job')
-        assert response.status_code == 302
- 
-    def test_page_GET_admin_users(self):
+    def adds_admins_group_to_users(self):
         admins_group = Group.objects.get(name='Admins')
         self.user.groups.add(admins_group)
-        response = self.client.get('/job-roles/create-new-job')
+        return self.user
+
+    def test_page_GET_non_admin_users(self):
+        response = self.client.get('/job-roles/add-job-role-title')
+        assert response.status_code == 302
+
+    def test_page_GET_admin_users(self):
+        self.adds_admins_group_to_users()
+        response = self.client.get('/job-roles/add-job-role-title')
         assert response.status_code == 200
         self.assertTemplateUsed(response, 'job_roles/add_job_role.html')
+
+    def test_job_role_title_saved_in__session(self):
+        self.adds_admins_group_to_users()
+        self.client.post('/job-roles/add-job-role-title', {'job_role_title': 'Senior Developer'})
+        session = self.client.session
+        self.assertEqual(session['job_role_title'], 'Senior Developer')

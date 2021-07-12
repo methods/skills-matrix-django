@@ -38,7 +38,6 @@ class AddEmailSignup(TestCase):
         with self.assertRaises(ValidationError):validate_domain_email('test@test.co.uk')
            
 
-
 class AddJobSignup(TestCase):
     def test_signup_add_job_page_status_code(self):
         response = self.client.get('/signup/job')
