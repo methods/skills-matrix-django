@@ -1,6 +1,6 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import user_passes_test, login_required
-from job_roles.forms import JobTitleForm
+from job_roles.forms import JobTitleForm, JobSkillsAndSkillLevelForm
 
 
 @login_required
@@ -24,4 +24,17 @@ def add_job_role(request):
 
 
 def add_job_role_skills(request):
-    return render(request, "job_roles/add_job_role_skills.html")
+    if request.method == 'POST':
+        form = JobSkillsAndSkillLevelForm(request.POST)
+        if form.is_valid():
+            request.session['job_role_skill'] = request.POST['job_role_skill']
+            request.session['job_role_skill_level'] = request.POST['job_role_skill_level']
+            request.session.save()
+            return redirect(new_job_role)
+    else:
+        form = JobSkillsAndSkillLevelForm()
+    return render(request, "job_roles/add_job_role_skills.html", {'form': form})
+
+
+def new_job_role(request):
+    pass

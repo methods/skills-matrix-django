@@ -21,114 +21,38 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        {% if jobTitle %}
-        <h1 class="govuk-heading-xl govuk-!-margin-bottom-5">{{jobRole.jobroletitle}}</h1>
-        {% else %}
-        <h1 class="govuk-heading-xl govuk-!-margin-bottom-5">{{jobroletitle}}</h1>
-        {% endif %}
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-5">{{request.session.job_role_title}}</h1>
     </div>
 </div>
 <div class="govuk-!-margin-top-4">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <h2 class="govuk-heading-m">Select skills</h2>
-            {% if jobTitle %}
-            <form action="/add-job-role-skills/{{jobTitle}}" method="post">
-                {% else %}
-                <form action="/add-job-role-skills" method="post">
-                    {% endif %}
-                    <dl class="govuk-summary-list">
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                <div class="govuk-form-group">
-                                    <select class="govuk-select" id="skillName" name="skillName">
-                                        {% for skill in jobroleskilllist %}
-                                        <option value="{{skill}}">{{skill}}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                <div class="govuk-form-group">
-                                    <select class="govuk-select" id="skillLevel" name="skillLevel">
-                                        <option value="Beginner">Beginner</option>
-                                        <option value="Intermediate">Intermediate</option>
-                                        <option value="Advanced">Advanced</option>
-                                        <option value="Expert">Expert</option>
-                                    </select>
-                                </div>
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
-                                <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button"
-                                    name="addskill" value="addskill">
-                                    Add Skill
-                                </button>
-                            </dd>
-
-                        </div>
-                    </dl>
-
-                    {% if jobTitle %}
-                    {% if jobRole.jobroleskills|length > 0 %}
-                    <h2 class="govuk-heading-m">Job role skills</h2>
-                    <dl class="govuk-summary-list">
-                        {% for jobroleskill in jobRole.jobroleskills %}
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                {{jobroleskill.skillName}}
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                {{jobroleskill.skillLevel}}
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
-                                <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
-                                    data-module="govuk-button" name="delete" value="{{jobroleskill.skillName}}">
-                                    Delete
-                                </button>
-                            </dd>
-                        </div>
-                        {% endfor %}
-                    </dl>
-                    <button class="govuk-button" data-module="govuk-button" name="savechanges" value="savechanges">Save
-                        changes</button>
-                    {% endif %}
-                    {% else %}
-                    {% if jobroleskills|length > 0 %}
-                    <h2 class="govuk-heading-m">Job role skills</h2>
-                    <dl class="govuk-summary-list">
-                        {% for jobroleskill in jobroleskills %}
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                {{jobroleskill.skillName}}
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                {{jobroleskill.skillLevel}}
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
-                                <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
-                                    data-module="govuk-button" name="delete" value="{{jobroleskill.skillName}}">
-                                    Delete
-                                </button>
-                            </dd>
-                        </div>
-                        {% endfor %}
-                    </dl>
-                    <button class="govuk-button" data-module="govuk-button" name="saveandcontinue"
-                        value="saveandcontinue">Save
-                        and
-                        continue</button>
-                    {% endif %}
-                    {% endif %}
-                </form>
-                {% if jobTitle %}
-                <p>If the skill you are looking for is not in the list, you can <a
-                        href="/add-job-role-skills/{{jobTitle}}/create-skill">create a new skill
-                        here</a>.</p>
-                {% else %}
-                <p>If the skill you are looking for is not in the list, you can <a
-                        href="/add-job-role-skills/create-skill">create a new skill
-                        here</a>.</p>
-                {% endif %}
+            <form class="form" method="post">
+                {% csrf_token %}
+                <dl class="govuk-summary-list">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            <div class="govuk-form-group">
+                                {{form.job_role_skill}}
+                            </div>
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            <div class="govuk-form-group">
+                                {{form.job_role_skill_level}}
+                            </div>
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button">
+                                Add Skill
+                            </button>
+                        </dd>
+                    </div>
+                </dl>
+            </form>
+            <p>If the skill you are looking for is not in the list, you can <a
+                    href="/add-job-role-skills/create-skill">create a new skill
+                    here</a>.</p>
         </div>
     </div>
 </div>
