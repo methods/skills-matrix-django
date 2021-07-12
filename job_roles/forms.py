@@ -8,3 +8,12 @@ class JobTitleForm(forms.Form):
                                            validators=[validate_input_capitalised],
                                            widget=GdsStyleTextInput(attrs={'class': 'govuk-input'}),
                                            error_messages={'required': 'Enter a job role title'})
+
+    def __init__(self, *args, **kwargs):
+        super(JobTitleForm, self).__init__(*args, **kwargs)
+        attrs = {}
+        attrs.update({"errors": True})
+        attrs['class'] = 'govuk-input--error'
+        for field in self.fields:
+            if field in self.errors:
+                self.fields[field].widget = GdsStyleTextInput(attrs=attrs)
