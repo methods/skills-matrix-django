@@ -2,29 +2,19 @@
 {% load sass_tags %}
 
 {% block content %}
-
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-
-      <h1 class="govuk-heading-xl">Are you sure you want to log out?</h1>
-
-<div class="govuk-grid-row">
-      <form class="form" method="post">
-          {% csrf_token %}
-        <div class="govuk-grid-column-one-third">
-        <button class="govuk-button" data-module="govuk-button">
-
-  Yes, log me out
-    </button>
-          </div>
-      </form>
-<div class="govuk-grid-column-one-third">
-        <a class="govuk-button govuk-button--warning" href="{% url 'dashboard' %}">No, cancel</a>
-  </div>
-</div>
-
+<div class="govuk-width-container">
+  <form class="form" method="post">
+    {% csrf_token %}
+    <div class="govuk-panel">
+      <h1 class="govuk-heading-xl">
+        Are you sure you want to log out?
+      </h1>
+      <button class="govuk-button" data-module="govuk-button">
+        Yes, log me out
+      </button>
+      <a class="govuk-button govuk-button--warning govuk-!-margin-left-4" href="{% url 'dashboard' %}">No, cancel</a>
     </div>
-  </div>
-  </div>
+  </form>
+</div>
 
 {% endblock %}

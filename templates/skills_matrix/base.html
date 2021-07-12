@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="govuk-template app-html-class">
   <head>
     <meta charset="utf-8"/>
     <title>
@@ -17,16 +17,15 @@
 
 
     <body class="govuk-template__body  js-enabled">
-    {% include 'skills_matrix/header.html' %}
+    {% include 'skills_matrix/partials/header.html' %}
     <div class="govuk-width-container">
               {% block beforeContent %} {% endblock %}
       <main id="main-content" tabindex="-1" class="govuk-main-wrapper govuk-main-wrapper--auto-spacing">
         {% block content %}{% endblock %}
       </main>
     </div>
+    {% include 'skills_matrix/partials/footer.html' %}
   </body>
-
-
 </html>
 
 
