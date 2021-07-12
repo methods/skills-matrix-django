@@ -39,8 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sass_processor',
     'skills_matrix',
-    'user_profile',
-    'signup',
+    'user_management',
     'app',
     'super_admin',
     'admin_user',
@@ -138,7 +137,7 @@ STATICFILES_FINDERS = [
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR/'static'
 
-AUTH_USER_MODEL = 'user_profile.NewUser'
+AUTH_USER_MODEL = 'user_management.NewUser'
 AUTHENTICATION_BACKENDS = ['auth_processes.backends.EmailAuthBackend']
 SESSION_SAVE_EVERY_REQUEST = True
 

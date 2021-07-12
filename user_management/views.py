@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from django.contrib.auth.models import Group
+from django.contrib.auth.decorators import login_required
 
 
 def add_name(request):
@@ -16,7 +17,7 @@ def add_name(request):
             return redirect(add_email)
     else:
         form = NameForm()
-    return render(request, 'signup/add_name.html', {'form': form})
+    return render(request, 'user_management/add_name.html', {'form': form})
 
 
 def add_email(request):
@@ -28,7 +29,7 @@ def add_email(request):
             return redirect(add_job)
     else:
         form = EmailForm()
-    return render(request, 'signup/add_email.html', {'form': form})
+    return render(request, 'user_management/add_email.html', {'form': form})
 
 
 def add_job(request):
@@ -41,7 +42,7 @@ def add_job(request):
             return redirect(create_password)
     else:
         form = JobForm()
-    return render(request, 'signup/add_job.html', {'form': form})
+    return render(request, 'user_management/add_job.html', {'form': form})
 
 
 def create_password(request):
@@ -55,7 +56,7 @@ def create_password(request):
             return redirect(summary)
     else:
         form = PasswordForm()
-    return render(request, 'signup/create_password.html', {'form': form}) 
+    return render(request, 'user_management/create_password.html', {'form': form})
 
 
 def summary(request):
@@ -71,10 +72,11 @@ def summary(request):
         new_user = user.objects.create_user(email_address, first_name, surname, team, job, hashed_password)
         group = Group.objects.get(name='Staff')
         new_user.groups.add(group)
-        messages.success(request, 'Your registration was succesful.')
+        messages.success(request, 'Your registration was successful.')
         return redirect('login') 
-    return render(request, 'signup/summary.html', {'full_name': full_name, 'email_address': email_address,
+    return render(request, 'user_management/summary.html', {'full_name': full_name, 'email_address': email_address,
                                                    'team': team, 'job': job})
+
 
 def edit_name(request):
     if request.method == 'POST':
@@ -88,7 +90,7 @@ def edit_name(request):
         first_name = request.session['first_name'] if 'first_name' in request.session else ""
         surname = request.session['surname'] if 'surname' in request.session else ""
         form = NameForm(initial={'first_name': first_name, 'surname': surname})
-        return render(request, 'signup/add_name.html', {'form': form, 'edit': True})
+        return render(request, 'user_management/add_name.html', {'form': form, 'edit': True})
 
 
 def edit_email_address(request):
@@ -102,7 +104,7 @@ def edit_email_address(request):
         form = EmailForm()
         form.fields['email_address'].initial = request.session[
             'email_address'] if 'email_address' in request.session else ''
-    return render(request, 'signup/add_email.html', {'form': form, 'edit': True})
+    return render(request, 'user_management/add_email.html', {'form': form, 'edit': True})
 
 
 def edit_job_information(request):
@@ -117,4 +119,9 @@ def edit_job_information(request):
         form = JobForm()
         form.fields['team'].initial = request.session['team'] if 'team' in request.session else ''
         form.fields['job'].initial = request.session['job'] if 'job' in request.session else ''
-    return render(request, 'signup/add_job.html', {'form': form, 'edit': True})
+    return render(request, 'user_management/add_job.html', {'form': form, 'edit': True})
+
+
+@login_required
+def profile(request):
+    return render(request, 'user_management/profile.html', {"user": request.user})

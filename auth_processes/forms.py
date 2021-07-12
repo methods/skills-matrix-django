@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django import forms
-from signup.widgets import GdsStyleEmailInput, GdsStylePasswordInput
+from user_management.widgets import GdsStyleEmailInput, GdsStylePasswordInput
 
 
 class LoginForm(AuthenticationForm):

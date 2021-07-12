@@ -1,21 +1,20 @@
-{% extends "signup/signup_base.html" %}
+{% extends "user_management/user_management_base.html" %}
 {% load sass_tags %}
 
 
 {% block beforeContent %}
-{% if edit %}
-    <a class="govuk-back-link" href="{% url 'summary' %}" >Back</a>
-{% endif %}
+    {% if edit %}<a class="govuk-back-link" href="{% url 'summary' %}" >{% else %}
+    <a class="govuk-back-link" href="{% url 'add name' %}" >{% endif %} Back</a>
 {% endblock %}
-
-
 {% block content %}
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+
     {% if edit %}
-    <h1 class="govuk-heading-xl">Edit your name</h1>
+    <h1 class="govuk-heading-xl">Edit your email address</h1>
     {% else %}
-    <h1 class="govuk-heading-xl">What is your name?</h1>
+    <h1 class="govuk-heading-xl">What is your email address?</h1>
     {% endif %}
     <div class="govuk-form-group {% if form.errors %} govuk-form-group--error {% endif %}">
       <form class="form" method="post">
@@ -25,7 +24,7 @@
         <div>
           <div>
             {% for error in field.errors %}
-            <span id="addname-error" class="govuk-error-message">
+            <span id="email-error" class="govuk-error-message">
               <span class="govuk-visually-hidden">Error:</span>
               {{error}}
             </span>
@@ -39,8 +38,10 @@
         {% endfor %}
         <button class="govuk-button" data-module="govuk-button">Continue</button>
       </form>
+
     </div>
 
   </div>
 </div>
+
 {% endblock %}
