@@ -24,4 +24,4 @@ def add_job_role(request):
 
 
 def add_job_role_skills(request):
-    pass
+    return render(request, "job_roles/add_job_role_skills.html")

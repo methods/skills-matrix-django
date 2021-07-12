@@ -59,3 +59,8 @@ class AddJobRolePageTests(TestCase):
         self.client.post('/job-roles/add-job-role-title', {'job_role_title': 'Senior Developer'})
         session = self.client.session
         self.assertEqual(session['job_role_title'], 'Senior Developer')
+
+    def test_valid_submission_redirects_to_add_job_role_skills_page(self):
+        self.adds_admins_group_to_users()
+        response = self.client.post('/job-roles/add-job-role-title', {'job_role_title': 'Lead Developer'})
+        self.assertRedirects(response, '/job-roles/add-job-role-skills')
