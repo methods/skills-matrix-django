@@ -19,6 +19,10 @@ class DashboardTests(TestCase):
         response = self.client.get('/profile')
         assert response.status_code == 200
         self.assertTemplateUsed(response, 'user_profile/profile.html')
+        assert "test_first_name" in response.content.decode()
+        assert "test_surname" in response.content.decode()
+        assert "OPC" in response.content.decode()
+        assert "Junior Developer" in response.content.decode()
 
     def test_profile_page_GET_no_user(self):
         self.User.objects.all().delete()

@@ -21,7 +21,7 @@
             Name
           </dt>
           <dd class="govuk-summary-list__value">
-            {{profile.fullName}}
+            {{user.first_name}} {{user.surname}}
           </dd>
           <dd class="govuk-summary-list__actions">
             <a class="govuk-link" href="/edit-name">
@@ -34,7 +34,7 @@
             Email address
           </dt>
           <dd class="govuk-summary-list__value">
-            {{profile.email}}
+            {{user.email}}
           </dd>
           <dd class="govuk-summary-list__actions">
             <a class="govuk-link" href="/edit-email">
@@ -47,7 +47,7 @@
             Your team
           </dt>
           <dd class="govuk-summary-list__value">
-            <p class="govuk-body">{{profile.team}}</p>
+            <p class="govuk-body">{{user.team}}</p>
           </dd>
           <dd class="govuk-summary-list__actions">
             <a class="govuk-link" href="/edit-job-role">
@@ -60,7 +60,7 @@
             Your job
           </dt>
           <dd class="govuk-summary-list__value">
-            {{profile.job}}
+            {{user.job_role}}
           </dd>
           <dd class="govuk-summary-list__actions">
             <a class="govuk-link" href="/edit-job-role">
