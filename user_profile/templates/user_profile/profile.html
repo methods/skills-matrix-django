@@ -1,0 +1,75 @@
+{% extends "user_profile/user_profile_base.html" %}
+{% load sass_tags %}
+
+{% block pageTitle %}
+  Edit Profile
+{% endblock %}
+
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+
+      <h1 class="govuk-heading-xl">Edit Profile</h1>
+
+
+      <h2 class="govuk-heading-m">Personal details</h2>
+
+      <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Name
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{profile.fullName}}
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="/edit-name">
+              Change<span class="govuk-visually-hidden"> name</span>
+            </a>
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Email address
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{profile.email}}
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="/edit-email">
+              Change<span class="govuk-visually-hidden"> email address</span>
+            </a>
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Your team
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <p class="govuk-body">{{profile.team}}</p>
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="/edit-job-role">
+              Change<span class="govuk-visually-hidden"> your team</span>
+            </a>
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Your job
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{profile.job}}
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="/edit-job-role">
+              Change<span class="govuk-visually-hidden"> your job</span>
+            </a>
+          </dd>
+        </div>
+
+      </dl>
+    </div>
+  </div>
+{% endblock %}

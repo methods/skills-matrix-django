@@ -8,4 +8,5 @@ urlpatterns = [
     path('error/', include('error.urls')),
     path('job-roles', include('job_roles.urls')),
     path('auth', include('auth_processes.urls')),
+    path('profile', include('user_profile.urls'))
 ]
