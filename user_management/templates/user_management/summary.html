@@ -2,20 +2,29 @@
 {% load sass_tags %}
 
 {% block pageTitle %}
-Check your answers
+{% if user %}  Edit profile
+{% else %} Check your answers
+{% endif %}
 {% endblock %}
 
+
 {% block beforeContent %}
+{% if not user_details %}
 <a class="govuk-back-link" href="{% url 'create password' %}">Back</a>
+{% endif %}
 {% endblock %}
+
+
+
 
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds-from-desktop">
-
-
+{% if user_details %}
+    <h1 class="govuk-heading-xl">Edit Profile</h1>
+    {% else %}
     <h1 class="govuk-heading-l">Check your answers</h1>
-
+{% endif %}
     <h2 class="govuk-heading-m">Personal details</h2>
 
     <dl class="govuk-summary-list govuk-!-margin-bottom-9">
@@ -24,10 +33,11 @@ Check your answers
           Name
         </dt>
         <dd class="govuk-summary-list__value">
-          {{full_name}}
+          {% if user_details %}{{user_details.first_name}} {{user_details.surname}}
+          {% else %} {{full_name}} {% endif %}
         </dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="{% url 'edit name' %}">
+          <a class="govuk-link" href={% if user_details %}"{% url 'edit name'%}"{% else %}"{% url 'edit name signup' %}"{% endif %}>
             Change<span class="govuk-visually-hidden"> name</span>
           </a>
         </dd>
@@ -37,10 +47,11 @@ Check your answers
           Email address
         </dt>
         <dd class="govuk-summary-list__value">
-          {{email_address}}
+          {% if user_details %}{{user_details.email}}
+          {% else %} {{email_address}} {% endif %}
         </dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="{% url 'edit email address' %}">
+          <a class="govuk-link" href="{% url 'edit email address signup' %}">
             Change<span class="govuk-visually-hidden"> email address</span>
           </a>
         </dd>
@@ -50,10 +61,11 @@ Check your answers
           Your team
         </dt>
         <dd class="govuk-summary-list__value">
-          <p class="govuk-body">{{team}}</p>
+          <p class="govuk-body">          {% if user_details %}{{user_details.team}}
+          {% else %} {{team}} {% endif %}</p>
         </dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="{% url 'edit job information' %}">
+          <a class="govuk-link" href="{% url 'edit job information signup' %}">
             Change<span class="govuk-visually-hidden"> your team</span>
           </a>
         </dd>
@@ -63,22 +75,25 @@ Check your answers
           Your job
         </dt>
         <dd class="govuk-summary-list__value">
-          {{job}}
+                    {% if user_details %}{{user_details.job_role}}
+          {% else %} {{job}} {% endif %}
         </dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="{% url 'edit job information' %}">
+          <a class="govuk-link" href="{% url 'edit job information signup' %}">
             Change<span class="govuk-visually-hidden"> your job</span>
           </a>
         </dd>
       </div>
 
     </dl>
+    {% if not user_details %}
     <form method="post">
       {% csrf_token %}
       <button class="govuk-button" data-module="govuk-button" href="{% url 'dashboard' %}">
         Register
       </button>
     </form>
+    {% endif %}
 
   </div>
 </div>

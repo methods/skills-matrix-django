@@ -17,7 +17,7 @@ def add_name(request):
             return redirect(add_email)
     else:
         form = NameForm()
-    return render(request, 'user_management/add_name.html', {'form': form})
+    return render(request, 'user_management/name.html', {'form': form})
 
 
 def add_email(request):
@@ -29,7 +29,7 @@ def add_email(request):
             return redirect(add_job)
     else:
         form = EmailForm()
-    return render(request, 'user_management/add_email.html', {'form': form})
+    return render(request, 'user_management/email_address.html', {'form': form})
 
 
 def add_job(request):
@@ -42,7 +42,7 @@ def add_job(request):
             return redirect(create_password)
     else:
         form = JobForm()
-    return render(request, 'user_management/add_job.html', {'form': form})
+    return render(request, 'user_management/job_info.html', {'form': form})
 
 
 def create_password(request):
@@ -78,7 +78,7 @@ def summary(request):
                                                    'team': team, 'job': job})
 
 
-def edit_name(request):
+def edit_name_signup(request):
     if request.method == 'POST':
         form = NameForm(request.POST)
         if form.is_valid():
@@ -90,10 +90,10 @@ def edit_name(request):
         first_name = request.session['first_name'] if 'first_name' in request.session else ""
         surname = request.session['surname'] if 'surname' in request.session else ""
         form = NameForm(initial={'first_name': first_name, 'surname': surname})
-        return render(request, 'user_management/add_name.html', {'form': form, 'edit': True})
+        return render(request, 'user_management/name.html', {'form': form, 'edit': True})
 
 
-def edit_email_address(request):
+def edit_email_address_signup(request):
     if request.method == 'POST':
         form = EmailForm(request.POST)
         if form.is_valid():
@@ -104,10 +104,10 @@ def edit_email_address(request):
         form = EmailForm()
         form.fields['email_address'].initial = request.session[
             'email_address'] if 'email_address' in request.session else ''
-    return render(request, 'user_management/add_email.html', {'form': form, 'edit': True})
+    return render(request, 'user_management/email_address.html', {'form': form, 'edit': True})
 
 
-def edit_job_information(request):
+def edit_job_information_signup(request):
     if request.method == 'POST':
         form = JobForm(request.POST)
         if form.is_valid():
@@ -119,9 +119,14 @@ def edit_job_information(request):
         form = JobForm()
         form.fields['team'].initial = request.session['team'] if 'team' in request.session else ''
         form.fields['job'].initial = request.session['job'] if 'job' in request.session else ''
-    return render(request, 'user_management/add_job.html', {'form': form, 'edit': True})
+    return render(request, 'user_management/job_info.html', {'form': form, 'edit': True})
 
 
 @login_required
 def profile(request):
-    return render(request, 'user_management/profile.html', {"user": request.user})
+    return render(request, 'user_management/summary.html', {"user_details": request.user})
+
+
+@login_required
+def edit_name(request):
+    return render(request, 'user_management/name.html')

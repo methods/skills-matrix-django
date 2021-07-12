@@ -164,7 +164,7 @@ class ProfilePageTests(TestCase):
     def test_profile_page_GET_logged_in_user(self):
         response = self.client.get('/user/profile')
         assert response.status_code == 200
-        self.assertTemplateUsed(response, 'user_profile/profile.html')
+        self.assertTemplateUsed(response, 'user_management/summary.html')
         assert "test_first_name" in response.content.decode()
         assert "test_surname" in response.content.decode()
         assert "OPC" in response.content.decode()
@@ -175,5 +175,7 @@ class ProfilePageTests(TestCase):
         response = self.client.get('/user/profile')
         assert response.status_code == 302
 
-
-
+    def test_edit_name_page_GET_logged_in_user(self):
+        response = self.client.get('/user/profile/edit-name')
+        assert response.status_code == 200
+        self.assertTemplateUsed(response, 'user_management/name.html')
