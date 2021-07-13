@@ -49,6 +49,33 @@
                         </dd>
                     </div>
                 </dl>
+                {% if request.session.new_added_job_competencies|length > 0 %}
+                <h2 class="govuk-heading-m">Job role skills</h2>
+                <dl class="govuk-summary-list">
+                    {% for new_job_competencies in request.session.new_added_job_competencies %}
+                    {% for key,value in new_job_competencies.items %}
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            {{key}}
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{value}}
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
+                                data-module="govuk-button" name="delete" value="{{jobroleskill.skillName}}">
+                                Delete
+                            </button>
+                        </dd>
+                    </div>
+                    {% endfor %}
+                    {% endfor %}
+                </dl>
+                <button class="govuk-button" data-module="govuk-button" name="saveandcontinue"
+                    value="saveandcontinue">Save
+                    and
+                    continue</button>
+                {% endif %}
             </form>
             <p>If the skill you are looking for is not in the list, you can <a
                     href="/add-job-role-skills/create-skill">create a new skill
