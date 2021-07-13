@@ -5,6 +5,8 @@
 {% block beforeContent %}
 {% if edit %}
     <a class="govuk-back-link" href="{% url 'summary' %}" >Back</a>
+{% elif edit_profile %}
+    <a class="govuk-back-link" href="{% url 'profile' %}" >Back</a>
 {% endif %}
 {% endblock %}
 
@@ -37,7 +39,11 @@
           {{field}}
         </div>
         {% endfor %}
+        {% if edit or edit_profile %}
+        <button class="govuk-button" data-module="govuk-button">Save</button>
+        {% else %}
         <button class="govuk-button" data-module="govuk-button">Continue</button>
+        {% endif %}
       </form>
     </div>
 

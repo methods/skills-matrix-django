@@ -132,15 +132,26 @@ def edit_name(request):
     if request.method == 'POST':
         form = NameForm(request.POST)
         if form.is_valid():
-            print('valid')
             request.user.first_name = request.POST['first_name']
-            print(request.user.first_name)
             request.user.surname = request.POST['surname']
             request.user.save()
-            print(request.user.first_name)
             return redirect(profile)
     else:
         first_name = request.user.first_name if request.user.first_name else ""
         surname = request.user.surname if request.user.surname else ""
         form = NameForm(initial={'first_name': first_name, 'surname': surname})
-        return render(request, 'user_management/name.html', {'form': form, 'edit': True})
+        return render(request, 'user_management/name.html', {'form': form, 'edit_profile': True})
+
+
+@login_required
+def edit_email(request):
+    if request.method == 'POST':
+        form = EmailForm(request.POST)
+        if form.is_valid():
+            request.user.email = request.POST['email_address']
+            request.user.save()
+            return redirect(profile)
+    else:
+        email_address = request.user.email
+        form = EmailForm(initial={'email_address': email_address})
+        return render(request, 'user_management/email_address.html', {'form': form, 'edit_profile': True})

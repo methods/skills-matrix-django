@@ -180,3 +180,20 @@ class EditNamePageTests(LoggedInUserTestCase):
         self.user.refresh_from_db()
         assert self.user.first_name == 'updated_first_name'
         assert self.user.surname == 'updated_surname'
+
+
+class EditEmailPageTests(LoggedInUserTestCase):
+    def test_edit_email_page_GET_logged_in_user(self):
+        response = self.client.get('/user/profile/edit-email-address')
+        assert response.status_code == 200
+        self.assertTemplateUsed(response, 'user_management/email_address.html')
+
+    def test_edit_email_page_GET_no_user(self):
+        self.User.objects.all().delete()
+        response = self.client.get('/user/profile/edit-email-address')
+        assert response.status_code == 302
+
+    def test_edit_email_POST(self):
+        self.client.post('/user/profile/edit-email-address', {'email_address': 'updated@methods.co.uk'})
+        self.user.refresh_from_db()
+        assert self.user.email == 'updated@methods.co.uk'

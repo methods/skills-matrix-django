@@ -12,5 +12,6 @@ urlpatterns = [
     path('signup/edit-email-address', views.edit_email_address_signup, name='edit email address signup'),
     path('signup/edit-job-information', views.edit_job_information_signup, name='edit job information signup'),
     path('profile', views.profile, name='profile'),
-    path('profile/edit-name', views.edit_name, name='edit name')
+    path('profile/edit-name', views.edit_name, name='edit name'),
+    path('profile/edit-email-address', views.edit_email, name='edit email address'),
 ]

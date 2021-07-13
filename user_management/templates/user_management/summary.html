@@ -37,7 +37,8 @@
           {% else %} {{full_name}} {% endif %}
         </dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href={% if user_details %}"{% url 'edit name'%}"{% else %}"{% url 'edit name signup' %}"{% endif %}>
+          <a class="govuk-link" href={% if user_details %}"{% url 'edit name'%}"
+          {% else %}"{% url 'edit name signup' %}"{% endif %}>
             Change<span class="govuk-visually-hidden"> name</span>
           </a>
         </dd>
@@ -51,7 +52,8 @@
           {% else %} {{email_address}} {% endif %}
         </dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="{% url 'edit email address signup' %}">
+          <a class="govuk-link" href={% if user_details %}"{% url 'edit email address'%}"
+          {% else %}"{% url 'edit email address signup' %}"{% endif %}>
             Change<span class="govuk-visually-hidden"> email address</span>
           </a>
         </dd>
