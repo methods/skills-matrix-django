@@ -23,9 +23,6 @@ def add_job_role(request):
     return render(request, "job_roles/add_job_role.html", {'form': form})
 
 
-new_added_job_competencies = []
-
-
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
                   login_url='/error/not-authorised')
@@ -35,9 +32,16 @@ def add_job_role_skills(request):
         if form.is_valid():
             request.session['job_role_skill'] = request.POST['job_role_skill']
             request.session['job_role_skill_level'] = request.POST['job_role_skill_level']
-            new_added_job_competencies.append({request.POST['job_role_skill']: request.POST['job_role_skill_level']})
-            request.session['new_added_job_competencies'] = new_added_job_competencies
+            if 'delete' in request.POST.keys():
+                for competency in request.session['new_added_job_competencies']:
+                    if request.POST["delete"] in competency:
+                        print(request.POST["delete"])
+                        request.session['new_added_job_competencies'].remove(competency)
+            if 'addSkill' in request.POST.keys():
+                request.session['new_added_job_competencies'].append({request.POST['job_role_skill']:
+                                                                      request.POST['job_role_skill_level']})
             request.session.save()
+            print('after the conditions',request.session['new_added_job_competencies'])
             render(request, "job_roles/add_job_role_skills.html", {'form': form})
     else:
         form = JobSkillsAndSkillLevelForm()
