@@ -67,9 +67,11 @@
           {% else %} {{team}} {% endif %}</p>
         </dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="{% url 'edit job information signup' %}">
+          <a class="govuk-link" href={% if user_details %}"{% url 'edit job information'%}"
+          {% else %}"{% url 'edit job information signup' %}"{% endif %}>
             Change<span class="govuk-visually-hidden"> your team</span>
           </a>
+
         </dd>
       </div>
       <div class="govuk-summary-list__row">
@@ -81,7 +83,8 @@
           {% else %} {{job}} {% endif %}
         </dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="{% url 'edit job information signup' %}">
+          <a class="govuk-link" href={% if user_details %}"{% url 'edit job information'%}"
+          {% else %}"{% url 'edit job information signup' %}"{% endif %}>
             Change<span class="govuk-visually-hidden"> your job</span>
           </a>
         </dd>

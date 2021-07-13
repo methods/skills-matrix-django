@@ -197,3 +197,23 @@ class EditEmailPageTests(LoggedInUserTestCase):
         self.client.post('/user/profile/edit-email-address', {'email_address': 'updated@methods.co.uk'})
         self.user.refresh_from_db()
         assert self.user.email == 'updated@methods.co.uk'
+
+
+class EditJobInformationPageTests(LoggedInUserTestCase):
+    def test_edit_email_page_GET_logged_in_user(self):
+        response = self.client.get('/user/profile/edit-job-information')
+        assert response.status_code == 200
+        self.assertTemplateUsed(response, 'user_management/job_info.html')
+
+    def test_edit_job_info_POST(self):
+        team = Team()
+        team.team_name = "Updated team"
+        team.save()
+        job = Job()
+        job.job_title = 'Updated job'
+        job.save()
+        self.client.post('/user/profile/edit-job-information', {'team': 'Updated team', 'job': 'Updated job'})
+        self.user.refresh_from_db()
+        assert self.user.job_role == 'Updated job'
+        assert self.user.team == 'Updated team'
+

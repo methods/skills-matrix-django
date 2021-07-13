@@ -155,3 +155,19 @@ def edit_email(request):
         email_address = request.user.email
         form = EmailForm(initial={'email_address': email_address})
         return render(request, 'user_management/email_address.html', {'form': form, 'edit_profile': True})
+
+
+@login_required
+def edit_job_information(request):
+    if request.method == 'POST':
+        form = JobForm(request.POST)
+        if form.is_valid():
+            request.user.team = request.POST['team']
+            request.user.job_role = request.POST['job']
+            request.user.save()
+            return redirect(profile)
+    else:
+        job = request.user.job_role
+        team = request.user.team
+        form = JobForm(initial={'team': team, 'job': job})
+    return render(request, 'user_management/job_info.html', {'form': form, 'edit_profile': True})
