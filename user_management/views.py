@@ -129,4 +129,18 @@ def profile(request):
 
 @login_required
 def edit_name(request):
-    return render(request, 'user_management/name.html')
+    if request.method == 'POST':
+        form = NameForm(request.POST)
+        if form.is_valid():
+            print('valid')
+            request.user.first_name = request.POST['first_name']
+            print(request.user.first_name)
+            request.user.surname = request.POST['surname']
+            request.user.save()
+            print(request.user.first_name)
+            return redirect(profile)
+    else:
+        first_name = request.user.first_name if request.user.first_name else ""
+        surname = request.user.surname if request.user.surname else ""
+        form = NameForm(initial={'first_name': first_name, 'surname': surname})
+        return render(request, 'user_management/name.html', {'form': form, 'edit': True})

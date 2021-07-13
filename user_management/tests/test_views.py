@@ -3,8 +3,7 @@ from super_admin.models import Team
 from job_roles.models import Job
 from django.core.exceptions import ValidationError
 from ..validators import validate_domain_email, password_validation
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth import get_user_model
+from common.tests.custom_classes import LoggedInUserTestCase
 
 
 class AddNameSignup(TestCase):
@@ -149,18 +148,7 @@ class EditJobInformation(TestCase):
         assert session['team'] == 'OPC'
 
 
-class ProfilePageTests(TestCase):
-
-    def setUp(self):
-        self.User = get_user_model()
-        password = make_password('password')
-        self.user = self.User.objects.create_user('test@methods.co.uk', 'test_first_name', 'test_surname', 'OPC',
-                                                  'Junior Developer', password)
-        self.client.login(username='test@methods.co.uk', password='password')
-
-    def tearDown(self):
-        self.User.objects.all().delete()
-
+class ProfilePageTests(LoggedInUserTestCase):
     def test_profile_page_GET_logged_in_user(self):
         response = self.client.get('/user/profile')
         assert response.status_code == 200
@@ -175,7 +163,20 @@ class ProfilePageTests(TestCase):
         response = self.client.get('/user/profile')
         assert response.status_code == 302
 
+
+class EditNamePageTests(LoggedInUserTestCase):
     def test_edit_name_page_GET_logged_in_user(self):
         response = self.client.get('/user/profile/edit-name')
         assert response.status_code == 200
         self.assertTemplateUsed(response, 'user_management/name.html')
+
+    def test_edit_name_page_GET_no_user(self):
+        self.User.objects.all().delete()
+        response = self.client.get('/user/profile/edit-name')
+        assert response.status_code == 302
+
+    def test_edit_name_page_POST(self):
+        self.client.post('/user/profile/edit-name', {'first_name': 'updated_first_name', 'surname': 'updated_surname'})
+        self.user.refresh_from_db()
+        assert self.user.first_name == 'updated_first_name'
+        assert self.user.surname == 'updated_surname'
