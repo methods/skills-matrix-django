@@ -1,43 +1,22 @@
-from django.test import TestCase
-from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group
+from common.tests.custom_classes import LoggedInUserTestCase
 
 
-class JobRolePageTests(TestCase):
-
-    def setUp(self):
-        User = get_user_model()
-        password = make_password('password')
-        User.objects.create_user('test@methods.co.uk', 'test_first_name', 'test_surname', 'OPC',
-                                                  'Junior Developer', password)
-        self.client.login(username='test@methods.co.uk', password='password')
-
-    def tearDown(self):
-        User = get_user_model()
-        User.objects.all().delete()
-
+class JobRolePageTests(LoggedInUserTestCase):
     def test_page_GET(self):
         response = self.client.get('/job-roles')
         assert response.status_code == 200
         self.assertTemplateUsed(response, 'job_roles/job-roles.html')
 
 
-class AddJobRolePageTests(TestCase):
+class AddJobRolePageTests(LoggedInUserTestCase):
 
     def setUp(self):
-        self.User = get_user_model()
-        password = make_password('password')
-        self.user = self.User.objects.create_user('test@methods.co.uk', 'test_first_name', 'test_surname', 'OPC',
-                                                  'Junior Developer', password)
-        self.client.login(username='test@methods.co.uk', password='password')
+        super(AddJobRolePageTests, self).setUp()
         # Group setup
         group_name = "Admins"
         self.group = Group(name=group_name)
         self.group.save()
-
-    def tearDown(self):
-        self.User.objects.all().delete()
 
     def test_page_GET_non_admin_users(self):
         response = self.client.get('/job-roles/create-new-job')
