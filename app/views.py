@@ -14,3 +14,8 @@ def dashboard(request):
 @login_required
 def edit_skills(request):
     return render(request, "app/edit_skills.html")
+
+
+@login_required
+def browse_profiles(request):
+    return render(request, 'app/browse_profiles.html')

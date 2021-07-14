@@ -1,0 +1,59 @@
+{% extends "app/app_base.html" %}
+{% load sass_tags %}
+
+{% block pageTitle %}
+  Browse profiles
+{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+
+<h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Browse profiles & skills</h1>
+<span class="govuk-caption-xl govuk-!-margin-bottom-5">Methods Digital</span>
+
+<div class="govuk-form-group">
+  <label class="govuk-label" for="sort">
+    Sort by
+  </label>
+  <select class="govuk-select" id="sort" name="sort">
+    <option value="django">Django</option>
+    <option value="python" selected>Python</option>
+    <option value="sass">Sass</option>
+    <option value="test driven development">TDD</option>
+    <option value="javascript">JavaScript</option>
+    <option value="javascript">HTML</option>
+    <option value="javascript">CSS</option>
+  </select>
+</div>
+
+<table class="govuk-table">
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Full Name</th>
+      <th scope="col" class="govuk-table__header">Team</th>
+      <th scope="col" class="govuk-table__header">Job Role</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+
+      <th scope="row" class="govuk-table__header"><a href="view-profile-1" class="govuk-link"> Patrick Fleming</a></th>
+      <td class="govuk-table__cell">OPC</td>
+      <td class="govuk-table__cell">Junior Developer</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"> <a href="view-profile-2" class="govuk-link">Valentina Militaru</a> </th>
+      <td class="govuk-table__cell">OPC</td>
+      <td class="govuk-table__cell">Junior Developer</td>
+    </tr>
+  </tbody>
+</table>
+
+
+    </div>
+  </div>
+
+{% endblock %}
