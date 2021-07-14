@@ -43,7 +43,7 @@
                             </div>
                         </dd>
                         <dd class="govuk-summary-list__actions">
-                            <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" name="addSkill">
+                            <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" name="addSkill" {% if form.job_role_skill|length == request.session.new_added_job_competencies|length %} disabled="disabled" aria-disabled="true" {% endif %} >
                                 Add Skill
                             </button>
                         </dd>
