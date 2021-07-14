@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 
 
 class LoggedInUserTestCase(TestCase):
@@ -13,3 +14,13 @@ class LoggedInUserTestCase(TestCase):
 
     def tearDown(self):
         self.User.objects.all().delete()
+
+
+class LoggedInSuperAdminTestCase(LoggedInUserTestCase):
+    def setUp(self):
+        super(LoggedInSuperAdminTestCase, self).setUp()
+        # Group setup
+        group_name = "Super admins"
+        self.group = Group(name=group_name)
+        self.group.save()
+        self.user.groups.add(self.group)
