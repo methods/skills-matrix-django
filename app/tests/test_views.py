@@ -15,3 +15,11 @@ class DashboardTests(LoggedInUserTestCase):
         response = self.client.get('/dashboard')
         assert "test_first_name" in response.content.decode()
         assert "test_surname" in response.content.decode()
+
+
+class BrowseProfileTests(LoggedInUserTestCase):
+
+    def test_status_code(self):
+        response = self.client.get('/browse-profiles')
+        assert response.status_code == 200
+        self.assertTemplateUsed(response, 'app/browse_profiles.html')
