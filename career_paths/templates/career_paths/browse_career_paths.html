@@ -1,0 +1,39 @@
+{% extends "career_paths/career_paths_base.html" %}
+{% load sass_tags %}
+
+{% block pageTitle %}
+Career paths
+{% endblock %}
+
+{% block content %}
+
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Career paths</h1>
+      <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+        {% for careerPath in careerPaths %}
+        <div class="govuk-accordion__section ">
+          <div class="govuk-accordion__section-header">
+            <h2 class="govuk-accordion__section-heading">
+              <span class="govuk-accordion__section-button" id="accordion-with-summary-sections-heading-1">
+                {{careerPath.name}}
+              </span>
+            </h2>
+          </div>
+          <div id="accordion-with-summary-sections-content-1" class="govuk-accordion__section-content"
+            aria-labelledby="accordion-with-summary-sections-heading-1">
+            <ul class="govuk-list">
+              <li>
+                <a class="govuk-link" href="/view-career-path/{{careerPath.name}}">View {{careerPath.name}}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <a class="govuk-button" data-module="govuk-button" href="/add-career-path-title">Add a career path</a>
+  </div>
+</div>
+
+{% endblock %}

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'error',
     'job_roles',
     'auth_processes',
+    'career_paths',
 ]
 
 MIDDLEWARE = [
