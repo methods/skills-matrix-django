@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import user_passes_test, login_required
 from job_roles.forms import JobTitleForm, JobSkillsAndSkillLevelForm
+from django.core.exceptions import ValidationError
+
 
 
 @login_required
@@ -37,7 +39,7 @@ def add_job_role_skills(request):
             form = JobSkillsAndSkillLevelForm(request.POST)
             request.session['disabled_choices'] = []
         if 'new_added_job_competencies' not in request.session.keys():
-            request.session['new_added_job_competencies'] = [] 
+            request.session['new_added_job_competencies'] = []
         if form.is_valid():
             if 'delete' in request.POST.keys():
                 if request.POST["delete"] in request.session['disabled_choices'] and len(request.session['disabled_choices']) > 0:
@@ -47,9 +49,13 @@ def add_job_role_skills(request):
                         request.session['new_added_job_competencies'].remove(competency)
                 form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
             if 'addSkill' in request.POST.keys():
-                request.session['disabled_choices'].append(request.POST['job_role_skill'])
-                request.session['new_added_job_competencies'].append({request.POST['job_role_skill']:
-                                                                      request.POST['job_role_skill_level']})
+                job_role_skill = form.cleaned_data['job_role_skill']
+                if not job_role_skill:
+                    raise ValidationError('Select a valid option')
+                else:
+                    request.session['disabled_choices'].append(request.POST['job_role_skill'])
+                    request.session['new_added_job_competencies'].append({request.POST['job_role_skill']:
+                                                                          request.POST['job_role_skill_level']})
 
             request.session.save()
             form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])

@@ -18,8 +18,8 @@ class CustomisedSelectWidget(Select):
         option_dict = super(CustomisedSelectWidget, self).create_option(
             name, value, label, selected, index, subindex=subindex, attrs=attrs
         )
-        # print(value)
+        # if not value:
+        #     option_dict['attrs']['disabled'] = True
         if value in self.disabled_choices:
-            print('in widget', value)
             option_dict['attrs']['disabled'] = True
         return option_dict

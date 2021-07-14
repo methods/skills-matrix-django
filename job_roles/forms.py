@@ -3,6 +3,7 @@ from signup.widgets import GdsStyleTextInput
 from .widgets import CustomisedSelectWidget
 from app.models import Skill, SkillLevel
 from .validators import validate_input_capitalised
+from .fields import EmptyChoiceField
 
 
 class JobTitleForm(forms.Form):
@@ -30,7 +31,7 @@ class JobSkillsAndSkillLevelForm(forms.Form):
         skill_level_options = ((skill_level.name, skill_level.name) for skill_level in SkillLevel.objects.all())
         return skill_level_options
 
-    job_role_skill = forms.ChoiceField(choices=get_skill_choices, required=False, widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'}))
+    job_role_skill = EmptyChoiceField(choices=get_skill_choices(), empty_label='--Select a skill--', required=False, widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'}))
     job_role_skill_level = forms.ChoiceField(choices=get_skill_level_choices,
                                              widget=forms.Select(attrs={'class': 'govuk-select'}))
 
