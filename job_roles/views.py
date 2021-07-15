@@ -22,6 +22,7 @@ def add_job_role(request):
             return redirect(add_job_role_skills)
     else:
         form = JobTitleForm()
+        form.fields['job_role_title'].initial = request.session['job_role_title'] if 'job_role_title' in request.session else ''
     return render(request, "job_roles/add_job_role.html", {'form': form})
 
 
