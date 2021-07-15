@@ -15,3 +15,11 @@ class SkillLevelsPageTests(LoggedInSuperAdminTestCase):
 
 
 class AddSkillLevelPageTests(LoggedInSuperAdminTestCase):
+    def test_page_GET_logged_in_super_admin(self):
+        response = self.client.get('/super-admin/add-a-skill-level')
+        assert response.status_code == 200
+        self.assertTemplateUsed(response, 'super_admin/add_skill_level.html')
+
+    def test_post_request(self):
+        self.client.post('/super-admin/view-skill-levels', {'name': 'test', 'description': 'test'})
+        assert SkillLevel.objects.filter(name='test') == []
