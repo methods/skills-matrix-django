@@ -60,12 +60,12 @@ def add_job_role_skills(request):
             request.session.save()
             form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
             render(request, "job_roles/add_job_role_skills.html", {'form': form})
-        else:
-            print(form.errors)
+            if "saveandcontinue" in request.POST.keys():
+                return redirect(review_job_role)
     else:
         form = JobSkillsAndSkillLevelForm()
     return render(request, "job_roles/add_job_role_skills.html", {'form': form})
 
 
-def new_job_role(request):
-    pass
+def review_job_role(request):
+    return render(request, "job_roles/review_job_role.html")
