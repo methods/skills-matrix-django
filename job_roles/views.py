@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import user_passes_test, login_required
 from job_roles.forms import JobTitleForm, JobSkillsAndSkillLevelForm
 from django.core.exceptions import ValidationError
-
+from django.contrib import messages
+from .models import Job, JobRoles
+from app.models import SkillLevel, Skill
 
 
 @login_required
@@ -24,9 +26,6 @@ def add_job_role(request):
         form = JobTitleForm()
         form.fields['job_role_title'].initial = request.session['job_role_title'] if 'job_role_title' in request.session else ''
     return render(request, "job_roles/add_job_role.html", {'form': form})
-
-
-
 
 
 @login_required
@@ -68,5 +67,19 @@ def add_job_role_skills(request):
     return render(request, "job_roles/add_job_role_skills.html", {'form': form})
 
 
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
+                  login_url='/error/not-authorised')
 def review_job_role(request):
+    job_title = request.session['job_role_title']
+    print(request.session['new_added_job_competencies'])
+    if request.method == 'POST':
+        Job(job_title=job_title).save()
+        job_role_title = Job.objects.get(job_title=job_title)
+        for new_job_competencies in request.session['new_added_job_competencies']:
+            for key, value in new_job_competencies.items():
+                job_role_skill = Skill.objects.get(name=key)
+                job_role_skill_level = SkillLevel.objects.get(name=value)
+                JobRoles(job_role_title=job_role_title, job_role_skill=job_role_skill, job_role_skill_level=job_role_skill_level).save()
+        messages.success(request, 'Job title saved.')
     return render(request, "job_roles/review_job_role.html")
