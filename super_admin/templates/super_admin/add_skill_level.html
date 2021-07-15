@@ -14,7 +14,6 @@
   </div>
 <div class="govuk-!-margin-top-4">
     <div class="govuk-grid-row">
-      <form action="/add-skill" method="post">
       <div class="govuk-grid-column-two-thirds-from-desktop">
       <div class="govuk-form-group {% if form.errors %} govuk-form-group--error {% endif %}">
       <form class="form" method="post">
@@ -36,17 +35,10 @@
           {{field}}
         </div>
         {% endfor %}
-        {% if edit_profile %}
         <button class="govuk-button" data-module="govuk-button">Save</button>
-        {% else %}
-        <button class="govuk-button" data-module="govuk-button">Continue</button>
-        {% endif %}
       </form>
     </div>
       </div>
-  <button class="govuk-button" data-module="govuk-button">Save</button>
-</form>
-  <p>If your skill isn't in the list, you can <a href="/add-skill/create-skill">create a new skill here</a>.</p>
 </div>
 
 {% endblock %}
