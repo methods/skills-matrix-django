@@ -63,7 +63,7 @@ def add_job_role_skills(request):
             if "saveandcontinue" in request.POST.keys():
                 return redirect(review_job_role)
     else:
-        form = JobSkillsAndSkillLevelForm()
+        form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices']) if 'disabled_choices' in request.session.keys() else JobSkillsAndSkillLevelForm()
     return render(request, "job_roles/add_job_role_skills.html", {'form': form})
 
 
