@@ -1,4 +1,5 @@
 from common.tests.custom_classes import LoggedInSuperAdminTestCase
+from ..models import SkillLevel
 
 
 class SkillLevelsPageTests(LoggedInSuperAdminTestCase):
@@ -6,3 +7,11 @@ class SkillLevelsPageTests(LoggedInSuperAdminTestCase):
         response = self.client.get('/super-admin/view-skill-levels')
         assert response.status_code == 200
         self.assertTemplateUsed(response, 'super_admin/view_skill_levels.html')
+
+    def test_delete_skill_level(self):
+        SkillLevel.objects.create(name='test')
+        self.client.post('/super-admin/view-skill-levels', {'delete': ['test']})
+        assert SkillLevel.objects.count() == 0
+
+
+class AddSkillLevelPageTests(LoggedInSuperAdminTestCase):
