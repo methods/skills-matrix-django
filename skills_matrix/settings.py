@@ -144,6 +144,3 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 LOGIN_REDIRECT_URL = '/dashboard'
 LOGIN_URL = '/auth/login'
-
-
-APPEND_SLASH = False

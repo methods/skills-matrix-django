@@ -30,4 +30,20 @@ def add_skill_level(request):
             SkillLevel.objects.create(name=name, description=description)
             return redirect(view_skill_levels)
     form = SkillLevelForm()
-    return render(request, 'super_admin/add_skill_level.html', {'form': form})
+    return render(request, 'super_admin/skill_level.html', {'form': form})
+
+
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='Super admins').exists(),
+                  login_url='/error/not-authorised')
+def edit_skill_level(request, pk):
+    skill_level = SkillLevel.objects.filter(pk=pk)
+    if request.POST:
+        form = SkillLevelForm(request.POST)
+        if form.is_valid():
+            skill_level.update(name=request.POST['name'], description=request.POST['description'])
+            return redirect(view_skill_levels)
+    form = SkillLevelForm()
+    form.fields['name'].initial = skill_level[0].name
+    form.fields['description'].initial = skill_level[0].description
+    return render(request, 'super_admin/skill_level.html', {'form': form})
