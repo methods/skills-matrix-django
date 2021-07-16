@@ -81,5 +81,6 @@ def review_job_role(request):
                 job_role_skill = Skill.objects.get(name=key)
                 job_role_skill_level = SkillLevel.objects.get(name=value)
                 JobRoles(job_role_title=job_role_title, job_role_skill=job_role_skill, job_role_skill_level=job_role_skill_level).save()
-        messages.success(request, 'Job title saved.')
+        messages.success(request, 'The new job role was added successfully.')
+        return redirect(job_roles)
     return render(request, "job_roles/review_job_role.html")
