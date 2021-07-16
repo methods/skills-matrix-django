@@ -9,7 +9,15 @@ from app.models import SkillLevel, Skill
 
 @login_required
 def job_roles(request):
-    return render(request, "job_roles/job-roles.html", {"user": request.user})
+    job_list=[]
+    skill_list = Job.objects.all()
+    for skill in skill_list:
+        competencies = Competency.objects.filter(job_role_title=skill.id)
+        for competency in competencies:
+            print(competency.id)
+            job_list.append(competency.job_role_title.job_title)
+    job_role_list = list(dict.fromkeys(job_list))
+    return render(request, "job_roles/job-roles.html", {"user": request.user, 'job_role_list': job_role_list})
 
 
 @login_required
