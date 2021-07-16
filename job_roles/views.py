@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from job_roles.forms import JobTitleForm, JobSkillsAndSkillLevelForm
 from django.core.exceptions import ValidationError
 from django.contrib import messages
-from .models import Job, JobRoles
+from .models import Job, Competency
 from app.models import SkillLevel, Skill
 
 
@@ -80,7 +80,7 @@ def review_job_role(request):
             for key, value in new_job_competencies.items():
                 job_role_skill = Skill.objects.get(name=key)
                 job_role_skill_level = SkillLevel.objects.get(name=value)
-                JobRoles(job_role_title=job_role_title, job_role_skill=job_role_skill, job_role_skill_level=job_role_skill_level).save()
+                Competency(job_role_title=job_role_title, job_role_skill=job_role_skill, job_role_skill_level=job_role_skill_level).save()
         messages.success(request, 'The new job role was added successfully.')
         return redirect(job_roles)
     return render(request, "job_roles/review_job_role.html")
