@@ -1,10 +1,6 @@
 {% extends "job_roles/job_roles_base.html" %}
 {% load sass_tags %}
 
-{% block pageTitle %}
-Job roles
-{% endblock %}
-
 {% block content %}
 
 <div class="govuk-grid-row">
@@ -46,7 +42,7 @@ Job roles
               aria-labelledby="accordion-with-summary-sections-heading-1">
               <ul class="govuk-list">
                 <li>
-                  <a class="govuk-link" href="/view-job-role/{{jobrole.jobroletitle}}">View job role</a>
+                  <a class="govuk-link" href="{% url 'job role view' job_role %}">View job role</a>
                 </li>
               </ul>
             </div>

@@ -18,7 +18,6 @@ def job_roles(request):
     for skill in skill_list:
         competencies = Competency.objects.filter(job_role_title=skill.id)
         for competency in competencies:
-            print(competency.id)
             job_list.append(competency.job_role_title.job_title)
     job_role_list = list(dict.fromkeys(job_list))
     return render(request, "job_roles/job-roles.html", {"user": request.user, 'job_role_list': job_role_list})
@@ -95,3 +94,9 @@ def review_job_role(request):
         messages.success(request, 'The new job role was added successfully.')
         return redirect(job_roles)
     return render(request, "job_roles/review_job_role.html")
+
+
+def dynamic_job_role_lookup_view(request, job):
+    job_title = Job.objects.get(job_title=job)
+    job_role_obj = Competency.objects.filter(job_role_title=job_title.id)
+    return render(request, "job_roles/job_role_detail.html", {'job_role_obj': job_role_obj, 'job_title': job})
