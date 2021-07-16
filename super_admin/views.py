@@ -9,11 +9,7 @@ from .forms import SkillLevelForm
                   login_url='/error/not-authorised')
 def view_skill_levels(request):
     if request.POST:
-        if 'edit' in request.POST.keys():
-            print('edit')
-        if 'delete' in request.POST.keys():
-            print(request.POST)
-            SkillLevel.objects.filter(name=request.POST['delete']).delete()
+        SkillLevel.objects.filter(name=request.POST['delete']).delete()
     skill_levels = SkillLevel.objects.all()
     return render(request, 'super_admin/view_skill_levels.html', {'skill_levels': skill_levels})
 
@@ -46,4 +42,4 @@ def edit_skill_level(request, pk):
     form = SkillLevelForm()
     form.fields['name'].initial = skill_level[0].name
     form.fields['description'].initial = skill_level[0].description
-    return render(request, 'super_admin/skill_level.html', {'form': form})
+    return render(request, 'super_admin/skill_level.html', {'form': form, 'edit': True})
