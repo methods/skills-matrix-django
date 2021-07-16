@@ -3,7 +3,7 @@ from app.models import Skill, SkillLevel
 
 
 class Job(models.Model):
-    job_title = models.CharField(max_length=50)
+    job_title = models.CharField(max_length=50,unique=True)
 
 
 class Competency(models.Model):
