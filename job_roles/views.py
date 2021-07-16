@@ -9,7 +9,11 @@ from app.models import SkillLevel, Skill
 
 @login_required
 def job_roles(request):
-    job_list=[]
+    if request.method == "GET":
+        if 'job_role_title' in request.session.keys(): del request.session['job_role_title']
+        if 'disabled_choices' in request.session.keys(): del request.session['disabled_choices']
+        if 'new_added_job_competencies' in request.session.keys(): del request.session['new_added_job_competencies']
+    job_list = []
     skill_list = Job.objects.all()
     for skill in skill_list:
         competencies = Competency.objects.filter(job_role_title=skill.id)
@@ -80,7 +84,6 @@ def add_job_role_skills(request):
                   login_url='/error/not-authorised')
 def review_job_role(request):
     job_title = request.session['job_role_title']
-    print(request.session['new_added_job_competencies'])
     if request.method == 'POST':
         Job(job_title=job_title).save()
         job_role_title = Job.objects.get(job_title=job_title)
