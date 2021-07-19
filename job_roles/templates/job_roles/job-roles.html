@@ -42,7 +42,7 @@
               aria-labelledby="accordion-with-summary-sections-heading-1">
               <ul class="govuk-list">
                 <li>
-                  <a class="govuk-link" href="{% url 'job role view' job_role %}">View job role</a>
+                  <a class="govuk-link" href="{% url 'job role view' job_role|slugify %}">View job role</a>
                 </li>
               </ul>
             </div>
