@@ -3,5 +3,5 @@ from . import views
 
 
 urlpatterns = [
-    path('not-authorised', views.not_authorised, name='not authorised')
+    path('not-authorised/', views.not_authorised, name='not authorised')
 ]
