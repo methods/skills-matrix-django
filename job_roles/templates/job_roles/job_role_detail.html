@@ -50,7 +50,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        <a class="govuk-button" data-module="govuk-button" href="{% url 'update job role view' job_title %}">Edit Job
+        <a class="govuk-button" data-module="govuk-button" href="{% url 'update job role view' job_title|slugify %}">Edit Job
             Role</a>
         <button class="govuk-button govuk-button--warning" data-module="govuk-button" name="deletejobrole"
             value="{{jobRole.jobroletitle}}">

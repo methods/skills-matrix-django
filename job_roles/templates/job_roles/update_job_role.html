@@ -20,39 +20,36 @@
 
 
 {% block content %}
-
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-xl govuk-!-margin-bottom-8">Edit Job Role </h1>
     </div>
 </div>
 <form method="post" action="/update-job-role/{{jobRole.jobroletitle}}">
-    <input class="govuk-input govuk-!-width-one-half" value="{{jobRole.jobroletitle}}" id="jobroletitle"
+    <input class="govuk-input govuk-!-width-one-half" id="jobroletitle"
         name="jobroletitle" type="text">
     <div class="govuk-!-margin-top-4">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds-from-desktop">
                 <dl class="govuk-summary-list govuk-!-margin-bottom-2">
-                    {% for jobroleskill in jobRole.jobroleskills %}
+                    {% for job_role in job_role_obj %}
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
                             <select class="govuk-select" id="jobroleskills" name="jobroleskills">
-                                {% for jobskill in jobroleskilllist %}
-                                <option >{{jobskill}}
-                                </option>
+                                {% for skill in available_skills %}
+                                <option {% if job_role.job_role_skill.name==skill.name %} selected {% endif %}>
+                                    {{skill.name}}</option>
                                 {% endfor %}
                             </select>
                         </dt>
                         <dd class="govuk-summary-list__value">
                             <div class="govuk-form-group">
                                 <select class="govuk-select" id="jobroleskilllevels" name="jobroleskilllevels">
-                                    <option value="Beginner" >Beginner
+                                    {% for skill_level in available_skill_levels %}
+                                    <option {% if job_role.job_role_skill_level.name==skill_level.name %} selected {%
+                                        endif %}>{{skill_level.name}}
                                     </option>
-                                    <option value="Intermediate" >
-                                        Intermediate</option>
-                                    <option value="Advanced" >Advanced
-                                    </option>
-                                    <option value="Expert" >Expert</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </dd>
@@ -81,5 +78,4 @@
     </div>
 </form>
 </div>
-
 {% endblock %}
