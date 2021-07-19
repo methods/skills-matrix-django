@@ -25,57 +25,49 @@
         <h1 class="govuk-heading-xl govuk-!-margin-bottom-8">Edit Job Role </h1>
     </div>
 </div>
-<form method="post" action="/update-job-role/{{jobRole.jobroletitle}}">
-    <input class="govuk-input govuk-!-width-one-half" id="jobroletitle"
-        name="jobroletitle" type="text">
+<form class="form" method="post">
+    {% csrf_token %}
     <div class="govuk-!-margin-top-4">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds-from-desktop">
+                <input class="govuk-input govuk-!-margin-bottom-4" value="{{job_title.job_title}}"/> 
                 <dl class="govuk-summary-list govuk-!-margin-bottom-2">
-                    {% for job_role in job_role_obj %}
+                    {% for form in form_list %}
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">
-                            <select class="govuk-select" id="jobroleskills" name="jobroleskills">
-                                {% for skill in available_skills %}
-                                <option {% if job_role.job_role_skill.name==skill.name %} selected {% endif %}>
-                                    {{skill.name}}</option>
-                                {% endfor %}
-                            </select>
+                            <div class="govuk-form-group">
+                                {{form.job_role_skill}}
+                            </div>
                         </dt>
                         <dd class="govuk-summary-list__value">
                             <div class="govuk-form-group">
-                                <select class="govuk-select" id="jobroleskilllevels" name="jobroleskilllevels">
-                                    {% for skill_level in available_skill_levels %}
-                                    <option {% if job_role.job_role_skill_level.name==skill_level.name %} selected {%
-                                        endif %}>{{skill_level.name}}
-                                    </option>
-                                    {% endfor %}
-                                </select>
+                                {{form.job_role_skill_level}}
                             </div>
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
                                 data-module="govuk-button" name="deletejobroleskills"
-                                value="{{jobroleskill.skillName}}">
+                                value="{{job_role.job_role_skill.name}}">
                                 Delete
                             </button>
                         </dd>
                     </div>
                     {% endfor %}
-                    <div class="govuk-!-margin-top-4">
-                        <button class="govuk-button" name="savejobrole" value="savejobrole">
-                            Save
-                        </button>
-                        <button class="govuk-button" name="addjobroleskill" value="addjobroleskill">
-                            Add a skill
-                        </button>
+                </dl>
+                <div class="govuk-!-margin-top-4">
+                    <button class="govuk-button" name="savejobrole" value="savejobrole">
+                        Save
+                    </button>
+                    <button class="govuk-button" name="addjobroleskill" value="addjobroleskill">
+                        Add a skill
+                    </button>
 
-                    </div>
+                </div>
                 </dl>
             </div>
         </div>
-
     </div>
 </form>
 </div>
 {% endblock %}
+

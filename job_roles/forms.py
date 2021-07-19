@@ -7,7 +7,7 @@ from .fields import EmptyChoiceField
 
 
 class JobTitleForm(forms.Form):
-    job_role_title = forms.CharField(label="Enter a new job title, e.g. 'Junior Developer'.", max_length=100,
+    job_role_title = forms.CharField(label="Enter a job title, e.g. 'Junior Developer'.", max_length=100,
                                            validators=[validate_input_capitalised],
                                            widget=GdsStyleTextInput(attrs={'class': 'govuk-input'}),
                                            error_messages={'required': 'Enter a job role title'})
@@ -39,3 +39,7 @@ class JobSkillsAndSkillLevelForm(forms.Form):
         super(JobSkillsAndSkillLevelForm, self).__init__(*args, **kwargs)
         if disabled_choices:
             self.fields['job_role_skill'].widget.disabled_choices = disabled_choices
+
+
+class UpdateJobForm(JobSkillsAndSkillLevelForm, JobTitleForm):
+    pass
