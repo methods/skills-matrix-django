@@ -100,3 +100,6 @@ def dynamic_job_role_lookup_view(request, job):
     job_title = Job.objects.get(job_title=job.title().replace('-', ' '))
     job_role_obj = Competency.objects.filter(job_role_title=job_title.id)
     return render(request, "job_roles/job_role_detail.html", {'job_role_obj': job_role_obj, 'job_title': job.title().replace('-', ' ')})
+
+def update_job_role_detail_view(request,job_title):
+    return render(request, "job_roles/update_job_role.html")
