@@ -30,7 +30,7 @@
     <div class="govuk-!-margin-top-4">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds-from-desktop">
-                <input class="govuk-input govuk-!-margin-bottom-4" value="{{job_title.job_title}}"/> 
+                <input class="govuk-input govuk-!-margin-bottom-4" value="{{form_list.0.job_role_title.value}}" name="job_role_title"/> 
                 <dl class="govuk-summary-list govuk-!-margin-bottom-2">
                     {% for form in form_list %}
                     <div class="govuk-summary-list__row">
@@ -47,7 +47,7 @@
                         <dd class="govuk-summary-list__actions">
                             <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
                                 data-module="govuk-button" name="deletejobroleskills"
-                                value="{{job_role.job_role_skill.name}}">
+                                value="{{form.job_role_skill.value}}">
                                 Delete
                             </button>
                         </dd>
