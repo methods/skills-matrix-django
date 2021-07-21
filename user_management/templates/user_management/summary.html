@@ -10,7 +10,7 @@
 
 {% block beforeContent %}
 {% if not user_details %}
-<a class="govuk-back-link" href="{% url 'create password' %}">Back</a>
+<a class="govuk-back-link" href="{% url 'create-password' %}">Back</a>
 {% endif %}
 {% endblock %}
 
@@ -37,8 +37,8 @@
           {% else %} {{full_name}} {% endif %}
         </dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href={% if user_details %}"{% url 'edit name'%}"
-          {% else %}"{% url 'edit name signup' %}"{% endif %}>
+          <a class="govuk-link" href={% if user_details %}"{% url 'edit-name'%}"
+          {% else %}"{% url 'edit-name-signup' %}"{% endif %}>
             Change<span class="govuk-visually-hidden"> name</span>
           </a>
         </dd>
@@ -52,8 +52,8 @@
           {% else %} {{email_address}} {% endif %}
         </dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href={% if user_details %}"{% url 'edit email address'%}"
-          {% else %}"{% url 'edit email address signup' %}"{% endif %}>
+          <a class="govuk-link" href={% if user_details %}"{% url 'edit-email-address'%}"
+          {% else %}"{% url 'edit-email-address-signup' %}"{% endif %}>
             Change<span class="govuk-visually-hidden"> email address</span>
           </a>
         </dd>
@@ -67,8 +67,8 @@
           {% else %} {{team}} {% endif %}</p>
         </dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href={% if user_details %}"{% url 'edit job information'%}"
-          {% else %}"{% url 'edit job information signup' %}"{% endif %}>
+          <a class="govuk-link" href={% if user_details %}"{% url 'edit-job-information'%}"
+          {% else %}"{% url 'edit-job-information-signup' %}"{% endif %}>
             Change<span class="govuk-visually-hidden"> your team</span>
           </a>
 
@@ -83,8 +83,8 @@
           {% else %} {{job}} {% endif %}
         </dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href={% if user_details %}"{% url 'edit job information'%}"
-          {% else %}"{% url 'edit job information signup' %}"{% endif %}>
+          <a class="govuk-link" href={% if user_details %}"{% url 'edit-job-information'%}"
+          {% else %}"{% url 'edit-job-information-signup' %}"{% endif %}>
             Change<span class="govuk-visually-hidden"> your job</span>
           </a>
         </dd>

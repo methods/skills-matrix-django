@@ -4,33 +4,34 @@ from job_roles.models import Job
 from django.core.exceptions import ValidationError
 from ..validators import validate_domain_email, password_validation
 from common.tests.custom_classes import LoggedInUserTestCase
+from django.urls import reverse
 
 
 class AddNameSignup(TestCase):
     def test_signup_add_name_page_status_code(self):
-        response = self.client.get('/user/signup/name')
+        response = self.client.get(reverse('add-name'))
         assert response.status_code == 200
 
     def test_signup_add_name_body_resp(self):
-        response = self.client.get('/user/signup/name')
+        response = self.client.get(reverse('add-name'))
         assert "What is your name?" in response.content.decode()
 
     def test_valid_submission_redirects_to_email_page(self):
-        response = self.client.post('/user/signup/name', {'first_name': 'user_first_name', 'surname': 'user_surname'})
-        self.assertRedirects(response, '/user/signup/email')
+        response = self.client.post(reverse('add-name'), {'first_name': 'user_first_name', 'surname': 'user_surname'})
+        self.assertRedirects(response, '/user/signup/email/')
 
 
 class AddEmailSignup(TestCase):
     def test_signup_add_email_page_status_code(self):
-        response = self.client.get('/user/signup/email')
+        response = self.client.get(reverse('add-email'))
         assert response.status_code == 200
 
     def test_signup_add_email_body_resp(self):
-        response = self.client.get('/user/signup/email')
+        response = self.client.get(reverse('add-email'))
         assert "What is your email address?" in response.content.decode()
 
     def test_email_session_storage(self):
-        self.client.post('/user/signup/email', {'email_address': 'test@methods.co.uk'})
+        self.client.post(reverse('add-email'), {'email_address': 'test@methods.co.uk'})
         session = self.client.session
         assert session['email_address'] == 'test@methods.co.uk'
 
@@ -42,11 +43,11 @@ class AddEmailSignup(TestCase):
 
 class AddJobSignup(TestCase):
     def test_signup_add_job_page_status_code(self):
-        response = self.client.get('/user/signup/job')
+        response = self.client.get(reverse('add-job'))
         assert response.status_code == 200
 
     def test_signup_add_job_body_resp(self):
-        response = self.client.get('/user/signup/job')
+        response = self.client.get(reverse('add-job'))
         assert "Information about your job" in response.content.decode()
 
     def test_add_job_submit_redirects_to_password_page(self):
@@ -56,21 +57,21 @@ class AddJobSignup(TestCase):
         job = Job()
         job.job_title = 'Junior Developer'
         job.save()
-        response = self.client.post('/user/signup/job', {'team': 'OPC', 'job': 'Junior Developer'})
-        self.assertRedirects(response, '/user/signup/create-password')
+        response = self.client.post(reverse('add-job'), {'team': 'OPC', 'job': 'Junior Developer'})
+        self.assertRedirects(response, '/user/signup/create-password/')
 
 
 class CreatePasswordView(TestCase):
     def test_create_password_status_code(self):
-        response = self.client.get('/user/signup/create-password')
+        response = self.client.get(reverse('create-password'))
         assert response.status_code == 200
 
     def test_create_password_body_resp(self):
-        response = self.client.get('/user/signup/create-password')
+        response = self.client.get(reverse('create-password'))
         assert "Create a password" in response.content.decode()
 
     def test_password_hashing(self):
-        self.client.post('/user/signup/create-password', {'password': 'password',
+        self.client.post(reverse('create-password'), {'password': 'password',
                                                                  'password_confirm': 'password'})
         session = self.client.session
         assert not session['hashed_password'] == 'password'
@@ -87,25 +88,25 @@ class CreatePasswordView(TestCase):
         
 class CheckDetailsSummary(TestCase):
     def test_check_details_page_status_code(self):
-        response = self.client.get('/user/signup/summary')
+        response = self.client.get(reverse('summary'))
         assert response.status_code == 200
 
     def test_check_details_body_resp(self):
-        response = self.client.get('/user/signup/summary')
+        response = self.client.get(reverse('summary'))
         assert "Check your answers" in response.content.decode()
 
 
 class EditName(TestCase):
     def test_edit_name_page_status_code(self):
-        response = self.client.get('/user/signup/edit-name')
+        response = self.client.get(reverse('edit-name-signup'))
         assert response.status_code == 200
 
     def test_edit_name_body_resp(self):
-        response = self.client.get('/user/signup/edit-name')
+        response = self.client.get(reverse('edit-name-signup'))
         assert "Edit your name" in response.content.decode()
 
     def test_edit_name_post_request(self):
-        self.client.post('/user/signup/edit-name', {'first_name': 'Test', 'surname': 'Test Surname'})
+        self.client.post(reverse('edit-name-signup'), {'first_name': 'Test', 'surname': 'Test Surname'})
         session = self.client.session
         assert session['first_name'] == 'Test'
         assert session['surname'] == 'Test Surname'
@@ -113,26 +114,26 @@ class EditName(TestCase):
 
 class EditEmail(TestCase):
     def test_edit_email_page_status_code(self):
-        response = self.client.get('/user/signup/edit-email-address')
+        response = self.client.get(reverse('edit-email-address-signup'))
         assert response.status_code == 200
 
     def test_edit_email_body_resp(self):
-        response = self.client.get('/user/signup/edit-email-address')
+        response = self.client.get(reverse('edit-email-address-signup'))
         assert "Edit your email address" in response.content.decode()
 
     def test_edit_email_session_storage(self):
-        self.client.post('/user/signup/edit-email-address', {'email_address': 'test@methods.co.uk'})
+        self.client.post(reverse('edit-email-address-signup'), {'email_address': 'test@methods.co.uk'})
         session = self.client.session
         assert session['email_address'] == 'test@methods.co.uk'
 
 
 class EditJobInformation(TestCase):
     def test_edit_email_page_status_code(self):
-        response = self.client.get('/user/signup/edit-job-information')
+        response = self.client.get(reverse('edit-job-information-signup'))
         assert response.status_code == 200
 
     def test_edit_email_body_resp(self):
-        response = self.client.get('/user/signup/edit-job-information')
+        response = self.client.get(reverse('edit-job-information-signup'))
         assert "Edit your job information" in response.content.decode()
 
     def test_edit_job_information_post_request(self):
@@ -142,7 +143,7 @@ class EditJobInformation(TestCase):
         job = Job()
         job.job_title = 'Junior Developer'
         job.save()
-        self.client.post('/user/signup/edit-job-information', {'team': 'OPC', 'job': 'Junior Developer'})
+        self.client.post(reverse('edit-job-information-signup'), {'team': 'OPC', 'job': 'Junior Developer'})
         session = self.client.session
         assert session['job'] == 'Junior Developer'
         assert session['team'] == 'OPC'
@@ -150,7 +151,7 @@ class EditJobInformation(TestCase):
 
 class ProfilePageTests(LoggedInUserTestCase):
     def test_profile_page_GET_logged_in_user(self):
-        response = self.client.get('/user/profile')
+        response = self.client.get(reverse('profile'))
         assert response.status_code == 200
         self.assertTemplateUsed(response, 'user_management/summary.html')
         assert "test_first_name" in response.content.decode()
@@ -160,23 +161,23 @@ class ProfilePageTests(LoggedInUserTestCase):
 
     def test_profile_page_GET_no_user(self):
         self.User.objects.all().delete()
-        response = self.client.get('/user/profile')
+        response = self.client.get(reverse('profile'))
         assert response.status_code == 302
 
 
 class EditNamePageTests(LoggedInUserTestCase):
     def test_edit_name_page_GET_logged_in_user(self):
-        response = self.client.get('/user/profile/edit-name')
+        response = self.client.get(reverse('edit-name'))
         assert response.status_code == 200
         self.assertTemplateUsed(response, 'user_management/name.html')
 
     def test_edit_name_page_GET_no_user(self):
         self.User.objects.all().delete()
-        response = self.client.get('/user/profile/edit-name')
+        response = self.client.get(reverse('edit-name'))
         assert response.status_code == 302
 
     def test_edit_name_page_POST(self):
-        self.client.post('/user/profile/edit-name', {'first_name': 'updated_first_name', 'surname': 'updated_surname'})
+        self.client.post(reverse('edit-name'), {'first_name': 'updated_first_name', 'surname': 'updated_surname'})
         self.user.refresh_from_db()
         assert self.user.first_name == 'updated_first_name'
         assert self.user.surname == 'updated_surname'
@@ -184,24 +185,24 @@ class EditNamePageTests(LoggedInUserTestCase):
 
 class EditEmailPageTests(LoggedInUserTestCase):
     def test_edit_email_page_GET_logged_in_user(self):
-        response = self.client.get('/user/profile/edit-email-address')
+        response = self.client.get(reverse('edit-email-address'))
         assert response.status_code == 200
         self.assertTemplateUsed(response, 'user_management/email_address.html')
 
     def test_edit_email_page_GET_no_user(self):
         self.User.objects.all().delete()
-        response = self.client.get('/user/profile/edit-email-address')
+        response = self.client.get(reverse('edit-email-address'))
         assert response.status_code == 302
 
     def test_edit_email_POST(self):
-        self.client.post('/user/profile/edit-email-address', {'email_address': 'updated@methods.co.uk'})
+        self.client.post(reverse('edit-email-address'), {'email_address': 'updated@methods.co.uk'})
         self.user.refresh_from_db()
         assert self.user.email == 'updated@methods.co.uk'
 
 
 class EditJobInformationPageTests(LoggedInUserTestCase):
     def test_edit_email_page_GET_logged_in_user(self):
-        response = self.client.get('/user/profile/edit-job-information')
+        response = self.client.get(reverse('edit-job-information'))
         assert response.status_code == 200
         self.assertTemplateUsed(response, 'user_management/job_info.html')
 
@@ -212,7 +213,7 @@ class EditJobInformationPageTests(LoggedInUserTestCase):
         job = Job()
         job.job_title = 'Updated job'
         job.save()
-        self.client.post('/user/profile/edit-job-information', {'team': 'Updated team', 'job': 'Updated job'})
+        self.client.post(reverse('edit-job-information'), {'team': 'Updated team', 'job': 'Updated job'})
         self.user.refresh_from_db()
         assert self.user.job_role == 'Updated job'
         assert self.user.team == 'Updated team'
