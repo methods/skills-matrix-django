@@ -1,0 +1,44 @@
+{% extends "super_admin/super_admin_base.html" %}
+{% load sass_tags %}
+
+{% block pageTitle %}
+  Add Skill
+{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">{% if edit %}Edit{% else %}Add a{% endif%} skill level</h1>
+    </div>
+  </div>
+<div class="govuk-!-margin-top-4">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds-from-desktop">
+      <div class="govuk-form-group {% if form.errors %} govuk-form-group--error {% endif %}">
+      <form class="form" method="post">
+        {% csrf_token %}
+        {{form.non_field_errors}}
+        {% for field in form %}
+        <div>
+          <div>
+            {% for error in field.errors %}
+            <span id="addname-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span>
+              {{error}}
+            </span>
+            {% endfor %}
+          </div>
+          <label class="govuk-hint" for="{{field.id_for_label}}">
+            {{field.label}}
+          </label>
+          {{field}}
+        </div>
+        {% endfor %}
+        <button class="govuk-button" data-module="govuk-button">Save</button>
+      </form>
+    </div>
+      </div>
+</div>
+
+{% endblock %}

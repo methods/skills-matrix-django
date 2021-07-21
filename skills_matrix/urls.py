@@ -8,5 +8,6 @@ urlpatterns = [
     path('error/', include('error.urls')),
     path('job-roles/', include('job_roles.urls')),
     path('auth/', include('auth_processes.urls')),
-    path('career-paths/', include('career_paths.urls'))
+    path('career-paths/', include('career_paths.urls')),
+    path('super-admin/', include('super_admin.urls')),
 ]

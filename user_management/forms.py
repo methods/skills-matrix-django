@@ -1,7 +1,7 @@
 from django import forms
 from super_admin.models import Team
 from job_roles.models import Job
-from .widgets import GdsStylePasswordInput,GdsStyleTextInput,GdsStyleEmailInput
+from common.widgets import GdsStylePasswordInput,GdsStyleTextInput,GdsStyleEmailInput
 from .validators import validate_domain_email
 
 

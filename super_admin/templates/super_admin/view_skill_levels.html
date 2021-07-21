@@ -1,0 +1,64 @@
+{% extends "super_admin/super_admin_base.html" %}
+{% load sass_tags %}
+
+
+{% block pageTitle %}
+  Home
+{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+<div class="govuk-warning-text">
+  <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+  <strong class="govuk-warning-text__text">
+    <span class="govuk-warning-text__assistive">Warning</span>
+    The skill levels on this page are applied across the whole application.
+  </strong>
+</div>
+<h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Skill levels</h1>
+    </div>
+  </div>
+
+<div class="govuk-!-margin-top-4">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half-from-desktop">
+
+        <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+          <form method="post">
+        {% csrf_token %}
+            {% for skill_level in skill_levels %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+                {{skill_level.name}}
+              </dt>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-button govuk-!-margin-bottom-0" href="{% url 'edit-a-skill-level' pk=skill_level.pk %}">
+                Edit
+              </a>
+              <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button"
+                      name="delete" value="{{skill_level.name}}">
+                Delete
+              </button>
+
+              </dd>
+            </div>
+            {% endfor %}
+            <div class="govuk-!-margin-top-4">
+              <button class="govuk-button" name="save" value="save">
+                Save
+              </button>
+              <a class="govuk-button" href="{% url 'add-a-skill-level' %}">
+                Add a skill level
+              </a>
+          </div>
+          </form>
+          </dl>
+
+
+
+</div>
+
+{% endblock %}
