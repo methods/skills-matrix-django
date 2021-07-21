@@ -106,6 +106,9 @@ def dynamic_job_role_lookup_view(request, job):
 def update_job_role_detail_view(request, job_title):
     job_title = Job.objects.get(job_title=job_title.title().replace('-', ' '))
     job_role_obj = Competency.objects.filter(job_role_title=job_title.id)
+    if request.method == 'POST':
+        if 'delete_competency' in request.POST.keys():
+            Competency.objects.get(id=request.POST['delete_competency']).delete()
     return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj, 'job_title': job_title})
 
 
