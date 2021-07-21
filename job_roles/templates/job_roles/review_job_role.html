@@ -1,0 +1,56 @@
+{% extends "job_roles/job_roles_base.html" %}
+{% load sass_tags %}
+
+
+{% block beforeContent %}
+<div class="govuk-breadcrumbs">
+    <ol class="govuk-breadcrumbs__list">
+        <li class="govuk-breadcrumbs__list-item">
+            <a class="govuk-breadcrumbs__link" href="{% url 'dashboard' %}">Home</a>
+        </li>
+        <li class="govuk-breadcrumbs__list-item">
+            <a class="govuk-breadcrumbs__link" href="{% url 'job-roles' %}">Job Roles</a>
+        </li>
+        <li class="govuk-breadcrumbs__list-item">
+            <a class="govuk-breadcrumbs__link" href="{% url 'add-job-title' %}">Job Title</a>
+        </li>
+        <li class="govuk-breadcrumbs__list-item">
+            <a class="govuk-breadcrumbs__link" href="{% url 'add-job-skills' %}">Job skills</a>
+        </li>
+    </ol>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-4">{{request.session.job_role_title}}</h1>
+        <span class="govuk-caption-xl"> Job role skills</span>
+    </div>
+</div>
+<div class="govuk-!-margin-top-4">
+    <form class="form"  method="post">
+        {% csrf_token %}
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Skill</th>
+                    <th scope="col" class="govuk-table__header">Skill Level</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                {% for new_job_competencies in request.session.new_added_job_competencies %}
+                {% for key,value in new_job_competencies.items %}
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">{{key}}</th>
+                    <td class="govuk-table__cell">{{value}}</td>
+                </tr>
+                {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+        <button class="govuk-button" data-module="govuk-button" name="save" value="save">Save</button>
+    </form>
+</div>
+{% endblock %}
