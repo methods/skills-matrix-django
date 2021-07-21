@@ -23,8 +23,7 @@ class AddJobRolePageTests(LoggedInUserTestCase):
         assert response.status_code == 302
  
     def test_page_GET_admin_users(self):
-        admins_group = Group.objects.get(name='Admins')
-        self.user.groups.add(admins_group)
+        self.user.groups.add(self.group)
         response = self.client.get('/job-roles/create-new-job')
         assert response.status_code == 200
         self.assertTemplateUsed(response, 'job_roles/add_job_role.html')
