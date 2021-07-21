@@ -1,7 +1,8 @@
 from django import forms
-from signup.widgets import GdsStyleTextInput
+from common.widgets import GdsStyleTextInput
 from .widgets import CustomisedSelectWidget
-from app.models import Skill, SkillLevel
+from super_admin.models import SkillLevel
+from app.models import Skill
 from .validators import validate_input_capitalised
 from .fields import EmptyChoiceField
 
@@ -24,10 +25,12 @@ class JobTitleForm(forms.Form):
 
 class JobSkillsAndSkillLevelForm(forms.Form):
     def get_skill_choices():
+        pass
         skill_options = ((skill.name, skill.name) for skill in Skill.objects.all())
         return skill_options
 
     def get_skill_level_choices():
+        pass
         skill_level_options = ((skill_level.name, skill_level.name) for skill_level in SkillLevel.objects.all())
         return skill_level_options
 

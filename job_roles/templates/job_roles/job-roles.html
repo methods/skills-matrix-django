@@ -48,10 +48,10 @@
             </div>
           </div>
           {% endfor %}
-          {% if user.is_staff %}
-          <a class="govuk-button" data-module="govuk-button" href="{% url 'add-a-job-role' %}">Add a job role</a>
-          {% endif %}
         </div>
+        {% if user.is_staff %}
+        <a class="govuk-button" data-module="govuk-button" href="{% url 'add-job-title' %}">Add a job role</a>
+        {% endif %}
       </div>
     </div>
       {% endblock %}
