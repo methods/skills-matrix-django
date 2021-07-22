@@ -1,6 +1,9 @@
 from django.contrib.auth.models import Group
-from common.tests.custom_classes import LoggedInUserTestCase
+from common.tests.custom_classes import LoggedInUserTestCase, LoggedInAdminTestCase
 from django.urls import reverse
+from job_roles.models import Competency, Job
+from app.models import Skill
+from super_admin.models import SkillLevel
 
 
 class JobRolePageTests(LoggedInUserTestCase):
@@ -42,3 +45,16 @@ class AddJobRolePageTests(LoggedInUserTestCase):
         self.user.groups.add(admins_group)
         response = self.client.post(reverse('add-job-title'), {'job_role_title': 'Lead Developer'})
         self.assertRedirects(response, '/job-roles/add-job-role-skills/')
+
+
+class UpdateJobRolePageTests(LoggedInAdminTestCase):
+    def test_edit_competency(self):
+        test_job = Job.objects.create(job_title='test')
+        test_skill = Skill.objects.create(name='test', skill_type='Career skill')
+        test_skill_level = SkillLevel.objects.create(name='test')
+        test_competency = Competency.objects.create(job_role_title=test_job, job_role_skill=test_skill,
+                                  job_role_skill_level=test_skill_level)
+        self.client.post(reverse('update-job-role-view', args=['test']), {'job_role_skill': 'updated',
+                                                                      'job_role_skill_level': 'updated'})
+        assert test_competency.job_role_skill == 'updated'
+        assert test_competency.job_role_skill_level == 'updated'

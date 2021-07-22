@@ -43,6 +43,3 @@ class JobSkillsAndSkillLevelForm(forms.Form):
         if disabled_choices:
             self.fields['job_role_skill'].widget.disabled_choices = disabled_choices
 
-
-class UpdateJobForm(JobSkillsAndSkillLevelForm, JobTitleForm):
-    pass
