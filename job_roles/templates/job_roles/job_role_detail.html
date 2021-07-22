@@ -5,7 +5,7 @@
 <div class="govuk-breadcrumbs">
     <ol class="govuk-breadcrumbs__list">
         <li class="govuk-breadcrumbs__list-item">
-            <a class="govuk-breadcrumbs__link" href="/home">Home</a>
+            <a class="govuk-breadcrumbs__link" href="{% url 'dashboard' %}" >Home</a>
         </li>
         {% if careerPath %}
         <li class="govuk-breadcrumbs__list-item">
@@ -16,7 +16,7 @@
         </li>
         {% else %}
         <li class="govuk-breadcrumbs__list-item">
-            <a class="govuk-breadcrumbs__link" href="/job-roles">Job Roles</a>
+            <a class="govuk-breadcrumbs__link" href="{% url 'job-roles' %}">Job Roles</a>
         </li>
         {% endif %}
     </ol>
