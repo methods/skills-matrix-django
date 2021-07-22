@@ -104,14 +104,12 @@ def dynamic_job_role_lookup_view(request, job):
 
 
 def update_job_role_detail_view(request, job_title):
-    job_title = Job.objects.get(job_title=job_title.title().replace('-', ' '))
+    job_title = Job.objects.get(job_title=job_title.replace('-', ' '))
     job_role_obj = Competency.objects.filter(job_role_title=job_title.id)
     if request.method == 'POST':
-        print(request.POST.keys())
         if 'delete_competency' in request.POST.keys():
             Competency.objects.get(id=request.POST['delete_competency']).delete()
         if 'edit_competency' in request.POST.keys():
-            print('edit')
             competency = Competency.objects.get(id=request.POST['edit_competency'])
             form = JobSkillsAndSkillLevelForm(initial={'job_role_skill': competency.job_role_skill.name,
                                                        'job_role_skill_level': competency.job_role_skill_level.name})
@@ -121,12 +119,17 @@ def update_job_role_detail_view(request, job_title):
                                                                       'form': form,
                                                                       'edit_competency_id': edit_competency_id})
         if 'update_competency' in request.POST.keys():
+            print('update')
             form = JobSkillsAndSkillLevelForm(request.POST)
             if form.is_valid():
+                print("valid")
                 competency = Competency.objects.get(id=request.POST['update_competency'])
                 competency.job_role_skill = Skill.objects.get(name=request.POST['job_role_skill'])
                 competency.job_role_skill_level = SkillLevel.objects.get(name=request.POST['job_role_skill_level'])
                 competency.save()
+                print(competency)
+            else:
+                print(form.errors)
     return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj, 'job_title': job_title})
 
 

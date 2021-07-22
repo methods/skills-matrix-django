@@ -51,10 +51,15 @@ class UpdateJobRolePageTests(LoggedInAdminTestCase):
     def test_edit_competency(self):
         test_job = Job.objects.create(job_title='test')
         test_skill = Skill.objects.create(name='test', skill_type='Career skill')
+        updated_skill = Skill.objects.create(name='updated', skill_type='Career skill')
         test_skill_level = SkillLevel.objects.create(name='test')
+        update_skill_level = SkillLevel.objects.create(name='updated')
         test_competency = Competency.objects.create(job_role_title=test_job, job_role_skill=test_skill,
                                   job_role_skill_level=test_skill_level)
         self.client.post(reverse('update-job-role-view', args=['test']), {'job_role_skill': 'updated',
-                                                                      'job_role_skill_level': 'updated'})
-        assert test_competency.job_role_skill == 'updated'
-        assert test_competency.job_role_skill_level == 'updated'
+                                                                      'job_role_skill_level': 'updated',
+                                                                          'update_competency': test_competency.id})
+        test_competency.refresh_from_db()
+        breakpoint()
+        assert test_competency.job_role_skill.name == 'updated'
+        assert test_competency.job_role_skill_level.name == 'updated'
