@@ -14,6 +14,7 @@ def job_roles(request):
         if 'job_role_title' in request.session.keys(): del request.session['job_role_title']
         if 'disabled_choices' in request.session.keys(): del request.session['disabled_choices']
         if 'new_added_job_competencies' in request.session.keys(): del request.session['new_added_job_competencies']
+        if 'updated_job_role_title' in request.session.keys(): del request.session['updated_job_role_title']
     job_list = []
     skill_list = Job.objects.all()
     for skill in skill_list:
@@ -104,8 +105,12 @@ def dynamic_job_role_lookup_view(request, job):
 
 
 def update_job_role_detail_view(request, job_title):
-    job_title = Job.objects.get(job_title=job_title.title().replace('-', ' '))
-    job_role_obj = Competency.objects.filter(job_role_title=job_title.id)
+    if 'updated_job_role_title' in request.session.keys():
+        job_title = Job.objects.get(job_title=request.session['updated_job_role_title'])
+        job_role_obj = Competency.objects.filter(job_role_title=job_title.id)
+    else:
+        job_title = Job.objects.get(job_title=job_title.title().replace('-', ' '))
+        job_role_obj = Competency.objects.filter(job_role_title=job_title.id)
     if request.method == 'POST':
         if 'delete_competency' in request.POST.keys():
             Competency.objects.get(id=request.POST['delete_competency']).delete()
@@ -122,18 +127,28 @@ def update_job_role_detail_view(request, job_title):
             # print('update')
             form = JobSkillsAndSkillLevelForm(request.POST)
             if form.is_valid():
-                print("valid")
                 competency = Competency.objects.get(id=request.POST['update_competency'])
                 competency.job_role_skill = Skill.objects.get(name=request.POST['job_role_skill'])
                 competency.job_role_skill_level = SkillLevel.objects.get(name=request.POST['job_role_skill_level'])
                 competency.save()
-                # print(competency)
             else:
                 print(form.errors)
         if 'edit_job_role_title' in request.POST.keys():
             form_job_role_title = JobTitleForm(initial={'job_role_title': job_title.job_title})
             return render(request, "job_roles/update_job_role.html", {'form_job_role_title': form_job_role_title, 'job_title': job_title, 'job_role_obj': job_role_obj
                                                                       })
+        if 'save_job_role_title' in request.POST.keys():
+            if 'updated_job_role_title' not in request.session.keys():
+                request.session['updated_job_role_title'] = None
+            form_job_role_title = JobTitleForm(request.POST)
+            if form_job_role_title.is_valid():
+                Job.objects.filter(id=request.POST['save_job_role_title']).update(job_title=form_job_role_title.cleaned_data['job_role_title'])
+                request.session['updated_job_role_title'] = Job.objects.get(id=request.POST['save_job_role_title']).job_title
+                updated_job_role_title_obj = Job.objects.get(id=request.POST['save_job_role_title'])
+                return render(request, "job_roles/update_job_role.html", {'job_title': updated_job_role_title_obj, 'job_role_obj': job_role_obj
+                                                                      })                                                    
+            else:
+                print(form_job_role_title.errors)
     return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj, 'job_title': job_title})
 
 
