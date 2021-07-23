@@ -1,0 +1,38 @@
+{% extends "job_roles/job_roles_base.html" %}
+{% load sass_tags %}
+
+{% block beforeContent %}
+<div class="govuk-breadcrumbs">
+  <ol class="govuk-breadcrumbs__list">
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{% url 'dashboard' %}">Home</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="{% url 'job-roles' %}">Job Roles</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link"  href="{% url 'job-role-view' job_title.job_title|slugify %}">{{job_title.job_title}}</a>
+    </li>
+  </ol>
+</div>
+{% endblock %}
+
+
+{% block content %}
+<div class="govuk-width-container">
+    <form method="post">
+        {% csrf_token %}
+        <div class="govuk-panel govuk-panel--confirmation" style="background:#1d70b8">
+            <h1 class="govuk-panel__title">
+              Are you sure you want to delete the {{job_title.job_title}} role?
+            </h1>
+            <a class="govuk-button" data-module="govuk-button" name="canceldeletejobrole" href="{% url 'job-role-view' job_title.job_title|slugify %}">
+            Cancel
+            </a>
+          <button class="govuk-button govuk-button--warning" data-module="govuk-button" name="delete_job_role" value="{{job_title.id}}">
+          Delete Job Role
+      </button>
+    </div>
+    </form>
+</div>
+{% endblock %}

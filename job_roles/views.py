@@ -91,13 +91,17 @@ def review_job_role(request):
         return redirect(job_roles)
     return render(request, "job_roles/review_job_role.html")
 
-
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
+                  login_url='/error/not-authorised')
 def dynamic_job_role_lookup_view(request, job):
     job_title = Job.objects.get(job_title=job.title().replace('-', ' '))
     job_role_obj = Competency.objects.filter(job_role_title=job_title.id)
-    return render(request, "job_roles/job_role_detail.html", {'job_role_obj': job_role_obj, 'job_title': job.title().replace('-', ' ')})
+    return render(request, "job_roles/job_role_detail.html", {'job_role_obj': job_role_obj, 'job_title': job_title})
 
-
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
+                  login_url='/error/not-authorised')
 def update_job_role_detail_view(request, job_title):
     if 'updated_job_role_title' in request.session.keys():
         job_title = Job.objects.get(job_title=request.session['updated_job_role_title'])
@@ -146,7 +150,13 @@ def update_job_role_detail_view(request, job_title):
     return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj, 'job_title': job_title})
 
 
-
+def delete_job_role_title_view(request, job_title):
+    job_title = Job.objects.get(job_title=job_title.title().replace('-', ' '))
+    if request.method == 'POST':
+        if "delete_job_role" in request.POST.keys():
+            Job.objects.get(id=request.POST['delete_job_role']).delete()
+            return render(request, "job_roles/delete_job_role_confirmation.html", {'job_title': job_title})
+    return render(request, "job_roles/delete_job_role.html", {'job_title': job_title})
 
 
 

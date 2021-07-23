@@ -1,0 +1,26 @@
+{% extends "job_roles/job_roles_base.html" %}
+{% load sass_tags %}
+
+{% block beforeContent %}
+<div class="govuk-breadcrumbs">
+    <ol class="govuk-breadcrumbs__list">
+        <li class="govuk-breadcrumbs__list-item">
+            <a class="govuk-breadcrumbs__link" href="{% url 'dashboard' %}">Home</a>
+        </li>
+        <li class="govuk-breadcrumbs__list-item">
+            <a class="govuk-breadcrumbs__link" href="{% url 'job-roles' %}">Job Roles</a>
+        </li>
+    </ol>
+</div>
+{% endblock %}
+
+
+{% block content %}
+<div class="govuk-width-container">
+    <div class="govuk-panel govuk-panel--confirmation">
+        <h1 class="govuk-panel__title">
+            The {{job_title.job_title}} role has been succesfully deleted.
+        </h1>
+    </div>
+</div>
+{% endblock %}
