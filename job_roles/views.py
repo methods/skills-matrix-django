@@ -15,13 +15,7 @@ def job_roles(request):
         if 'disabled_choices' in request.session.keys(): del request.session['disabled_choices']
         if 'new_added_job_competencies' in request.session.keys(): del request.session['new_added_job_competencies']
         if 'updated_job_role_title' in request.session.keys(): del request.session['updated_job_role_title']
-    job_list = []
-    skill_list = Job.objects.all()
-    for skill in skill_list:
-        competencies = Competency.objects.filter(job_role_title=skill.id)
-        for competency in competencies:
-            job_list.append(competency.job_role_title.job_title)
-    job_role_list = list(dict.fromkeys(job_list))
+    job_role_list = Job.objects.all().order_by('id')
     return render(request, "job_roles/job-roles.html", {"user": request.user, 'job_role_list': job_role_list})
 
 
@@ -107,10 +101,10 @@ def dynamic_job_role_lookup_view(request, job):
 def update_job_role_detail_view(request, job_title):
     if 'updated_job_role_title' in request.session.keys():
         job_title = Job.objects.get(job_title=request.session['updated_job_role_title'])
-        job_role_obj = Competency.objects.filter(job_role_title=job_title.id)
+        job_role_obj = Competency.objects.filter(job_role_title=job_title.id).order_by('id')
     else:
         job_title = Job.objects.get(job_title=job_title.title().replace('-', ' '))
-        job_role_obj = Competency.objects.filter(job_role_title=job_title.id)
+        job_role_obj = Competency.objects.filter(job_role_title=job_title.id).order_by('id')
     if request.method == 'POST':
         if 'delete_competency' in request.POST.keys():
             Competency.objects.get(id=request.POST['delete_competency']).delete()

@@ -25,7 +25,25 @@
 {% endblock %}
 
 {% block content %}
-
+{% if not job_role_obj|length %}
+<div class="govuk-width-container">
+    <form class="form" method="post">
+      {% csrf_token %}
+      <div class="govuk-panel">
+        <h1 class="govuk-heading-xl">
+          There are no skills assigned to the {{job_title}} role.
+        </h1>
+        <a class="govuk-button" href="{% url 'add-a-skill-level' %}">
+            Add skill
+          </a>
+        <button class="govuk-button govuk-button--warning" data-module="govuk-button" name="deletejobrole"
+            value="{{job_title}}">
+            Delete Job Role
+        </button>
+      </div>
+    </form>
+  </div>
+{% else %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-xl govuk-!-margin-bottom-4">{{job_title}}</h1>
@@ -57,6 +75,6 @@
             Delete Job Role
         </button>
     </form>
-
 </div>
+{% endif %}
 {% endblock %}
