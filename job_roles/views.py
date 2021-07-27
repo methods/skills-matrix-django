@@ -6,6 +6,7 @@ from django.contrib import messages
 from .models import Job, Competency
 from app.models import Skill
 from super_admin.models import SkillLevel
+from .utils import populate_existing_competencies
 
 
 @login_required
@@ -114,23 +115,22 @@ def update_job_role_detail_view(request, job_title):
             Competency.objects.get(id=request.POST['delete_competency']).delete()
         if 'edit_competency' in request.POST.keys():
             competency = Competency.objects.get(id=request.POST['edit_competency'])
+            disabled_choices = populate_existing_competencies(job_title)
             form = JobSkillsAndSkillLevelForm(initial={'job_role_skill': competency.job_role_skill.name,
-                                                       'job_role_skill_level': competency.job_role_skill_level.name})
+                                                       'job_role_skill_level': competency.job_role_skill_level.name},
+                                              disabled_choices=disabled_choices)
             edit_competency_id = int(request.POST['edit_competency'])
             return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj,
                                                                       'job_title': job_title,
                                                                       'form': form,
                                                                       'edit_competency_id': edit_competency_id})
         if 'update_competency' in request.POST.keys():
-            # print('update')
             form = JobSkillsAndSkillLevelForm(request.POST)
             if form.is_valid():
                 competency = Competency.objects.get(id=request.POST['update_competency'])
                 competency.job_role_skill = Skill.objects.get(name=request.POST['job_role_skill'])
                 competency.job_role_skill_level = SkillLevel.objects.get(name=request.POST['job_role_skill_level'])
                 competency.save()
-            else:
-                print(form.errors)
         if 'edit_job_role_title' in request.POST.keys():
             form_job_role_title = JobTitleForm(initial={'job_role_title': job_title.job_title})
             return render(request, "job_roles/update_job_role.html", {'form_job_role_title': form_job_role_title, 'job_title': job_title, 'job_role_obj': job_role_obj
@@ -144,12 +144,13 @@ def update_job_role_detail_view(request, job_title):
                 request.session['updated_job_role_title'] = Job.objects.get(id=request.POST['save_job_role_title']).job_title
                 updated_job_role_title_obj = Job.objects.get(id=request.POST['save_job_role_title'])
                 return render(request, "job_roles/update_job_role.html", {'job_title': updated_job_role_title_obj, 'job_role_obj': job_role_obj
-                                                                      })                                                    
-            else:
-                print(form_job_role_title.errors)
+                                                                      })
     return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj, 'job_title': job_title})
 
 
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
+                  login_url='/error/not-authorised')
 def delete_job_role_title_view(request, job_title):
     job_title = Job.objects.get(job_title=job_title.title().replace('-', ' '))
     if request.method == 'POST':
@@ -159,6 +160,9 @@ def delete_job_role_title_view(request, job_title):
     return render(request, "job_roles/delete_job_role.html", {'job_title': job_title})
 
 
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
+                  login_url='/error/not-authorised')
 def add_a_skill(request, job_title):
     job = Job.objects.get(job_title=job_title.title().replace('-', ' '))
     if request.POST:
@@ -168,9 +172,6 @@ def add_a_skill(request, job_title):
                    job_role_skill_level=job_role_skill_level).save()
         return redirect(update_job_role_detail_view, job_title=job_title)
     else:
-        competencies = Competency.objects.filter(job_role_title=job.id)
-        disabled_choices = []
-        for competency in competencies:
-            disabled_choices.append(competency.job_role_skill.name)
+        disabled_choices = populate_existing_competencies(job)
         form = JobSkillsAndSkillLevelForm(disabled_choices=disabled_choices) if 'disabled_choices' != [] else JobSkillsAndSkillLevelForm()
         return render(request, "job_roles/add_job_role_skills.html", {'form': form})
