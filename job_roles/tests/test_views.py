@@ -66,8 +66,16 @@ class AddJobRolePageTests(LoggedInUserTestCase):
 
 class AddSkillPageTests(LoggedInAdminTestCase):
     def test_admin_user_GET_returns_200_and_correct_template(self):
-        test_job = Job.objects.create(job_title='test')
-        response = self.client.get(reverse('add-a-skill', kwargs={'job_title': 'test'}))
+        test_job = Job.objects.create(job_title='Test Job')
+        response = self.client.get(reverse('add-a-skill', kwargs={'job_title': 'Test Job'}))
         assert response.status_code == 200
         self.assertTemplateUsed(response, 'job_roles/add_job_role_skills.html')
 
+    def test_valid_post_request(self):
+        test_job = Job.objects.create(job_title='Test Job')
+        test_skill = Skill.objects.create(name='test_skill', skill_type='Career skill')
+        test_skill_level = SkillLevel.objects.create(name='test_skill_level')
+        self.client.post(reverse('add-a-skill', kwargs={'job_title': 'Test Job'}), {'job_role_skill': 'test_skill',
+                                                                            'job_role_skill_level': 'test_skill_level'})
+        assert Competency.objects.filter(job_role_title=test_job, job_role_skill=test_skill,
+                          job_role_skill_level=test_skill_level).exists()
