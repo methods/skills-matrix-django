@@ -4,6 +4,7 @@ from django.urls import reverse
 from job_roles.models import Competency, Job
 from app.models import Skill
 from super_admin.models import SkillLevel
+from .utils import creates_job_competency_instances
 
 
 class JobRolePageTests(LoggedInUserTestCase):
@@ -47,35 +48,32 @@ class AddJobRolePageTests(LoggedInUserTestCase):
         self.assertRedirects(response, '/job-roles/add-job-role-skills/')
 
 
-# class UpdateJobRolePageTests(LoggedInAdminTestCase):
-#     def test_edit_competency(self):
-#         test_job = Job.objects.create(job_title='test')
-#         test_skill = Skill.objects.create(name='test', skill_type='Career skill')
-#         updated_skill = Skill.objects.create(name='updated', skill_type='Career skill')
-#         test_skill_level = SkillLevel.objects.create(name='test')
-#         update_skill_level = SkillLevel.objects.create(name='updated')
-#         test_competency = Competency.objects.create(job_role_title=test_job, job_role_skill=test_skill,
-#                                   job_role_skill_level=test_skill_level)
-#         self.client.post(reverse('update-job-role-view', args=['test']), {'job_role_skill': 'updated',
-#                                                                       'job_role_skill_level': 'updated',
-#                                                                           'update_competency': test_competency.id})
-#         test_competency.refresh_from_db()
-#         assert test_competency.job_role_skill.name == 'updated'
-#         assert test_competency.job_role_skill_level.name == 'updated'
+class UpdateJobRolePageTests(LoggedInAdminTestCase):
+    def test_edit_competency(self):
+        test_competency = creates_job_competency_instances()
+        Skill.objects.create(name='updated', skill_type='Career skill')
+        SkillLevel.objects.create(name='updated')
+        test_competency = Competency.objects.create(job_role_title=test_competency['test_job'],
+                                                    job_role_skill=test_competency['test_skill'],
+                                                    job_role_skill_level=test_competency['test_skill_level'])
+        self.client.post(reverse('update-job-role-view', kwargs={'job_title': 'Test Job'}), {'job_role_skill': 'updated',
+                                                                      'job_role_skill_level': 'updated',
+                                                                          'update_competency': test_competency.id})
+        test_competency.refresh_from_db()
+        assert test_competency.job_role_skill.name == 'updated'
+        assert test_competency.job_role_skill_level.name == 'updated'
 
 
 class AddSkillPageTests(LoggedInAdminTestCase):
     def test_admin_user_GET_returns_200_and_correct_template(self):
-        test_job = Job.objects.create(job_title='Test Job')
+        Job.objects.create(job_title='Test Job')
         response = self.client.get(reverse('add-a-skill', kwargs={'job_title': 'Test Job'}))
         assert response.status_code == 200
         self.assertTemplateUsed(response, 'job_roles/add_job_role_skills.html')
 
     def test_valid_post_request(self):
-        test_job = Job.objects.create(job_title='Test Job')
-        test_skill = Skill.objects.create(name='test_skill', skill_type='Career skill')
-        test_skill_level = SkillLevel.objects.create(name='test_skill_level')
+        test_competency = creates_job_competency_instances()
         self.client.post(reverse('add-a-skill', kwargs={'job_title': 'Test Job'}), {'job_role_skill': 'test_skill',
                                                                             'job_role_skill_level': 'test_skill_level'})
-        assert Competency.objects.filter(job_role_title=test_job, job_role_skill=test_skill,
-                          job_role_skill_level=test_skill_level).exists()
+        assert Competency.objects.filter(job_role_title=test_competency['test_job'], job_role_skill=test_competency['test_skill'],
+                          job_role_skill_level=test_competency['test_skill_level']).exists()

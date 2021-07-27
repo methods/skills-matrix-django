@@ -24,6 +24,7 @@ class JobTitleForm(forms.Form):
 
 
 class JobSkillsAndSkillLevelForm(forms.Form):
+
     def get_skill_choices():
         pass
         skill_options = ((skill.name, skill.name) for skill in Skill.objects.all())
@@ -34,7 +35,8 @@ class JobSkillsAndSkillLevelForm(forms.Form):
         skill_level_options = ((skill_level.name, skill_level.name) for skill_level in SkillLevel.objects.all())
         return skill_level_options
 
-    job_role_skill = EmptyChoiceField(choices=get_skill_choices(), empty_label='--Select a skill--', required=False, widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'}))
+    job_role_skill = EmptyChoiceField(choices=get_skill_choices(), empty_label='--Select a skill--', required=False,
+                                      widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'}))
     job_role_skill_level = forms.ChoiceField(choices=get_skill_level_choices,
                                              widget=forms.Select(attrs={'class': 'govuk-select'}))
 
