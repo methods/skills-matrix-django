@@ -16,6 +16,16 @@ class LoggedInUserTestCase(TestCase):
         self.User.objects.all().delete()
 
 
+class LoggedInAdminTestCase(LoggedInUserTestCase):
+    def setUp(self):
+        super(LoggedInAdminTestCase, self).setUp()
+        # Group setup
+        group_name = "Admins"
+        self.group = Group(name=group_name)
+        self.group.save()
+        self.user.groups.add(self.group)
+
+
 class LoggedInSuperAdminTestCase(LoggedInUserTestCase):
     def setUp(self):
         super(LoggedInSuperAdminTestCase, self).setUp()

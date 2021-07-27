@@ -25,15 +25,29 @@
 {% endblock %}
 
 {% block content %}
-
+{% if not job_role_obj|length %}
+<div class="govuk-width-container">
+      <div class="govuk-panel">
+        <h1 class="govuk-heading-xl">
+          There are no skills assigned to the {{job_title.job_title}} role.
+        </h1>
+        <a class="govuk-button" href="{% url 'add-a-skill-level' %}">
+            Add skill
+          </a>
+          <a class="govuk-button govuk-button--warning" href="{% url 'delete-job-role-view' job_title.job_title|slugify %}" data-module="govuk-button"
+          >
+          Delete Job Role
+      </a>
+      </div>
+  </div>
+{% else %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-xl govuk-!-margin-bottom-4">{{job_title}}</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-4">{{job_title.job_title}}</h1>
         <span class="govuk-caption-xl"> Job role skills</span>
     </div>
 </div>
 <div class="govuk-!-margin-top-4">
-    <form action="/view-job-role/{{jobRole.jobroletitle}}" method="post">
         <table class="govuk-table">
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
@@ -50,13 +64,12 @@
                 {% endfor %}
             </tbody>
         </table>
-        <a class="govuk-button" data-module="govuk-button" href="{% url 'update-job-role-view' job_title|slugify %}">Edit Job
+        <a class="govuk-button" data-module="govuk-button" href="{% url 'update-job-role-view' job_title.job_title|slugify %}">Edit Job
             Role</a>
-        <button class="govuk-button govuk-button--warning" data-module="govuk-button" name="deletejobrole"
-            value="{{jobRole.jobroletitle}}">
+            <a class="govuk-button govuk-button--warning" href="{% url 'delete-job-role-view' job_title.job_title|slugify %}" data-module="govuk-button"
+            >
             Delete Job Role
-        </button>
-    </form>
-
+        </a>
 </div>
+{% endif %}
 {% endblock %}

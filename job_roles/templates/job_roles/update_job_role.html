@@ -21,44 +21,68 @@
 
 {% block content %}
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-8">Edit Job Role </h1>
-    <input class="govuk-input govuk-!-margin-bottom-4" value="{{job_title.job_title}}" type="text">
-  </div>
+    <form method='post'>
+      {% csrf_token %}
+      <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-8">Edit Job Role </h1>
+        <dl class="govuk-summary-list govuk-!-margin-bottom-8">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              {% if form_job_role_title %}
+              {{form_job_role_title.job_role_title}}
+              {% else %}
+              {{job_title.job_title}}
+              {% endif %}
+            </dt>
+            <dd class='govuk-!-margin-bottom-2'>
+              <button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-right-1" data-module="govuk-button" {% if form_job_role_title %}name="save_job_role_title" {% else %} name="edit_job_role_title" {% endif %}
+              value=" {{job_title.id}}">
+              {% if form_job_role_title %}Save{% else %}Edit{% endif%}
+            </button>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </form>
 </div>
 <div class="govuk-!-margin-top-4">
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half-from-desktop">
+    <div class="govuk-grid-column-two-thirds">
       <dl class="govuk-summary-list govuk-!-margin-bottom-9">
         <form method="post">
           {% csrf_token %}
           {% for competency in job_role_obj %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
+              {% if form and edit_competency_id == competency.id %}
+              {{form.job_role_skill}}
+              {% else %}
               {{competency.job_role_skill.name}}
+              {% endif %}
             </dt>
             <dt class="govuk-summary-list__key">
+              {% if form and edit_competency_id == competency.id %}
+              {{form.job_role_skill_level}}
+              {% else %}
               {{competency.job_role_skill_level.name}}
+              {% endif %}
             </dt>
             <dd class='govuk-!-margin-bottom-2'>
-              <button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-right-1" data-module="govuk-button"
-                name="edit_competency" value="{{competency.id}}">
-                Edit
+              <button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-right-1" data-module="govuk-button" 
+              {% if form and edit_competency_id == competency.id %}name="update_competency" {% else %}
+                name="edit_competency" {% endif %} value="{{competency.id}}" {% if form and edit_competency_id != competency.id %} disabled {% endif %}>
+                {% if form and edit_competency_id == competency.id %}Save{% else %}Edit{% endif %}
               </button>
               <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button"
-                name="delete_competency" value="{{competency.id}}">
+                name="delete_competency" value="{{competency.id}}" {% if form %} disabled {% endif %}>
                 Delete
               </button>
-
             </dd>
           </div>
           {% endfor %}
           <div class="govuk-!-margin-top-4">
-            <button class="govuk-button" name="save" value="save">
-              Save
-            </button>
             <a class="govuk-button" href="{% url 'add-a-skill-level' %}">
-              Add a skill level
+              Add skill
             </a>
           </div>
         </form>
