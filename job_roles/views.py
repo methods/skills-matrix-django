@@ -160,4 +160,17 @@ def delete_job_role_title_view(request, job_title):
 
 
 def add_a_skill(request, job_title):
-    return render(request, "job_roles/add_job_role_skills.html")
+    job = Job.objects.get(job_title=job_title.title().replace('-', ' '))
+    if request.POST:
+        job_role_skill = Skill.objects.get(name=request.POST['job_role_skill'])
+        job_role_skill_level = SkillLevel.objects.get(name=request.POST['job_role_skill_level'])
+        Competency(job_role_title=job, job_role_skill=job_role_skill,
+                   job_role_skill_level=job_role_skill_level).save()
+        return redirect(update_job_role_detail_view, job_title=job_title)
+    else:
+        competencies = Competency.objects.filter(job_role_title=job.id)
+        disabled_choices = []
+        for competency in competencies:
+            disabled_choices.append(competency.job_role_skill.name)
+        form = JobSkillsAndSkillLevelForm(disabled_choices=disabled_choices) if 'disabled_choices' != [] else JobSkillsAndSkillLevelForm()
+        return render(request, "job_roles/add_job_role_skills.html", {'form': form})
