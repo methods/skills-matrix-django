@@ -81,7 +81,7 @@
           </div>
           {% endfor %}
           <div class="govuk-!-margin-top-4">
-            <a class="govuk-button" href="{% url 'add-a-skill-level' %}">
+            <a class="govuk-button" href="{% url 'add-a-skill' job_title.job_title|slugify %}">
               Add skill
             </a>
           </div>
