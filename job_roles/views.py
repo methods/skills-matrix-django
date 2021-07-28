@@ -112,7 +112,7 @@ def update_job_role_detail_view(request, job_title):
             Competency.objects.get(id=request.POST['delete_competency']).delete()
         if 'edit_competency' in request.POST.keys():
             competency = Competency.objects.get(id=request.POST['edit_competency'])
-            disabled_choices = populate_existing_competencies(job_title)
+            disabled_choices = populate_existing_competencies(job_title, competency.job_role_skill.name)
             form = JobSkillsAndSkillLevelForm(initial={'job_role_skill': competency.job_role_skill.name,
                                                        'job_role_skill_level': competency.job_role_skill_level.name},
                                               disabled_choices=disabled_choices)

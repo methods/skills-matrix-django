@@ -3,11 +3,12 @@ from super_admin.models import SkillLevel
 from app.models import Skill
 
 
-def populate_existing_competencies(job):
+def populate_existing_competencies(job, existing_competency=None):
     competencies = Competency.objects.filter(job_role_title=job.id)
     disabled_choices = []
     for competency in competencies:
-        disabled_choices.append(competency.job_role_skill.name)
+        if existing_competency != competency.job_role_skill.name:
+            disabled_choices.append(competency.job_role_skill.name)
     return disabled_choices
 
 
