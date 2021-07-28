@@ -7,6 +7,7 @@ from .models import Job, Competency
 from app.models import Skill
 from super_admin.models import SkillLevel
 from .utils import populate_existing_competencies
+from django.utils.text import slugify
 
 
 @login_required
@@ -15,7 +16,6 @@ def job_roles(request):
         if 'job_role_title' in request.session.keys(): del request.session['job_role_title']
         if 'disabled_choices' in request.session.keys(): del request.session['disabled_choices']
         if 'new_added_job_competencies' in request.session.keys(): del request.session['new_added_job_competencies']
-        if 'updated_job_role_title' in request.session.keys(): del request.session['updated_job_role_title']
     job_role_list = Job.objects.all().order_by('id')
     return render(request, "job_roles/job-roles.html", {"user": request.user, 'job_role_list': job_role_list})
 
@@ -105,13 +105,8 @@ def dynamic_job_role_lookup_view(request, job):
 @user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
                   login_url='/error/not-authorised')
 def update_job_role_detail_view(request, job_title):
-    if 'updated_job_role_title' in request.session.keys():
-        job_title = Job.objects.get(job_title=request.session['updated_job_role_title'])
-        job_role_obj = Competency.objects.filter(job_role_title=job_title.id).order_by('id')
-
-    else:
-        job_title = Job.objects.get(job_title=job_title.title().replace('-', ' '))
-        job_role_obj = Competency.objects.filter(job_role_title=job_title.id).order_by('id')
+    job_title = Job.objects.get(job_title=job_title.title().replace('-', ' '))
+    job_role_obj = Competency.objects.filter(job_role_title=job_title.id).order_by('id')
     if request.method == 'POST':
         if 'delete_competency' in request.POST.keys():
             Competency.objects.get(id=request.POST['delete_competency']).delete()
@@ -138,15 +133,11 @@ def update_job_role_detail_view(request, job_title):
             return render(request, "job_roles/update_job_role.html", {'form_job_role_title': form_job_role_title, 'job_title': job_title, 'job_role_obj': job_role_obj
                                                                       })
         if 'save_job_role_title' in request.POST.keys():
-            if 'updated_job_role_title' not in request.session.keys():
-                request.session['updated_job_role_title'] = None
             form_job_role_title = JobTitleForm(request.POST)
             if form_job_role_title.is_valid():
-                Job.objects.filter(id=request.POST['save_job_role_title']).update(job_title=form_job_role_title.cleaned_data['job_role_title'])
-                request.session['updated_job_role_title'] = Job.objects.get(id=request.POST['save_job_role_title']).job_title
-                updated_job_role_title_obj = Job.objects.get(id=request.POST['save_job_role_title'])
-                return render(request, "job_roles/update_job_role.html", {'job_title': updated_job_role_title_obj, 'job_role_obj': job_role_obj
-                                                                      })
+                updated_title = form_job_role_title.cleaned_data['job_role_title']
+                Job.objects.filter(id=request.POST['save_job_role_title']).update(job_title=updated_title)
+                return redirect(update_job_role_detail_view, job_title=slugify(updated_title))
     return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj, 'job_title': job_title})
 
 
