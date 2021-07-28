@@ -21,7 +21,11 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+        {% if job_title %}
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-5">{{job_title}}</h1>
+        {% else %}
         <h1 class="govuk-heading-xl govuk-!-margin-bottom-5">{{request.session.job_role_title}}</h1>
+        {% endif %}
     </div>
 </div>
 <div class="govuk-!-margin-top-4">
@@ -43,32 +47,34 @@
                             </div>
                         </dd>
                         <dd class="govuk-summary-list__actions">
-                            <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" name="addSkill" {% if form.job_role_skill|length|add:"-1" == request.session.new_added_job_competencies|length %} disabled="disabled" aria-disabled="true" {% endif %} >
+                            <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" name="addSkill" {% if form.job_role_skill|length|add:"0" == request.session.new_added_job_competencies|length %} disabled="disabled" aria-disabled="true" {% endif %} >
                                 Add Skill
                             </button>
                         </dd>
                     </div>
                 </dl>
-                {% if request.session.new_added_job_competencies|length > 0 %}
+                {% if competencies %}
                 <h2 class="govuk-heading-m">Job role skills</h2>
                 <dl class="govuk-summary-list">
-                    {% for new_job_competencies in request.session.new_added_job_competencies %}
-                    {% for key,value in new_job_competencies.items %}
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            {{key}}
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{value}}
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
-                                data-module="govuk-button" name="delete" value="{{key}}">
-                                Delete
-                            </button>
-                        </dd>
-                    </div>
-                    {% endfor %}
+                    {% for competency in competencies %}
+                        {% for key,value in competency.items %}
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {{key}}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{value}}
+                            </dd>
+                            {% if new_role %}
+                            <dd class="govuk-summary-list__actions">
+                                <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
+                                    data-module="govuk-button" name="delete" value="{{key}}">
+                                    Delete
+                                </button>
+                            </dd>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
                     {% endfor %}
                 </dl>
                 <button class="govuk-button" data-module="govuk-button" name="saveandcontinue"
