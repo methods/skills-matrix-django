@@ -1,4 +1,4 @@
-
+{% load sass_tags %}
 <!DOCTYPE html>
 <html lang="en" class="govuk-template app-html-class">
   <head>
@@ -9,8 +9,7 @@
       {% endblock %}
     </title>
 
-    {% load static %}
-    <link href="{% static 'scss/global.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% sass_src 'scss/global.scss' %}" rel="stylesheet" type="text/css">
     {% block extra_css %}
     {% endblock %}
   </head>
