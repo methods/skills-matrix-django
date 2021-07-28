@@ -69,7 +69,6 @@ def add_job_role_skills(request):
             request.session.save()
             form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
             competencies = request.session['new_added_job_competencies']
-            print('new job role', competencies)
             return render(request, "job_roles/add_job_role_skills.html", {'form': form, 'competencies': competencies,
                                                                           'new_role': True})
     else:
@@ -175,5 +174,4 @@ def add_a_skill(request, job_title):
             skill = Skill.objects.filter(id=competency.job_role_skill.id)
             skill_level = SkillLevel.objects.filter(id=competency.job_role_skill_level.id)
             competencies_by_name.append({skill[0].name: skill_level[0].name})
-        print('add a skill to existing role', competencies_by_name)
         return render(request, "job_roles/add_job_role_skills.html", {'form': form, 'competencies': competencies_by_name, 'job_title': job.job_title})
