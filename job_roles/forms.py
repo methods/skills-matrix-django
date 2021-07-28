@@ -1,10 +1,9 @@
 from django import forms
 from common.widgets import GdsStyleTextInput
 from .widgets import CustomisedSelectWidget
-from super_admin.models import SkillLevel
-from app.models import Skill
 from .validators import validate_input_capitalised
 from .fields import EmptyChoiceField
+from .utils import get_skill_choices, get_skill_level_choices
 
 
 class JobTitleForm(forms.Form):
@@ -24,22 +23,16 @@ class JobTitleForm(forms.Form):
 
 
 class JobSkillsAndSkillLevelForm(forms.Form):
-    def get_skill_choices():
-        pass
-        skill_options = ((skill.name, skill.name) for skill in Skill.objects.all())
-        return skill_options
 
-    def get_skill_level_choices():
-        pass
-        skill_level_options = ((skill_level.name, skill_level.name) for skill_level in SkillLevel.objects.all())
-        return skill_level_options
-
-    job_role_skill = EmptyChoiceField(choices=get_skill_choices(), empty_label='--Select a skill--', required=False, widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'}))
-    job_role_skill_level = forms.ChoiceField(choices=get_skill_level_choices,
+    job_role_skill = EmptyChoiceField(choices=[], empty_label='--Select a skill--', required=False,
+                                      widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'}))
+    job_role_skill_level = forms.ChoiceField(choices=[],
                                              widget=forms.Select(attrs={'class': 'govuk-select'}))
 
     def __init__(self, *args, disabled_choices=None, **kwargs):
         super(JobSkillsAndSkillLevelForm, self).__init__(*args, **kwargs)
+        self.fields['job_role_skill'].choices = get_skill_choices()
+        self.fields['job_role_skill_level'].choices = get_skill_level_choices()
         if disabled_choices:
             self.fields['job_role_skill'].widget.disabled_choices = disabled_choices
 

@@ -1,8 +1,7 @@
 from django import forms
-from super_admin.models import Team
-from job_roles.models import Job
 from common.widgets import GdsStylePasswordInput, GdsStyleTextInput, GdsStyleEmailInput
 from .validators import validate_domain_email
+from .utils import get_job_choices, get_team_choices
 
 
 class NameForm(forms.Form):
@@ -24,15 +23,14 @@ class NameForm(forms.Form):
 
 
 class JobForm(forms.Form):
-    def get_team_choices():
-        team_options = [(team.team_name, team.team_name) for team in Team.objects.all()]
-        return team_options
 
-    def get_job_choices():
-        job_options = [(job.job_title, job.job_title) for job in Job.objects.all()]
-        return job_options
-    team = forms.ChoiceField(choices=get_team_choices, widget=forms.Select(attrs={'class': 'govuk-select'}))
-    job = forms.ChoiceField(choices=get_job_choices, widget=forms.Select(attrs={'class': 'govuk-select'}))
+    team = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'govuk-select'}))
+    job = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'govuk-select'}))
+
+    def __init__(self, *args, **kwargs):
+        super(JobForm, self).__init__(*args, **kwargs)
+        self.fields['team'].choices = get_team_choices()
+        self.fields['job'].choices = get_job_choices()
 
 
 class EmailForm(forms.Form):

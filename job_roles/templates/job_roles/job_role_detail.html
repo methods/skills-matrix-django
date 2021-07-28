@@ -31,7 +31,7 @@
         <h1 class="govuk-heading-xl">
           There are no skills assigned to the {{job_title.job_title}} role.
         </h1>
-        <a class="govuk-button" href="{% url 'add-a-skill-level' %}">
+        <a class="govuk-button" href="{% url 'add-a-skill' job_title.job_title|slugify %}">
             Add skill
           </a>
           <a class="govuk-button govuk-button--warning" href="{% url 'delete-job-role-view' job_title.job_title|slugify %}" data-module="govuk-button"
