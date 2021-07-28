@@ -108,6 +108,7 @@ def update_job_role_detail_view(request, job_title):
     if 'updated_job_role_title' in request.session.keys():
         job_title = Job.objects.get(job_title=request.session['updated_job_role_title'])
         job_role_obj = Competency.objects.filter(job_role_title=job_title.id).order_by('id')
+
     else:
         job_title = Job.objects.get(job_title=job_title.title().replace('-', ' '))
         job_role_obj = Competency.objects.filter(job_role_title=job_title.id).order_by('id')

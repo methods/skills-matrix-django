@@ -50,12 +50,13 @@ class AddJobRolePageTests(LoggedInUserTestCase):
 
 class UpdateJobRolePageTests(LoggedInAdminTestCase):
     def test_edit_competency(self):
-        test_competency = creates_job_competency_instances()
-        Skill.objects.create(name='updated', skill_type='Career skill')
-        SkillLevel.objects.create(name='updated')
-        test_competency = Competency.objects.create(job_role_title=test_competency['test_job'],
-                                                    job_role_skill=test_competency['test_skill'],
-                                                    job_role_skill_level=test_competency['test_skill_level'])
+        test_instances = creates_job_competency_instances()
+        Skill.objects.create(name='updated', skill_type='Career skill').save()
+        SkillLevel.objects.create(name='updated').save()
+        test_competency = Competency.objects.create(job_role_title=test_instances['test_job'],
+                                                    job_role_skill=test_instances['test_skill'],
+                                                    job_role_skill_level=test_instances['test_skill_level'])
+        test_competency.save()
         self.client.post(reverse('update-job-role-view', kwargs={'job_title': 'Test Job'}), {'job_role_skill': 'updated',
                                                                       'job_role_skill_level': 'updated',
                                                                           'update_competency': test_competency.id})
