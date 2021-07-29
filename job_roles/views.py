@@ -6,8 +6,9 @@ from django.contrib import messages
 from .models import Job, Competency
 from app.models import Skill
 from super_admin.models import SkillLevel
-from .utils import populate_existing_competencies
+from .view_utils import populate_existing_competencies
 from django.utils.text import slugify
+from .view_utils import prepare_competency_edit
 
 
 @login_required
@@ -112,16 +113,11 @@ def update_job_role_detail_view(request, job_title):
         if 'delete_competency' in request.POST.keys():
             Competency.objects.get(id=request.POST['delete_competency']).delete()
         if 'edit_competency' in request.POST.keys():
-            competency = Competency.objects.get(id=request.POST['edit_competency'])
-            disabled_choices = populate_existing_competencies(job_title, competency.job_role_skill.name)
-            form = JobSkillsAndSkillLevelForm(initial={'job_role_skill': competency.job_role_skill.name,
-                                                       'job_role_skill_level': competency.job_role_skill_level.name},
-                                              disabled_choices=disabled_choices)
-            edit_competency_id = int(request.POST['edit_competency'])
+            template_variables = prepare_competency_edit(request.POST['edit_competency'], job_title)
             return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj,
                                                                       'job_title': job_title,
-                                                                      'form': form,
-                                                                      'edit_competency_id': edit_competency_id})
+                                                                      'form': template_variables['form'],
+                                                                      'edit_competency_id': template_variables['edit_competency_id']})
         if 'update_competency' in request.POST.keys():
             form = JobSkillsAndSkillLevelForm(request.POST)
             if form.is_valid():
@@ -129,6 +125,16 @@ def update_job_role_detail_view(request, job_title):
                 competency.job_role_skill = Skill.objects.get(name=request.POST['job_role_skill'])
                 competency.job_role_skill_level = SkillLevel.objects.get(name=request.POST['job_role_skill_level'])
                 competency.save()
+            else:
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, error)
+                template_variables = prepare_competency_edit(request.POST['update_competency'], job_title)
+                return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj,
+                                                                          'job_title': job_title,
+                                                                          'form': template_variables['form'],
+                                                                          'edit_competency_id': template_variables[
+                                                                              'edit_competency_id']})
         if 'edit_job_role_title' in request.POST.keys():
             form_job_role_title = JobTitleForm(initial={'job_role_title': job_title.job_title})
             return render(request, "job_roles/update_job_role.html", {'form_job_role_title': form_job_role_title, 'job_title': job_title, 'job_role_obj': job_role_obj

@@ -51,6 +51,13 @@
 <div class="govuk-!-margin-top-4">
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+      <div class="govuk-form-group govuk-form-group--error">
+        {% for message in messages %}
+          <span id="form-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ message }}
+          </span>
+        {% endfor %}
+        </div>
       <dl class="govuk-summary-list govuk-!-margin-bottom-9">
         <form method="post">
           {% csrf_token %}
