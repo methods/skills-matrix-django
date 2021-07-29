@@ -138,7 +138,7 @@ def update_job_role_detail_view(request, job_title):
             if form_job_role_title.is_valid():
                 updated_title = form_job_role_title.cleaned_data['job_role_title']
                 Job.objects.filter(id=request.POST['save_job_role_title']).update(job_title=updated_title)
-                return redirect(update_job_role_detail_view, job_title=y(updated_title))
+                return redirect(update_job_role_detail_view, job_title=slugify(updated_title))
     return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj, 'job_title': job_title})
 
 
@@ -164,7 +164,7 @@ def add_a_skill(request, job_title):
         job_role_skill_level = SkillLevel.objects.get(name=request.POST['job_role_skill_level'])
         Competency(job_role_title=job, job_role_skill=job_role_skill,
                    job_role_skill_level=job_role_skill_level).save()
-        return redirect(update_job_role_detail_view, job_title=job_title)
+        return redirect(add_a_skill, job_title=job_title)
     else:
         disabled_choices = populate_existing_competencies(job)
         form = JobSkillsAndSkillLevelForm(disabled_choices=disabled_choices) if 'disabled_choices' != [] else JobSkillsAndSkillLevelForm()
@@ -174,4 +174,5 @@ def add_a_skill(request, job_title):
             skill = Skill.objects.filter(id=competency.job_role_skill.id)
             skill_level = SkillLevel.objects.filter(id=competency.job_role_skill_level.id)
             competencies_by_name.append({skill[0].name: skill_level[0].name})
-        return render(request, "job_roles/add_job_role_skills.html", {'form': form, 'competencies': competencies_by_name, 'job_title': job.job_title})
+    return render(request, "job_roles/add_job_role_skills.html", {'form': form, 'competencies': competencies_by_name,
+                                                                  'job_title': job.job_title, 'existing_role': True})

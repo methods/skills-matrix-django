@@ -11,8 +11,18 @@
             <a class="govuk-breadcrumbs__link" href="{% url 'job-roles' %}">Job Roles</a>
         </li>
         <li class="govuk-breadcrumbs__list-item">
+            {% if not existing_role %}
             <a class="govuk-breadcrumbs__link" href="{% url 'add-job-title' %}">Job Title</a>
+         </li>
+            {% else %}
+            <a class="govuk-breadcrumbs__link" href="{% url 'job-role-view' job_title|slugify %}">{{job_title}}</a>
+         </li>
+        <li class="govuk-breadcrumbs__list-item">
+            <a class="govuk-breadcrumbs__link" href="{% url 'update-job-role-view' job_title|slugify %}">Edit {{job_title}}</a>
         </li>
+
+            {% endif %}
+
     </ol>
 </div>
 {% endblock %}
@@ -81,7 +91,7 @@
                 {% endif %}
                 {% if job_title %}
                  <a class="govuk-button" data-module="govuk-button"
-                    href="{% url 'job-role-view' job_title|slugify %}">Continue</a>
+                    href="{% url 'update-job-role-view' job_title|slugify %}">Continue</a>
                 {% else %}
                 <button class="govuk-button" data-module="govuk-button" name="saveandcontinue" value="saveandcontinue">
                     Continue</button>
