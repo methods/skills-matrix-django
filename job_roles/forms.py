@@ -36,13 +36,8 @@ class JobSkillsAndSkillLevelForm(forms.Form):
         if disabled_choices:
             self.fields['job_role_skill'].widget.disabled_choices = disabled_choices
 
-    def clean(self):
-        cleaned_data = super().clean()
-        skill = cleaned_data.get("job_role_skill")
-
-        if skill == '':
-            raise forms.ValidationError(
-                'Select a skill'
-            )
-
-
+    def clean_job_role_skill(self):
+        job_role_skill = self.cleaned_data.get('job_role_skill')
+        if not job_role_skill:
+            raise forms.ValidationError('Select a skill')
+        return job_role_skill
