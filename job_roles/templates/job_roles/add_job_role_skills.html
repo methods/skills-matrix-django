@@ -56,6 +56,7 @@
                 {% if competencies %}
                 <h2 class="govuk-heading-m">Job role skills</h2>
                 <dl class="govuk-summary-list">
+
                     {% for competency in competencies %}
                         {% for key,value in competency.items %}
                         <div class="govuk-summary-list__row">
@@ -77,10 +78,13 @@
                         {% endfor %}
                     {% endfor %}
                 </dl>
-                <button class="govuk-button" data-module="govuk-button" name="saveandcontinue"
-                    value="saveandcontinue">Save
-                    and
-                    continue</button>
+                {% endif %}
+                {% if job_title %}
+                 <a class="govuk-button" data-module="govuk-button"
+                    href="{% url 'job-role-view' job_title|slugify %}">Continue</a>
+                {% else %}
+                <button class="govuk-button" data-module="govuk-button" name="saveandcontinue" value="saveandcontinue">
+                    Continue</button>
                 {% endif %}
             </form>
             <p class="govuk-body">If the skill you are looking for is not in the list, you can <a
