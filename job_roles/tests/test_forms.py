@@ -1,5 +1,6 @@
 from django.test import TestCase
 from job_roles.forms import JobTitleForm, JobSkillsAndSkillLevelForm
+from .utils import creates_job_role_skill_and_skill_level_form
 
 
 class TestJobRoleForms(TestCase):
@@ -37,39 +38,26 @@ class TestJobRoleForms(TestCase):
         self.assertFalse(job_role_skills_form.is_valid())
 
     def test_job_role_skills_form_valid_data(self):
-        skill_options = [('skill_1', 'skill_1'), ('skill_2', 'skill_2'),('skill_3', 'skill_3')]
-        skill_level_options = [('skill_level_1', 'skill_level_1'), ('skill_level_2', 'skill_level_2'), ('skill_level_3', 'skill_level_3')]
         form_data = {"job_role_skill": 'skill_1', 'job_role_skill_level': 'skill_level_1'}
-        job_role_skills_form = JobSkillsAndSkillLevelForm(data=form_data)
-        job_role_skills_form.fields['job_role_skill_level'].choices = skill_level_options
-        job_role_skills_form.fields['job_role_skill'].choices = skill_options
+        job_role_skills_form = creates_job_role_skill_and_skill_level_form(form_data=form_data)
         self.assertTrue(job_role_skills_form.is_valid())
 
     def test_job_role_skills_form_invalid_data(self):
-        skill_options = [('skill_1', 'skill_1'), ('skill_2', 'skill_2'),('skill_3', 'skill_3')]
-        skill_level_options = [('skill_level_1', 'skill_level_1'), ('skill_level_2', 'skill_level_2'), ('skill_level_3', 'skill_level_3')]
         form_data = {"job_role_skill": 'skill_5', 'job_role_skill_level': 'skill_level_8'}
-        job_role_skills_form = JobSkillsAndSkillLevelForm(data=form_data)
-        job_role_skills_form.fields['job_role_skill_level'].choices = skill_level_options
-        job_role_skills_form.fields['job_role_skill'].choices = skill_options
+        job_role_skills_form = creates_job_role_skill_and_skill_level_form(form_data=form_data)
         self.assertFalse(job_role_skills_form.is_valid())
-    
+
     def test_job_role_skills_form_disabled_choice_list(self):
-        skill_options = [('skill_1', 'skill_1'), ('skill_2', 'skill_2'),('skill_3', 'skill_3')]
-        skill_level_options = [('skill_level_1', 'skill_level_1'), ('skill_level_2', 'skill_level_2'), ('skill_level_3', 'skill_level_3')]
         disabled_choices = ['skill_level_1','skill_level_2']
         form_data = {"job_role_skill": 'skill_3', 'job_role_skill_level': 'skill_level_2'}
-        job_role_skills_form = JobSkillsAndSkillLevelForm(data=form_data, disabled_choices=disabled_choices)
-        job_role_skills_form.fields['job_role_skill_level'].choices = skill_level_options
-        job_role_skills_form.fields['job_role_skill'].choices = skill_options
-        self.assertEqual(job_role_skills_form.fields['job_role_skill'].widget.disabled_choices, ['skill_level_1','skill_level_2'] )
+        job_role_skills_form = creates_job_role_skill_and_skill_level_form(form_data=form_data,
+                                                                           disabled_choices=disabled_choices)
+        self.assertEqual(job_role_skills_form.fields['job_role_skill'].widget.disabled_choices,
+                                                    ['skill_level_1', 'skill_level_2'])
 
     def test_job_role_skills_form_invalid_disabled_choice_list(self):
-        skill_options = [('skill_1', 'skill_1'), ('skill_2', 'skill_2'),('skill_3', 'skill_3')]
-        skill_level_options = [('skill_level_1', 'skill_level_1'), ('skill_level_2', 'skill_level_2'), ('skill_level_3', 'skill_level_3')]
-        disabled_choices = ['skill_level_1','skill_level_2']
+        disabled_choices = ['test_skill_level_1','test_skill_level_2']
         form_data = {"job_role_skill": 'skill_3', 'job_role_skill_level': 'skill_level_2'}
-        job_role_skills_form = JobSkillsAndSkillLevelForm(data=form_data, disabled_choices=disabled_choices)
-        job_role_skills_form.fields['job_role_skill_level'].choices = skill_level_options
-        job_role_skills_form.fields['job_role_skill'].choices = skill_options
-        self.assertNotEqual(job_role_skills_form.fields['job_role_skill'].widget.disabled_choices, ['skill_level_1','skill_2'] )
+        job_role_form = JobSkillsAndSkillLevelForm(data=form_data, disabled_choices=disabled_choices)
+        self.assertNotEqual(job_role_form.fields['job_role_skill'].widget.disabled_choices,
+                                                ['skill_level_1', 'skill_level_0'])
