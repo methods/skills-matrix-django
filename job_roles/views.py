@@ -138,7 +138,7 @@ def update_job_role_detail_view(request, job_title):
             if form_job_role_title.is_valid():
                 updated_title = form_job_role_title.cleaned_data['job_role_title']
                 Job.objects.filter(id=request.POST['save_job_role_title']).update(job_title=updated_title)
-                return redirect(update_job_role_detail_view, job_title=slugify(updated_title))
+                return redirect(update_job_role_detail_view, job_title=y(updated_title))
     return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj, 'job_title': job_title})
 
 
