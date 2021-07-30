@@ -50,10 +50,18 @@ class AddJobRoleTitleTests(LoggedInUserTestCase):
 
 class AddJObRoleSkillsTests(LoggedInAdminTestCase):
 
-    def test_add_job_role_skills_GET_returns_200(self):
+    def test_add_job_role_skills_GET(self):
         response = self.client.get(reverse('add-job-skills'))
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'job_roles/add_job_role_skills.html')
+
+    def test_add_job_role_skills_POST_saves_skill_and_skill_level_in_session(self):
+        Skill.objects.create(name='test_skill', skill_type='Career skill').save()
+        SkillLevel.objects.create(name='test_skill_level').save()
+        self.client.post(reverse('add-job-skills'), {'job_role_skill': 'test_skill', 'job_role_skill_level':
+                                                     'test_skill_level', 'addSkill': ''})
+        session = self.client.session
+        self.assertEquals(session['new_added_job_competencies'], [{'test_skill': 'test_skill_level'}])
 
 
 class UpdateJobRolePageTests(LoggedInAdminTestCase):
