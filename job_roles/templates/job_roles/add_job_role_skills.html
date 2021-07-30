@@ -95,14 +95,12 @@
                         {% endfor %}
                     {% endfor %}
                 </dl>
-                {% endif %}
-                {% if job_title %}
+
+
                  <a class="govuk-button" data-module="govuk-button"
-                    href="{% url 'update-job-role-view' job_title|slugify %}">Continue</a>
-                {% else %}
-                <button class="govuk-button" data-module="govuk-button" name="saveandcontinue" value="saveandcontinue">
-                    Continue</button>
-                {% endif %}
+                     {% if job_title %} href="{% url 'update-job-role-view' job_title|slugify %}"
+                    {% else %} href={% url 'review-job-role-details' %} {% endif %}>Continue</a>
+                                {% endif %}
             </form>
             <p class="govuk-body">If the skill you are looking for is not in the list, you can <a
                     href="/add-job-role-skills/create-skill">create a new skill
