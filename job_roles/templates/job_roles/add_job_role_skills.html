@@ -42,6 +42,13 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds-from-desktop">
             <h2 class="govuk-heading-m">Select skills</h2>
+            <div class="govuk-form-group govuk-form-group--error">
+        {% for message in messages %}
+          <span id="form-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ message }}
+          </span>
+        {% endfor %}
+        </div>
             <form class="form" method="post">
                 {% csrf_token %}
                 <dl class="govuk-summary-list">
