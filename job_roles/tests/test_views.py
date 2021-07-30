@@ -14,10 +14,10 @@ class JobRolePageTests(LoggedInUserTestCase):
         self.assertTemplateUsed(response, 'job_roles/job-roles.html')
 
 
-class AddJobRolePageTests(LoggedInUserTestCase):
+class AddJobRoleTitleTests(LoggedInUserTestCase):
 
     def setUp(self):
-        super(AddJobRolePageTests, self).setUp()
+        super(AddJobRoleTitleTests, self).setUp()
         # Group setup
         group_name = "Admins"
         self.group = Group(name=group_name)
@@ -46,6 +46,14 @@ class AddJobRolePageTests(LoggedInUserTestCase):
         self.user.groups.add(admins_group)
         response = self.client.post(reverse('add-job-title'), {'job_role_title': 'Lead Developer'})
         self.assertRedirects(response, '/job-roles/add-job-role-skills/')
+
+
+class AddJObRoleSkillsTests(LoggedInAdminTestCase):
+
+    def test_add_job_role_skills_GET_returns_200(self):
+        response = self.client.get(reverse('add-job-skills'))
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, 'job_roles/add_job_role_skills.html')
 
 
 class UpdateJobRolePageTests(LoggedInAdminTestCase):
