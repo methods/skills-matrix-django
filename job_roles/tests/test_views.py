@@ -76,6 +76,17 @@ class AddJObRoleSkillsTests(LoggedInAdminTestCase):
                          response.client.session['new_added_job_competencies'])
 
 
+class ReviewJobRoleTests(LoggedInAdminTestCase):
+
+    def test_review_job_role_GET(self):
+        session = self.client.session
+        session['job_role_title'] = 'Test Job Role'
+        session.save()
+        response = self.client.get(reverse('review-job-role-details'))
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, 'job_roles/review_job_role.html')
+
+
 class UpdateJobRolePageTests(LoggedInAdminTestCase):
     def test_edit_competency(self):
         test_instances = creates_job_competency_instances()
