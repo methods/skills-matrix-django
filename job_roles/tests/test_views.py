@@ -58,23 +58,18 @@ class AddJObRoleSkillsTests(LoggedInAdminTestCase):
     def test_add_job_role_skills_POST_saves_skill_and_skill_level_in_session(self):
         Skill.objects.create(name='test_skill', skill_type='Career skill').save()
         SkillLevel.objects.create(name='test_skill_level').save()
-        self.client.post(reverse('add-job-skills'), {'job_role_skill': 'test_skill', 'job_role_skill_level':
-                                                     'test_skill_level', 'addSkill': ''})
+        response = self.client.post(reverse('add-job-skills'), {'job_role_skill': 'test_skill', 'job_role_skill_level':
+                                                                'test_skill_level', 'addSkill': ''})
+        self.assertIn({'test_skill': 'test_skill_level'}, response.client.session['new_added_job_competencies'])
+
+    def test_add_job_role_skills_POST_removes_skill_and_skill_level_from_the_session(self):
         session = self.client.session
-        self.assertIn({'test_skill': 'test_skill_level'}, session['new_added_job_competencies'])
-
-    # def test_add_job_role_skills_POST_redirects_user_when_saveandcontinue_is_pressed(self):
-    #     response = self.client.post(reverse('add-job-skills'), {'saveandcontinue': 'saveandcontinue'})
-    #     self.assertRedirects(response, reverse('review-job-role-details'), status_code=302,
-    #                          target_status_code=200, fetch_redirect_response=True)
-
-    # def test_add_job_role_skills_POST_removes_skill_and_skill_level_from_the_session(self):
-    #     session = self.client.session
-    #     session['new_added_job_competencies'] = [{'test_skill_1_to_be_deleted': 'test_skill_level_1_to_be_deleted'}, {'test_skill_2_to_be_deleted': 'test_skill_level_2_to_be_deleted'}]
-    #     self.client.post(reverse('add-job-skills'), {'delete': 'test_skill_2_to_be_deleted'})
-    #     print(session.items())
-    #     self.assertNotIn({'test_skill_2_to_be_deleted': 'test_skill_level_2_to_be_deleted'},
-    #                      session['new_added_job_competencies'])
+        session['new_added_job_competencies'] = [{'test_skill_1_to_be_deleted': 'test_skill_level_1_to_be_deleted'},
+                                                 {'test_skill_2_to_be_deleted': 'test_skill_level_2_to_be_deleted'}]
+        session.save()
+        response = self.client.post(reverse('add-job-skills'), {'delete': 'test_skill_2_to_be_deleted'})
+        self.assertNotIn({'test_skill_2_to_be_deleted': 'test_skill_level_2_to_be_deleted'},
+                         response.client.session['new_added_job_competencies'])
 
 
 class UpdateJobRolePageTests(LoggedInAdminTestCase):
