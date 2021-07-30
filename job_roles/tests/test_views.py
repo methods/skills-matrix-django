@@ -77,7 +77,6 @@ class AddJObRoleSkillsTests(LoggedInAdminTestCase):
 
 
 class ReviewJobRoleTests(LoggedInAdminTestCase):
-
     def test_review_job_role_GET(self):
         session = self.client.session
         session['job_role_title'] = 'Test Job Role'
@@ -85,6 +84,26 @@ class ReviewJobRoleTests(LoggedInAdminTestCase):
         response = self.client.get(reverse('review-job-role-details'))
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'job_roles/review_job_role.html')
+
+    def test_review_job_role_POST_saves_new_job_role_to_db(self):
+        session = self.client.session
+        session['job_role_title'] = 'Test Job Role'
+        session['new_added_job_competencies'] = [{'test_skill_1': 'test_skill_level_2'},
+                                                 {'test_skill_2': 'test_skill_level_1'}, {'test_skill_3':
+                                                                                          'test_skill_level_4'},
+                                                 {'test_skill_4': 'test_skill_level_3'}]
+        session.save()
+        Skill.objects.create(name='test_skill_1', skill_type='Career skill').save()
+        Skill.objects.create(name='test_skill_2', skill_type='Career skill').save()
+        Skill.objects.create(name='test_skill_3', skill_type='Career skill').save()
+        Skill.objects.create(name='test_skill_4', skill_type='Career skill').save()
+        SkillLevel.objects.create(name='test_skill_level_2').save()
+        SkillLevel.objects.create(name='test_skill_level_1').save()
+        SkillLevel.objects.create(name='test_skill_level_4').save()
+        SkillLevel.objects.create(name='test_skill_level_3').save()
+        response = self.client.post(reverse('review-job-role-details'), {'save': 'save'})
+        test_job_title = Job.objects.get(job_title=response.client.session['job_role_title'])
+        assert Competency.objects.filter(job_role_title=test_job_title.id).exists()
 
 
 class UpdateJobRolePageTests(LoggedInAdminTestCase):
