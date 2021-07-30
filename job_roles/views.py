@@ -66,12 +66,11 @@ def add_job_role_skills(request):
                     for error in errors:
                         messages.error(request, error)
         form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
-        competencies = request.session['new_added_job_competencies']
-        return render(request, "job_roles/add_job_role_skills.html", {'form': form, 'competencies': competencies,
-                                                                    'new_role': True})
     else:
         form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices']) if 'disabled_choices' in request.session.keys() else JobSkillsAndSkillLevelForm()
-    return render(request, "job_roles/add_job_role_skills.html", {'form': form})
+    competencies = request.session['new_added_job_competencies'] if 'new_added_job_competencies' in request.session.keys() else []
+    return render(request, "job_roles/add_job_role_skills.html", {'form': form, 'competencies': competencies,
+                                                                  'new_role': True})
 
 
 @login_required

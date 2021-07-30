@@ -39,5 +39,10 @@ class JobSkillsAndSkillLevelForm(forms.Form):
     def clean_job_role_skill(self):
         job_role_skill = self.cleaned_data.get('job_role_skill')
         if not job_role_skill:
+            self.fields['job_role_skill'] = EmptyChoiceField(choices=get_skill_choices(),
+                                                             empty_label='--Select a skill--',
+                                                             required=False,
+                                                             widget=CustomisedSelectWidget(
+                                                                 attrs={'class': 'govuk-select--error'}))
             raise forms.ValidationError('Select a skill')
         return job_role_skill
