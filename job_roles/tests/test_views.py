@@ -60,14 +60,18 @@ class AddJObRoleSkillsTests(LoggedInAdminTestCase):
         SkillLevel.objects.create(name='test_skill_level').save()
         response = self.client.post(reverse('add-job-skills'), {'job_role_skill': 'test_skill', 'job_role_skill_level':
                                                                 'test_skill_level', 'addSkill': ''})
+        self.assertIn('test_skill', response.client.session['disabled_choices'])
         self.assertIn({'test_skill': 'test_skill_level'}, response.client.session['new_added_job_competencies'])
 
     def test_add_job_role_skills_POST_removes_skill_and_skill_level_from_the_session(self):
         session = self.client.session
         session['new_added_job_competencies'] = [{'test_skill_1_to_be_deleted': 'test_skill_level_1_to_be_deleted'},
                                                  {'test_skill_2_to_be_deleted': 'test_skill_level_2_to_be_deleted'}]
+        session['disabled_choices'] = ['test_skill_1_to_be_deleted', 'test_skill_2_to_be_deleted',
+                                       'test_skill_3_to_be_deleted', 'test_skill_4_to_be_deleted']
         session.save()
         response = self.client.post(reverse('add-job-skills'), {'delete': 'test_skill_2_to_be_deleted'})
+        self.assertNotIn('test_skill_2_to_be_deleted', response.client.session['disabled_choices'])
         self.assertNotIn({'test_skill_2_to_be_deleted': 'test_skill_level_2_to_be_deleted'},
                          response.client.session['new_added_job_competencies'])
 
