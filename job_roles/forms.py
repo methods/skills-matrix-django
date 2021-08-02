@@ -37,11 +37,9 @@ class JobSkillsAndSkillLevelForm(forms.Form):
         attrs = {}
         attrs.update({"errors": True})
         attrs['class'] = 'govuk-select govuk-select--error'
-
         for field in self.fields:
             if field in self.errors:
-                print(attrs)
-                self.fields[field].widget = CustomisedSelectWidget(attrs=attrs)
+                self.fields[field].widget.attrs = attrs
 
     def clean_job_role_skill(self):
         job_role_skill = self.cleaned_data.get('job_role_skill')

@@ -115,7 +115,8 @@ def update_job_role_detail_view(request, job_title):
                                                                       'form': template_variables['form'],
                                                                       'edit_competency_id': template_variables['edit_competency_id']})
         if 'update_competency' in request.POST.keys():
-            form = JobSkillsAndSkillLevelForm(request.POST)
+            disabled_choices = populate_existing_competencies(job_title)
+            form = JobSkillsAndSkillLevelForm(request.POST, disabled_choices=disabled_choices)
             if form.is_valid():
                 competency = Competency.objects.get(id=request.POST['update_competency'])
                 competency.job_role_skill = Skill.objects.get(name=request.POST['job_role_skill'])
