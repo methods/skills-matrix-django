@@ -47,6 +47,3 @@ class JobSkillsAndSkillLevelForm(forms.Form):
             raise forms.ValidationError('Select a skill')
         return job_role_skill
 
-    def repopulate_dropdown_choices(self):
-        self.fields['job_role_skill_level'].choices = get_skill_level_choices()
-        self.fields['job_role_skill'].choices = get_skill_choices()

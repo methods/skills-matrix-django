@@ -40,12 +40,14 @@ def add_job_role(request):
 @user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
                   login_url='/error/not-authorised')
 def add_job_role_skills(request):
+    if 'disabled_choices' not in request.session.keys():
+        request.session['disabled_choices'] = ['']
+    form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
     if request.method == 'POST':
         if 'disabled_choices' in request.session.keys():
             form = JobSkillsAndSkillLevelForm(request.POST, disabled_choices=request.session['disabled_choices'])
         else:
             form = JobSkillsAndSkillLevelForm(request.POST)
-            request.session['disabled_choices'] = []
         if 'new_added_job_competencies' not in request.session.keys():
             request.session['new_added_job_competencies'] = []
         if 'delete' in request.POST.keys():
@@ -66,9 +68,6 @@ def add_job_role_skills(request):
                 for field, errors in form.errors.items():
                     for error in errors:
                         messages.error(request, error)
-                form.repopulate_dropdown_choices()
-    else:
-        form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices']) if 'disabled_choices' in request.session.keys() else JobSkillsAndSkillLevelForm()
     competencies = request.session['new_added_job_competencies'] if 'new_added_job_competencies' in request.session.keys() else []
     return render(request, "job_roles/add_job_role_skills.html", {'form': form, 'competencies': competencies,
                                                                   'new_role': True})
@@ -184,6 +183,5 @@ def add_a_skill(request, job_title):
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, error)
-            form.repopulate_dropdown_choices()
     return render(request, "job_roles/add_job_role_skills.html", {'form': form, 'competencies': competencies_by_name,
                                                                   'job_title': job.job_title, 'existing_role': True})
