@@ -115,7 +115,13 @@ class DynamicJobRoleLookUpTests(LoggedInAdminTestCase):
 
 
 class UpdateJobRolePageTests(LoggedInAdminTestCase):
-    def test_edit_competency(self):
+    def test_update_job_role_detail_view_GET(self):
+        Job.objects.create(job_title='Test Job Role Update View')
+        response = self.client.get(reverse('update-job-role-view', kwargs={'job_title': 'Test Job Role Update View'}))
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, 'job_roles/update_job_role.html')
+
+    def test_edit_competency_POST(self):
         test_instances = creates_job_competency_instances()
         Skill.objects.create(name='updated', skill_type='Career skill').save()
         SkillLevel.objects.create(name='updated').save()
@@ -130,7 +136,7 @@ class UpdateJobRolePageTests(LoggedInAdminTestCase):
         assert test_competency.job_role_skill.name == 'updated'
         assert test_competency.job_role_skill_level.name == 'updated'
 
-    def test_delete_competency_by_id(self):
+    def test_delete_competency_by_id_POST(self):
         test_instances = creates_job_competency_instances()
         test_competency = Competency.objects.create(job_role_title=test_instances['test_job'],
                                                     job_role_skill=test_instances['test_skill'],
@@ -140,7 +146,7 @@ class UpdateJobRolePageTests(LoggedInAdminTestCase):
         self.assertFalse(Competency.objects.filter(job_role_title=test_competency.job_role_title.id,
                                                    job_role_skill=test_competency.job_role_skill.id,
                                                    job_role_skill_level=test_competency.job_role_skill_level.id).exists())
-        
+
 
 class AddSkillPageTests(LoggedInAdminTestCase):
     def test_admin_user_GET_returns_200_and_correct_template(self):
