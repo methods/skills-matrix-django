@@ -130,6 +130,17 @@ class UpdateJobRolePageTests(LoggedInAdminTestCase):
         assert test_competency.job_role_skill.name == 'updated'
         assert test_competency.job_role_skill_level.name == 'updated'
 
+    def test_delete_competency_by_id(self):
+        test_instances = creates_job_competency_instances()
+        test_competency = Competency.objects.create(job_role_title=test_instances['test_job'],
+                                                    job_role_skill=test_instances['test_skill'],
+                                                    job_role_skill_level=test_instances['test_skill_level'])
+        self.client.post(reverse('update-job-role-view', kwargs={'job_title': 'Test Job'}), {
+                                                                     'delete_competency': test_competency.id})
+        self.assertFalse(Competency.objects.filter(job_role_title=test_competency.job_role_title.id,
+                                                   job_role_skill=test_competency.job_role_skill.id,
+                                                   job_role_skill_level=test_competency.job_role_skill_level.id).exists())
+        
 
 class AddSkillPageTests(LoggedInAdminTestCase):
     def test_admin_user_GET_returns_200_and_correct_template(self):
@@ -142,5 +153,6 @@ class AddSkillPageTests(LoggedInAdminTestCase):
         test_competency = creates_job_competency_instances()
         self.client.post(reverse('add-a-skill', kwargs={'job_title': 'Test Job'}), {'job_role_skill': 'test_skill',
                                                                             'job_role_skill_level': 'test_skill_level'})
-        assert Competency.objects.filter(job_role_title=test_competency['test_job'], job_role_skill=test_competency['test_skill'],
-                          job_role_skill_level=test_competency['test_skill_level']).exists()
+        self.assertTrue(Competency.objects.filter(job_role_title=test_competency['test_job'],
+                                                  job_role_skill=test_competency['test_skill'],
+                                                  job_role_skill_level=test_competency['test_skill_level']).exists())
