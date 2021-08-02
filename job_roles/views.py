@@ -164,6 +164,13 @@ def delete_job_role_title_view(request, job_title):
 def add_a_skill(request, job_title):
     job = Job.objects.get(job_title=job_title.title().replace('-', ' '))
     disabled_choices = populate_existing_competencies(job)
+    form = JobSkillsAndSkillLevelForm(disabled_choices=disabled_choices) if 'disabled_choices' != [] else JobSkillsAndSkillLevelForm()
+    competencies_by_id = Competency.objects.filter(job_role_title=job.id)
+    competencies_by_name = []
+    for competency in competencies_by_id:
+        skill = Skill.objects.filter(id=competency.job_role_skill.id)
+        skill_level = SkillLevel.objects.filter(id=competency.job_role_skill_level.id)
+        competencies_by_name.append({skill[0].name: skill_level[0].name})
     if request.POST:
         form = JobSkillsAndSkillLevelForm(request.POST, disabled_choices=disabled_choices)
         if form.is_valid():
@@ -176,12 +183,6 @@ def add_a_skill(request, job_title):
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, error)
-    form = JobSkillsAndSkillLevelForm(disabled_choices=disabled_choices) if 'disabled_choices' != [] else JobSkillsAndSkillLevelForm()
-    competencies_by_id = Competency.objects.filter(job_role_title=job.id)
-    competencies_by_name = []
-    for competency in competencies_by_id:
-        skill = Skill.objects.filter(id=competency.job_role_skill.id)
-        skill_level = SkillLevel.objects.filter(id=competency.job_role_skill_level.id)
-        competencies_by_name.append({skill[0].name: skill_level[0].name})
+            form.repopulate_dropdown_choices()
     return render(request, "job_roles/add_job_role_skills.html", {'form': form, 'competencies': competencies_by_name,
                                                                   'job_title': job.job_title, 'existing_role': True})
