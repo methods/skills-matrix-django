@@ -121,7 +121,16 @@ class UpdateJobRolePageTests(LoggedInAdminTestCase):
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'job_roles/update_job_role.html')
 
-    def test_edit_competency_POST(self):
+    def test_edit_competency_renders_form_POST(self):
+        test_instances = creates_job_competency_instances()
+        test_competency = Competency.objects.create(job_role_title=test_instances['test_job'],
+                                                    job_role_skill=test_instances['test_skill'],
+                                                    job_role_skill_level=test_instances['test_skill_level'])
+        response = self.client.post(reverse('update-job-role-view', kwargs={'job_title': 'Test Job'}),
+                                    {'edit_competency': test_competency.id})
+        self.assertTemplateUsed(response, 'job_roles/update_job_role.html')
+
+    def test_edit_competency_save_POST(self):
         test_instances = creates_job_competency_instances()
         Skill.objects.create(name='updated', skill_type='Career skill').save()
         SkillLevel.objects.create(name='updated').save()
