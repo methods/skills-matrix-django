@@ -61,11 +61,12 @@ def add_job_role_skills(request):
                 request.session['new_added_job_competencies'].append({request.POST['job_role_skill']:
                                                                       request.POST['job_role_skill_level']})
                 request.session.save()
+                form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
             else:
                 for field, errors in form.errors.items():
                     for error in errors:
                         messages.error(request, error)
-        form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
+                form.repopulate_dropdown_choices()
     else:
         form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices']) if 'disabled_choices' in request.session.keys() else JobSkillsAndSkillLevelForm()
     competencies = request.session['new_added_job_competencies'] if 'new_added_job_competencies' in request.session.keys() else []
