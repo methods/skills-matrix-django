@@ -48,7 +48,7 @@ class AddJobRoleTitleTests(LoggedInUserTestCase):
         self.assertRedirects(response, '/job-roles/add-job-role-skills/')
 
 
-class AddJObRoleSkillsTests(LoggedInAdminTestCase):
+class AddJobRoleSkillsTests(LoggedInAdminTestCase):
 
     def test_add_job_role_skills_GET(self):
         response = self.client.get(reverse('add-job-skills'))
@@ -104,6 +104,14 @@ class ReviewJobRoleTests(LoggedInAdminTestCase):
         response = self.client.post(reverse('review-job-role-details'), {'save': 'save'})
         test_job_title = Job.objects.get(job_title=response.client.session['job_role_title'])
         assert Competency.objects.filter(job_role_title=test_job_title.id).exists()
+
+
+class DynamicJobRoleLookUpTests(LoggedInAdminTestCase):
+    def test_dynamic_job_role_lookup_view_GET(self):
+        Job.objects.create(job_title='Test Job Role Title')
+        response = self.client.get(reverse('job-role-view', kwargs={'job': 'Test Job Role Title'}))
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, 'job_roles/job_role_detail.html')
 
 
 class UpdateJobRolePageTests(LoggedInAdminTestCase):
