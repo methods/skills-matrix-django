@@ -6,6 +6,7 @@ from app.models import Skill
 from super_admin.models import SkillLevel
 from .utils import creates_job_competency_instances
 from django.utils.text import slugify
+from django.contrib.messages import get_messages
 
 
 class JobRolePageTests(LoggedInUserTestCase):
@@ -46,7 +47,7 @@ class AddJobRoleTitleTests(LoggedInUserTestCase):
         admins_group = Group.objects.get(name='Admins')
         self.user.groups.add(admins_group)
         response = self.client.post(reverse('add-job-title'), {'job_role_title': 'Lead Developer'})
-        self.assertRedirects(response, '/job-roles/add-job-role-skills/')
+        self.assertRedirects(response, expected_url=reverse('add-job-skills'), status_code=302, target_status_code=200)
 
 
 class AddJobRoleSkillsTests(LoggedInAdminTestCase):
@@ -103,17 +104,21 @@ class ReviewJobRoleTests(LoggedInAdminTestCase):
                                                                                           'test_skill_level_4'},
                                                  {'test_skill_4': 'test_skill_level_3'}]
         session.save()
-        Skill.objects.create(name='test_skill_1', skill_type='Career skill').save()
-        Skill.objects.create(name='test_skill_2', skill_type='Career skill').save()
-        Skill.objects.create(name='test_skill_3', skill_type='Career skill').save()
-        Skill.objects.create(name='test_skill_4', skill_type='Career skill').save()
-        SkillLevel.objects.create(name='test_skill_level_2').save()
-        SkillLevel.objects.create(name='test_skill_level_1').save()
-        SkillLevel.objects.create(name='test_skill_level_4').save()
-        SkillLevel.objects.create(name='test_skill_level_3').save()
+        Skill.objects.create(name='test_skill_1', skill_type='Career skill')
+        Skill.objects.create(name='test_skill_2', skill_type='Career skill')
+        Skill.objects.create(name='test_skill_3', skill_type='Career skill')
+        Skill.objects.create(name='test_skill_4', skill_type='Career skill')
+        SkillLevel.objects.create(name='test_skill_level_2')
+        SkillLevel.objects.create(name='test_skill_level_1')
+        SkillLevel.objects.create(name='test_skill_level_4')
+        SkillLevel.objects.create(name='test_skill_level_3')
         response = self.client.post(reverse('review-job-role-details'), {'save': 'save'})
         test_job_title = Job.objects.get(job_title=response.client.session['job_role_title'])
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), 'The new job role was added successfully.')
         self.assertTrue(Competency.objects.filter(job_role_title=test_job_title.id).exists())
+        self.assertRedirects(response, expected_url=reverse('job-roles'), status_code=302, target_status_code=200)
 
 
 class DynamicJobRoleLookUpTests(LoggedInAdminTestCase):
