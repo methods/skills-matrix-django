@@ -78,7 +78,7 @@ class AddJobRoleSkillsTests(LoggedInAdminTestCase):
         self.assertNotIn({'test_skill_2_to_be_deleted': 'test_skill_level_2_to_be_deleted'},
                          response.client.session['new_added_job_competencies'])
 
-    def test_validation_errors_are_sent_back_to_addjobroleskills_page_template(self):
+    def test_form_validation_errors_are_sent_back_to_addjobroleskills_page_template(self):
         SkillLevel.objects.create(name='test_skill_level')
         response = self.client.post(reverse('add-job-skills'), {'job_role_skill': '', 'job_role_skill_level':
                                                                 'test_skill_level', 'addSkill': ''})
@@ -214,3 +214,12 @@ class AddSkillPageTests(LoggedInAdminTestCase):
         self.assertTrue(Competency.objects.filter(job_role_title=test_competency['test_job'],
                                                   job_role_skill=test_competency['test_skill'],
                                                   job_role_skill_level=test_competency['test_skill_level']).exists())
+
+    def test_form_validation_errors_are_sent_back_to_add_a_skill_page_template(self):
+        Job.objects.create(job_title='Test Job')
+        SkillLevel.objects.create(name='test_skill_level')
+        response = self.client.post(reverse('add-a-skill', kwargs={'job_title': 'Test Job'}), {'job_role_skill': '',
+                                                                            'job_role_skill_level': 'test_skill_level'})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'job_roles/add_job_role_skills.html')
+        self.assertContains(response, "Select a skill", count=2)
