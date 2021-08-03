@@ -104,7 +104,7 @@ class ReviewJobRoleTests(LoggedInAdminTestCase):
         SkillLevel.objects.create(name='test_skill_level_3').save()
         response = self.client.post(reverse('review-job-role-details'), {'save': 'save'})
         test_job_title = Job.objects.get(job_title=response.client.session['job_role_title'])
-        assert Competency.objects.filter(job_role_title=test_job_title.id).exists()
+        self.assertTrue(Competency.objects.filter(job_role_title=test_job_title.id).exists())
 
 
 class DynamicJobRoleLookUpTests(LoggedInAdminTestCase):
@@ -170,6 +170,20 @@ class UpdateJobRolePageTests(LoggedInAdminTestCase):
         self.assertFalse(Competency.objects.filter(job_role_title=test_competency.job_role_title.id,
                                                    job_role_skill=test_competency.job_role_skill.id,
                                                    job_role_skill_level=test_competency.job_role_skill_level.id).exists())
+
+
+class DeleteJobRoleTitleTests(LoggedInAdminTestCase):
+    def test_delete_job_role_title_view_GET(self):
+        Job.objects.create(job_title='Test Job Role Title To Be Deleted')
+        response = self.client.get(reverse('delete-job-role-view', kwargs={'job_title': 'Test Job Role Title To Be Deleted'}))
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, "job_roles/delete_job_role.html")
+
+    def test_delete_job_role_title_POST(self):
+        job_title_to_be_deleted = Job.objects.create(job_title='Test Job Role Title To Be Deleted')
+        response = self.client.post(reverse('delete-job-role-view', kwargs={'job_title': 'Test Job Role Title To Be Deleted'}),{'delete_job_role': job_title_to_be_deleted.id})
+        self.assertTemplateUsed(response, "job_roles/delete_job_role_confirmation.html")
+        self.assertFalse(Job.objects.filter(job_title=job_title_to_be_deleted.id).exists())
 
 
 class AddSkillPageTests(LoggedInAdminTestCase):
