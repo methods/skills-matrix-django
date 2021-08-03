@@ -5,6 +5,7 @@ from job_roles.models import Competency, Job
 from app.models import Skill
 from super_admin.models import SkillLevel
 from .utils import creates_job_competency_instances
+from django.utils.text import slugify
 
 
 class JobRolePageTests(LoggedInUserTestCase):
@@ -131,16 +132,18 @@ class UpdateJobRolePageTests(LoggedInAdminTestCase):
         self.assertTemplateUsed(response, 'job_roles/update_job_role.html')
 
     def test_edit_job_role_title_renders_template_POST(self):
-        creates_job_competency_instances()
+        test_instances = creates_job_competency_instances()
         response = self.client.post(reverse('update-job-role-view', kwargs={'job_title': 'Test Job'}),
-                                    {'edit_job_role_title': 'Test Job'})
+                                    {'edit_job_role_title': test_instances['test_job'].id})
         self.assertTemplateUsed(response, 'job_roles/update_job_role.html')
 
-    def test_edit_job_role_title_renders_form_POST(self):
-        creates_job_competency_instances()
-        response = self.client.post(reverse('update-job-role-view', kwargs={'job_title': 'Test Job'}),
-                                    {'save_job_role_title': 'Test Job'})
-        self.assertTemplateUsed(response, 'job_roles/update_job_role.html')
+    def test_save_job_role_title_POST(self):
+        test_job_title = Job.objects.create(job_title='Job Role Title To Be Updated')
+        response = self.client.post(reverse('update-job-role-view', kwargs={'job_title': 'Job Role Title To Be Updated'}),
+                         {'save_job_role_title': test_job_title.id, 'job_role_title': 'New Job Role Title'})
+        test_job_title.refresh_from_db()
+        self.assertEquals(test_job_title.job_title, 'New Job Role Title')
+        self.assertRedirects(response, expected_url=reverse('update-job-role-view', kwargs={'job_title': slugify(test_job_title.job_title)}), status_code=302, target_status_code=200)
 
     def test_edit_competency_save_POST(self):
         test_instances = creates_job_competency_instances()
