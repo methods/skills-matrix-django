@@ -44,12 +44,6 @@ def add_job_role_skills(request):
         request.session['disabled_choices'] = ['']
     form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
     if request.method == 'POST':
-        if 'disabled_choices' in request.session.keys():
-            form = JobSkillsAndSkillLevelForm(request.POST, disabled_choices=request.session['disabled_choices'])
-        else:
-            form = JobSkillsAndSkillLevelForm(request.POST)
-        if 'new_added_job_competencies' not in request.session.keys():
-            request.session['new_added_job_competencies'] = []
         if 'delete' in request.POST.keys():
             if request.POST["delete"] in request.session['disabled_choices'] and len(
                     request.session['disabled_choices']) > 0:
@@ -57,17 +51,24 @@ def add_job_role_skills(request):
             for competency in request.session['new_added_job_competencies']:
                 if request.POST["delete"] in competency:
                     request.session['new_added_job_competencies'].remove(competency)
-        if 'addSkill' in request.POST.keys():
-            if form.is_valid():
-                request.session['disabled_choices'].append(request.POST['job_role_skill'])
-                request.session['new_added_job_competencies'].append({request.POST['job_role_skill']:
-                                                                      request.POST['job_role_skill_level']})
-                request.session.save()
-                form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
+        else:
+            if 'disabled_choices' in request.session.keys():
+                form = JobSkillsAndSkillLevelForm(request.POST, disabled_choices=request.session['disabled_choices'])
             else:
-                for field, errors in form.errors.items():
-                    for error in errors:
-                        messages.error(request, error)
+                form = JobSkillsAndSkillLevelForm(request.POST)
+            if 'new_added_job_competencies' not in request.session.keys():
+                request.session['new_added_job_competencies'] = []
+            if 'addSkill' in request.POST.keys():
+                if form.is_valid():
+                    request.session['disabled_choices'].append(request.POST['job_role_skill'])
+                    request.session['new_added_job_competencies'].append({request.POST['job_role_skill']:
+                                                                          request.POST['job_role_skill_level']})
+                    request.session.save()
+                    form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
+                else:
+                    for field, errors in form.errors.items():
+                        for error in errors:
+                            messages.error(request, error)
     competencies = request.session['new_added_job_competencies'] if 'new_added_job_competencies' in request.session.keys() else []
     return render(request, "job_roles/add_job_role_skills.html", {'form': form, 'competencies': competencies,
                                                                   'new_role': True})

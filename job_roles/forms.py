@@ -46,4 +46,3 @@ class JobSkillsAndSkillLevelForm(forms.Form):
         if not job_role_skill:
             raise forms.ValidationError('Select a skill')
         return job_role_skill
-
