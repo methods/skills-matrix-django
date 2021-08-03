@@ -57,12 +57,13 @@ class AddJobRoleSkillsTests(LoggedInAdminTestCase):
         self.assertTemplateUsed(response, 'job_roles/add_job_role_skills.html')
 
     def test_add_job_role_skills_POST_saves_skill_and_skill_level_in_session(self):
-        Skill.objects.create(name='test_skill', skill_type='Career skill').save()
-        SkillLevel.objects.create(name='test_skill_level').save()
+        Skill.objects.create(name='test_skill', skill_type='Career skill')
+        SkillLevel.objects.create(name='test_skill_level')
         response = self.client.post(reverse('add-job-skills'), {'job_role_skill': 'test_skill', 'job_role_skill_level':
                                                                 'test_skill_level', 'addSkill': ''})
         self.assertIn('test_skill', response.client.session['disabled_choices'])
         self.assertIn({'test_skill': 'test_skill_level'}, response.client.session['new_added_job_competencies'])
+        self.assertContains(response, "Select a skill", count=1)
 
     def test_add_job_role_skills_POST_removes_skill_and_skill_level_from_the_session(self):
         session = self.client.session
@@ -75,6 +76,14 @@ class AddJobRoleSkillsTests(LoggedInAdminTestCase):
         self.assertNotIn('test_skill_2_to_be_deleted', response.client.session['disabled_choices'])
         self.assertNotIn({'test_skill_2_to_be_deleted': 'test_skill_level_2_to_be_deleted'},
                          response.client.session['new_added_job_competencies'])
+
+    def test_validation_errors_are_sent_back_to_addjobroleskills_page_template(self):
+        SkillLevel.objects.create(name='test_skill_level')
+        response = self.client.post(reverse('add-job-skills'), {'job_role_skill': '', 'job_role_skill_level':
+                                                                'test_skill_level', 'addSkill': ''})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'job_roles/add_job_role_skills.html')
+        self.assertContains(response, "Select a skill", count=2)
 
 
 class ReviewJobRoleTests(LoggedInAdminTestCase):
