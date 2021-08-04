@@ -78,7 +78,11 @@ def add_job_role_skills(request):
 @user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
                   login_url='/error/not-authorised')
 def review_job_role(request):
-    job_title = request.session['job_role_title']
+    if 'job_role_title' in request.session.keys():
+        job_title = request.session['job_role_title']
+    else:
+        messages.info(request, 'Please make sure to add a job role title.')
+        return redirect(add_job_role)
     if request.method == 'POST':
         Job(job_title=job_title).save()
         job_role_title = Job.objects.get(job_title=job_title)
