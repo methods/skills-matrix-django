@@ -4,7 +4,7 @@ from django.urls import reverse
 from job_roles.models import Competency, Job
 from app.models import Skill
 from super_admin.models import SkillLevel
-from .utils import creates_job_competency_instances
+from .utils import creates_job_competency_instances, creates_job_role_skill_and_skill_level_instances
 from django.utils.text import slugify
 from django.contrib.messages import get_messages
 
@@ -104,14 +104,7 @@ class ReviewJobRoleTests(LoggedInAdminTestCase):
                                                                                           'test_skill_level_4'},
                                                  {'test_skill_4': 'test_skill_level_3'}]
         session.save()
-        Skill.objects.create(name='test_skill_1', skill_type='Career skill')
-        Skill.objects.create(name='test_skill_2', skill_type='Career skill')
-        Skill.objects.create(name='test_skill_3', skill_type='Career skill')
-        Skill.objects.create(name='test_skill_4', skill_type='Career skill')
-        SkillLevel.objects.create(name='test_skill_level_2')
-        SkillLevel.objects.create(name='test_skill_level_1')
-        SkillLevel.objects.create(name='test_skill_level_4')
-        SkillLevel.objects.create(name='test_skill_level_3')
+        creates_job_role_skill_and_skill_level_instances()
         response = self.client.post(reverse('review-job-role-details'), {'save': 'save'})
         test_job_title = Job.objects.get(job_title=response.client.session['job_role_title'])
         messages = list(get_messages(response.wsgi_request))
