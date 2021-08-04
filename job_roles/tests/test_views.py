@@ -39,15 +39,22 @@ class AddJobRoleTitleTests(LoggedInUserTestCase):
     def test_job_role_title_saved_in__session(self):
         admins_group = Group.objects.get(name='Admins')
         self.user.groups.add(admins_group)
-        self.client.post(reverse('add-job-title'), {'job_role_title': 'Senior Developer'})
-        session = self.client.session
-        self.assertEqual(session['job_role_title'], 'Senior Developer')
+        response = self.client.post(reverse('add-job-title'), {'job_role_title': 'Senior Developer'})
+        self.assertEqual(response.client.session['job_role_title'], 'Senior Developer')
 
     def test_valid_submission_redirects_to_add_job_role_skills_page(self):
         admins_group = Group.objects.get(name='Admins')
         self.user.groups.add(admins_group)
         response = self.client.post(reverse('add-job-title'), {'job_role_title': 'Lead Developer'})
         self.assertRedirects(response, expected_url=reverse('add-job-skills'), status_code=302, target_status_code=200)
+
+    def test_input_capitalised_validation_error__message_is_sent_back_to_addjobrole_page_template(self):
+        admins_group = Group.objects.get(name='Admins')
+        self.user.groups.add(admins_group)
+        response = self.client.post(reverse('add-job-title'), {'job_role_title': 'Lead developer'})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'job_roles/add_job_role.html')
+        self.assertContains(response, "The job role title should be capitalised.", count=1)
 
 
 class AddJobRoleSkillsTests(LoggedInAdminTestCase):
