@@ -8,6 +8,7 @@ from super_admin.models import SkillLevel
 from .view_utils import populate_existing_competencies
 from django.utils.text import slugify
 from .view_utils import prepare_competency_edit
+from django.contrib.messages import get_messages
 
 
 @login_required

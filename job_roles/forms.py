@@ -23,15 +23,17 @@ class JobTitleForm(forms.Form):
 
 class JobSkillsAndSkillLevelForm(forms.Form):
 
+    job_role_skill = forms.ChoiceField(choices=[], required=False,
+                                        widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'}))
+
     job_role_skill_level = forms.ChoiceField(choices=[],
                                              required=False,
-                                             widget=forms.Select(attrs={'class': 'govuk-select'}))
+                                             widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'},
+                                                                 disabled_choices=['']))
 
     def __init__(self, *args, disabled_choices=None, **kwargs):
         super(JobSkillsAndSkillLevelForm, self).__init__(*args, **kwargs)
-        self.fields['job_role_skill'] = forms.ChoiceField(choices=get_skill_choices(),
-                                                         required=False,
-                                                         widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'}))
+        self.fields['job_role_skill'].choices = get_skill_choices()
         self.fields['job_role_skill_level'].choices = get_skill_level_choices()
         if disabled_choices:
             self.fields['job_role_skill'].widget.disabled_choices = disabled_choices

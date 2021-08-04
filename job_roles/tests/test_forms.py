@@ -84,3 +84,8 @@ class TestJobSkillsForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors["job_role_skill"], ["Select a skill"])
         self.assertEqual(form.errors["job_role_skill_level"], ["Select a skill level"])
+
+    def test_select_options_appear_in_form_choices(self):
+        form = JobSkillsAndSkillLevelForm()
+        assert ('', '--Select a skill--') in form.fields['job_role_skill'].choices
+        assert ('', '--Select a skill level--') in form.fields['job_role_skill_level'].choices
