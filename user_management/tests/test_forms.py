@@ -48,3 +48,10 @@ class JobFormTests(TestCase):
         form = JobForm()
         assert ('', '--Select a team--') in form.fields['team'].choices
         assert ('', '--Select a job--') in form.fields['job'].choices
+
+    def test_form_submit_empty_strings(self):
+        form = JobForm({'team': '', 'job': ''})
+        assert not form.is_valid()
+        self.assertEqual(form.errors['team'], ['Select a team'])
+        self.assertEqual(form.errors['job'], ['Select a job'])
+

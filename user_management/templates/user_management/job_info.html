@@ -20,6 +20,13 @@
       <h1 class="govuk-heading-xl">Information about your job</h1>
         {% endif %}
 
+        {% for message in messages %}
+          <div class="govuk-form-group govuk-form-group--error">
+              <span id="form-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ message }}
+              </span>
+          </div>
+        {% endfor %}
 
       <form class="form" method="post">
           {% csrf_token %}

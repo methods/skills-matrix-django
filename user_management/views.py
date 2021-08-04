@@ -40,6 +40,10 @@ def add_job(request):
             request.session['job'] = request.POST['job']
             request.session.save()
             return redirect(create_password)
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, error)
     else:
         form = JobForm()
     return render(request, 'user_management/job_info.html', {'form': form})

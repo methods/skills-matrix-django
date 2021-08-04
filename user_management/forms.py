@@ -1,5 +1,5 @@
 from django import forms
-from common.widgets import GdsStylePasswordInput, GdsStyleTextInput, GdsStyleEmailInput
+from common.widgets import GdsStylePasswordInput, GdsStyleTextInput, GdsStyleEmailInput, CustomisedSelectWidget
 from .validators import validate_domain_email
 from .utils import get_job_choices, get_team_choices
 
@@ -24,13 +24,33 @@ class NameForm(forms.Form):
 
 class JobForm(forms.Form):
 
-    team = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'govuk-select'}))
-    job = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'govuk-select'}))
+    team = forms.ChoiceField(choices=[], required=False, widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'},
+                                                                       disabled_choices=['']))
+    job = forms.ChoiceField(choices=[], required=False, widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'},
+                                                                      disabled_choices=['']))
 
     def __init__(self, *args, **kwargs):
         super(JobForm, self).__init__(*args, **kwargs)
         self.fields['team'].choices = get_team_choices()
         self.fields['job'].choices = get_job_choices()
+        attrs = {}
+        attrs.update({"errors": True})
+        attrs['class'] = 'govuk-select govuk-select--error'
+        for field in self.fields:
+            if field in self.errors:
+                self.fields[field].widget.attrs = attrs
+
+    def clean_team(self):
+        team = self.cleaned_data.get('team')
+        if not team:
+            raise forms.ValidationError('Select a team')
+        return team
+
+    def clean_job(self):
+        job = self.cleaned_data.get('job')
+        if not job:
+            raise forms.ValidationError('Select a job')
+        return job
 
 
 class EmailForm(forms.Form):
