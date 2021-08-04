@@ -40,9 +40,13 @@ def add_job_role(request):
 @user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
                   login_url='/error/not-authorised')
 def add_job_role_skills(request):
-    if 'disabled_choices' not in request.session.keys():
-        request.session['disabled_choices'] = ['']
-    form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
+    if 'job_role_title' in request.session.keys():
+        if 'disabled_choices' not in request.session.keys():
+            request.session['disabled_choices'] = ['']
+        form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
+    else:
+        messages.info(request, 'Please make sure to add a job role title.')
+        return redirect(add_job_role)
     if request.method == 'POST':
         if 'delete' in request.POST.keys():
             if request.POST["delete"] in request.session['disabled_choices'] and len(

@@ -32,3 +32,8 @@ def creates_job_role_skill_and_skill_level_form(form_data=None, disabled_choices
 def assigns_users_to_a_specific_group(group_name=None, user=None):
     admins_group = Group.objects.get(name=group_name)
     user.groups.add(admins_group)
+
+
+def saves_job_title_to_session(session=None):
+    session['job_role_title'] = 'Test Job Role'
+    session.save()

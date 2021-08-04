@@ -4,9 +4,10 @@ from django.urls import reverse
 from job_roles.models import Competency, Job
 from app.models import Skill
 from super_admin.models import SkillLevel
-from .utils import creates_job_competency_instances, creates_job_role_skill_and_skill_level_instances, assigns_users_to_a_specific_group
+from .utils import creates_job_competency_instances, creates_job_role_skill_and_skill_level_instances, assigns_users_to_a_specific_group, saves_job_title_to_session
 from django.utils.text import slugify
 from django.contrib.messages import get_messages
+
 
 
 class JobRolePageTests(LoggedInUserTestCase):
@@ -63,11 +64,20 @@ class AddJobRoleTitleTests(LoggedInUserTestCase):
 class AddJobRoleSkillsTests(LoggedInAdminTestCase):
 
     def test_add_job_role_skills_GET(self):
+        saves_job_title_to_session(session=self.client.session)
         response = self.client.get(reverse('add-job-skills'))
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'job_roles/add_job_role_skills.html')
 
+    def test_add_job_role_skills_redirects_if_no_job_role_title_in_the_session(self):
+        response = self.client.get(reverse('add-job-skills'))
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), 'Please make sure to add a job role title.')
+        self.assertRedirects(response, expected_url=reverse('add-job-title'), status_code=302, target_status_code=200)
+
     def test_add_job_role_skills_POST_saves_skill_and_skill_level_in_session(self):
+        saves_job_title_to_session(session=self.client.session)
         Skill.objects.create(name='test_skill', skill_type='Career skill')
         SkillLevel.objects.create(name='test_skill_level')
         response = self.client.post(reverse('add-job-skills'), {'job_role_skill': 'test_skill', 'job_role_skill_level':
@@ -78,6 +88,7 @@ class AddJobRoleSkillsTests(LoggedInAdminTestCase):
 
     def test_add_job_role_skills_POST_removes_skill_and_skill_level_from_the_session(self):
         session = self.client.session
+        session['job_role_title'] = 'Test Job Role'
         session['new_added_job_competencies'] = [{'test_skill_1_to_be_deleted': 'test_skill_level_1_to_be_deleted'},
                                                  {'test_skill_2_to_be_deleted': 'test_skill_level_2_to_be_deleted'}]
         session['disabled_choices'] = ['test_skill_1_to_be_deleted', 'test_skill_2_to_be_deleted',
@@ -89,6 +100,7 @@ class AddJobRoleSkillsTests(LoggedInAdminTestCase):
                          response.client.session['new_added_job_competencies'])
 
     def test_form_validation_errors_are_sent_back_to_addjobroleskills_page_template(self):
+        saves_job_title_to_session(session=self.client.session)
         SkillLevel.objects.create(name='test_skill_level')
         response = self.client.post(reverse('add-job-skills'), {'job_role_skill': '', 'job_role_skill_level':
                                                                 'test_skill_level', 'addSkill': ''})
@@ -99,14 +111,12 @@ class AddJobRoleSkillsTests(LoggedInAdminTestCase):
 
 class ReviewJobRoleTests(LoggedInAdminTestCase):
     def test_review_job_role_GET(self):
-        session = self.client.session
-        session['job_role_title'] = 'Test Job Role'
-        session.save()
+        saves_job_title_to_session(session=self.client.session)
         response = self.client.get(reverse('review-job-role-details'))
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'job_roles/review_job_role.html')
 
-    def test_review_job_role_redirect_if_no_job_role_title_in_the_session(self):
+    def test_review_job_role_redirects_if_no_job_role_title_in_the_session(self):
         response = self.client.get(reverse('review-job-role-details'))
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
