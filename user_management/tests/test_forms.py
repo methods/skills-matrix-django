@@ -1,5 +1,5 @@
-from django.test import SimpleTestCase
-from ..forms import NameForm, EmailForm, PasswordForm
+from django.test import SimpleTestCase, TestCase
+from ..forms import NameForm, EmailForm, PasswordForm, JobForm
 
 
 class TestForms(SimpleTestCase):
@@ -41,3 +41,10 @@ class TestForms(SimpleTestCase):
             'password_confirm': 'password2'
         })
         assert not form.is_valid()
+
+
+class JobFormTests(TestCase):
+    def test_add_job_form(self):
+        form = JobForm()
+        assert ('', '--Select a team--') in form.fields['team'].choices
+        assert ('', '--Select a job--') in form.fields['job'].choices

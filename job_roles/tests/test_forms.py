@@ -41,6 +41,8 @@ class TestJobRoleForms(TestCase):
     def test_job_role_skills_form_valid_data(self):
         form_data = {"job_role_skill": 'test_skill_1', 'job_role_skill_level': 'test_skill_level_1'}
         job_role_skills_form = creates_job_role_skill_and_skill_level_form(form_data=form_data)
+        print(job_role_skills_form.errors)
+        breakpoint()
         self.assertTrue(job_role_skills_form.is_valid())
 
     def test_job_role_skills_form_invalid_data(self):

@@ -1,6 +1,6 @@
 from django import forms
 from common.widgets import GdsStyleTextInput
-from .widgets import CustomisedSelectWidget
+from common.widgets import CustomisedSelectWidget
 from .validators import validate_input_capitalised
 from .form_utils import get_skill_choices, get_skill_level_choices
 
