@@ -106,6 +106,13 @@ class ReviewJobRoleTests(LoggedInAdminTestCase):
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'job_roles/review_job_role.html')
 
+    def test_review_job_role_redirect_if_no_job_role_title_in_the_session(self):
+        response = self.client.get(reverse('review-job-role-details'))
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), 'Please make sure to add a job role title.')
+        self.assertRedirects(response, expected_url=reverse('add-job-title'), status_code=302, target_status_code=200)
+
     def test_review_job_role_POST_saves_new_job_role_to_db(self):
         session = self.client.session
         session['job_role_title'] = 'Test Job Role'
