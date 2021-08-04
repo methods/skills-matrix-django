@@ -3,7 +3,7 @@ from django.forms import Select
 
 
 class GdsStylePasswordInput(Input):
-    template_name = "user_management/gds_input.html"
+    template_name = "common/gds_input.html"
     input_type = 'password'
 
     def __init__(self, attrs=None, render_value=False):
@@ -17,13 +17,13 @@ class GdsStylePasswordInput(Input):
 
 
 class GdsStyleTextInput(Input):
-    template_name = "user_management/gds_input.html"
+    template_name = "common/gds_input.html"
     input_type = 'text'
 
 
 class GdsStyleEmailInput(Input):
     input_type = 'email'
-    template_name = 'user_management/gds_input.html'
+    template_name = 'common/gds_input.html'
 
 
 class CustomisedSelectWidget(Select):
