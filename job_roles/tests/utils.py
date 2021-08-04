@@ -2,6 +2,7 @@ from job_roles.models import Job
 from app.models import Skill
 from super_admin.models import SkillLevel
 from ..forms import JobSkillsAndSkillLevelForm
+from django.contrib.auth.models import Group
 
 
 def creates_job_competency_instances():
@@ -26,3 +27,8 @@ def creates_job_role_skill_and_skill_level_form(form_data=None, disabled_choices
     creates_job_role_skill_and_skill_level_instances()
     job_role_skills_form = JobSkillsAndSkillLevelForm(data=form_data, disabled_choices=disabled_choices)
     return job_role_skills_form
+
+
+def assigns_users_to_a_specific_group(group_name=None, user=None):
+    admins_group = Group.objects.get(name=group_name)
+    user.groups.add(admins_group)

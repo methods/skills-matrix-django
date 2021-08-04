@@ -4,7 +4,7 @@ from django.urls import reverse
 from job_roles.models import Competency, Job
 from app.models import Skill
 from super_admin.models import SkillLevel
-from .utils import creates_job_competency_instances, creates_job_role_skill_and_skill_level_instances
+from .utils import creates_job_competency_instances, creates_job_role_skill_and_skill_level_instances, assigns_users_to_a_specific_group
 from django.utils.text import slugify
 from django.contrib.messages import get_messages
 
@@ -21,8 +21,8 @@ class AddJobRoleTitleTests(LoggedInUserTestCase):
     def setUp(self):
         super(AddJobRoleTitleTests, self).setUp()
         # Group setup
-        group_name = "Admins"
-        self.group = Group(name=group_name)
+        self.group_name = "Admins"
+        self.group = Group(name=self.group_name)
         self.group.save()
 
     def test_page_GET_non_admin_users(self):
@@ -30,35 +30,30 @@ class AddJobRoleTitleTests(LoggedInUserTestCase):
         assert response.status_code == 302
 
     def test_page_GET_admin_users(self):
-        admins_group = Group.objects.get(name='Admins')
-        self.user.groups.add(admins_group)
+        assigns_users_to_a_specific_group(group_name=self.group_name, user=self.user)
         response = self.client.get(reverse('add-job-title'))
         assert response.status_code == 200
         self.assertTemplateUsed(response, 'job_roles/add_job_role.html')
 
     def test_job_role_title_saved_in__session(self):
-        admins_group = Group.objects.get(name='Admins')
-        self.user.groups.add(admins_group)
+        assigns_users_to_a_specific_group(group_name=self.group_name, user=self.user)
         response = self.client.post(reverse('add-job-title'), {'job_role_title': 'Senior Developer'})
         self.assertEqual(response.client.session['job_role_title'], 'Senior Developer')
 
     def test_valid_submission_redirects_to_add_job_role_skills_page(self):
-        admins_group = Group.objects.get(name='Admins')
-        self.user.groups.add(admins_group)
+        assigns_users_to_a_specific_group(group_name=self.group_name, user=self.user)
         response = self.client.post(reverse('add-job-title'), {'job_role_title': 'Lead Developer'})
         self.assertRedirects(response, expected_url=reverse('add-job-skills'), status_code=302, target_status_code=200)
 
     def test_input_capitalised_validation_error__message_is_sent_back_to_addjobrole_page_template(self):
-        admins_group = Group.objects.get(name='Admins')
-        self.user.groups.add(admins_group)
+        assigns_users_to_a_specific_group(group_name=self.group_name, user=self.user)
         response = self.client.post(reverse('add-job-title'), {'job_role_title': 'Lead developer'})
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'job_roles/add_job_role.html')
         self.assertContains(response, "The job role title should be capitalised.", count=1)
 
     def test_input_required_validation_error__message_is_sent_back_to_addjobrole_page_template(self):
-        admins_group = Group.objects.get(name='Admins')
-        self.user.groups.add(admins_group)
+        assigns_users_to_a_specific_group(group_name=self.group_name, user=self.user)
         response = self.client.post(reverse('add-job-title'), {'job_role_title': ''})
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'job_roles/add_job_role.html')
