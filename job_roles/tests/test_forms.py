@@ -20,13 +20,22 @@ class TestJobRoleForms(TestCase):
         self.assertTrue(job_role_title_form.is_bound)
         self.assertFalse(job_role_title_form.is_valid())
 
-    def test_input_capitalised_validation(self):
+    def test_input_capitalised_validation_error_message(self):
         job_role_title_form = JobTitleForm(data={
             'job_role_title': 'junior developer'
         })
         self.assertFalse(job_role_title_form.is_valid())
         self.assertEqual(
             job_role_title_form.errors["job_role_title"], ["The job role title should be capitalised."]
+        )
+
+    def test_input_required_validation_error_message(self):
+        job_role_title_form = JobTitleForm(data={
+            'job_role_title': ''
+        })
+        self.assertFalse(job_role_title_form.is_valid())
+        self.assertEqual(
+            job_role_title_form.errors["job_role_title"], ['Enter a job role title']
         )
 
     def test_job_role_skills_form_no_data(self):

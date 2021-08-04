@@ -56,6 +56,14 @@ class AddJobRoleTitleTests(LoggedInUserTestCase):
         self.assertTemplateUsed(response, 'job_roles/add_job_role.html')
         self.assertContains(response, "The job role title should be capitalised.", count=1)
 
+    def test_input_required_validation_error__message_is_sent_back_to_addjobrole_page_template(self):
+        admins_group = Group.objects.get(name='Admins')
+        self.user.groups.add(admins_group)
+        response = self.client.post(reverse('add-job-title'), {'job_role_title': ''})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'job_roles/add_job_role.html')
+        self.assertContains(response, "Enter a job role title", count=1)
+
 
 class AddJobRoleSkillsTests(LoggedInAdminTestCase):
 
