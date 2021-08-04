@@ -24,6 +24,7 @@ class TestJobRoleForms(TestCase):
         job_role_title_form = JobTitleForm(data={
             'job_role_title': 'junior developer'
         })
+        self.assertFalse(job_role_title_form.is_valid())
         self.assertEqual(
             job_role_title_form.errors["job_role_title"], ["The job role title should be capitalised."]
         )
