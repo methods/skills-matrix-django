@@ -48,7 +48,7 @@
             <span class="govuk-visually-hidden">Error:</span> {{ message }}
           </span>
         {% endfor %}
-        </div>
+
             <form class="form" method="post">
                 {% csrf_token %}
                 <dl class="govuk-summary-list">
@@ -106,6 +106,7 @@
                     href="/add-job-role-skills/create-skill">create a new skill
                     here</a>.</p>
         </div>
+    </div>
     </div>
 </div>
 {% endblock %}

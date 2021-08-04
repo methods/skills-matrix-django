@@ -3,7 +3,7 @@ from job_roles.forms import JobTitleForm, JobSkillsAndSkillLevelForm
 from .utils import creates_job_role_skill_and_skill_level_form
 
 
-class TestJobRoleForms(TestCase):
+class TestJobTitleForm(TestCase):
 
     def test_job_role_title_form_no_data(self):
         job_role_title_form = JobTitleForm()
@@ -37,6 +37,9 @@ class TestJobRoleForms(TestCase):
         self.assertEqual(
             job_role_title_form.errors["job_role_title"], ['Enter a job role title']
         )
+
+
+class TestJobSkillsForm(TestCase):
 
     def test_job_role_skills_form_no_data(self):
         job_role_skills_form = JobSkillsAndSkillLevelForm()
@@ -75,10 +78,9 @@ class TestJobRoleForms(TestCase):
         self.assertNotEqual(job_role_form.fields['job_role_skill'].widget.disabled_choices,
                                                 ['test_skill_level_1', 'test_skill_level_0'])
 
-    def test_skill_empty_label_selection_raises_error(self):
-        form_data = {"job_role_skill": '', 'job_role_skill_level': 'test_skill_level_3'}
+    def test_empty_label_selection_raises_error(self):
+        form_data = {"job_role_skill": '', 'job_role_skill_level': ''}
         form = creates_job_role_skill_and_skill_level_form(form_data=form_data)
         self.assertFalse(form.is_valid())
-        self.assertEqual(
-            form.errors["job_role_skill"], ["Select a skill"]
-        )
+        self.assertEqual(form.errors["job_role_skill"], ["Select a skill"])
+        self.assertEqual(form.errors["job_role_skill_level"], ["Select a skill level"])

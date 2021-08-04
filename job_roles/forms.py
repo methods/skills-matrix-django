@@ -24,6 +24,7 @@ class JobTitleForm(forms.Form):
 class JobSkillsAndSkillLevelForm(forms.Form):
 
     job_role_skill_level = forms.ChoiceField(choices=[],
+                                             required=False,
                                              widget=forms.Select(attrs={'class': 'govuk-select'}))
 
     def __init__(self, *args, disabled_choices=None, **kwargs):
