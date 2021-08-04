@@ -47,3 +47,9 @@ class JobSkillsAndSkillLevelForm(forms.Form):
         if not job_role_skill:
             raise forms.ValidationError('Select a skill')
         return job_role_skill
+
+    def clean_job_role_skill_level(self):
+        skill_level = self.cleaned_data.get('job_role_skill_level')
+        if not skill_level:
+            raise forms.ValidationError('Select a skill level')
+        return skill_level
