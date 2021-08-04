@@ -37,3 +37,11 @@ def assigns_users_to_a_specific_group(group_name=None, user=None):
 def saves_job_title_to_session(session=None):
     session['job_role_title'] = 'Test Job Role'
     session.save()
+
+
+def saves_new_added_job_competencies_to_session(session=None):
+    session['new_added_job_competencies'] = [{'test_skill_1': 'test_skill_level_2'},
+                                             {'test_skill_2': 'test_skill_level_1'},
+                                             {'test_skill_3': 'test_skill_level_4'},
+                                             {'test_skill_4': 'test_skill_level_3'}]
+    session.save()

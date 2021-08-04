@@ -82,11 +82,17 @@ def add_job_role_skills(request):
 @user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
                   login_url='/error/not-authorised')
 def review_job_role(request):
-    if 'job_role_title' in request.session.keys():
+    if 'job_role_title' and 'new_added_job_competencies' in request.session.keys():
         job_title = request.session['job_role_title']
-    else:
+        if len(request.session['new_added_job_competencies']) == 0:
+            messages.info(request, 'Please make sure to add the relevant skills to this job role.')
+            return redirect(add_job_role_skills)
+    elif 'job_role_title' not in request.session.keys():
         messages.info(request, 'Please make sure to add a job role title.')
         return redirect(add_job_role)
+    elif 'new_added_job_competencies' not in request.session.keys():
+        messages.info(request, 'Please make sure to add the relevant skills to this job role.')
+        return redirect(add_job_role_skills)
     if request.method == 'POST':
         Job(job_title=job_title).save()
         job_role_title = Job.objects.get(job_title=job_title)

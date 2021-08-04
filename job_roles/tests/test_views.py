@@ -4,10 +4,9 @@ from django.urls import reverse
 from job_roles.models import Competency, Job
 from app.models import Skill
 from super_admin.models import SkillLevel
-from .utils import creates_job_competency_instances, creates_job_role_skill_and_skill_level_instances, assigns_users_to_a_specific_group, saves_job_title_to_session
+from .utils import creates_job_competency_instances, creates_job_role_skill_and_skill_level_instances, assigns_users_to_a_specific_group, saves_job_title_to_session, saves_new_added_job_competencies_to_session
 from django.utils.text import slugify
 from django.contrib.messages import get_messages
-
 
 
 class JobRolePageTests(LoggedInUserTestCase):
@@ -112,6 +111,7 @@ class AddJobRoleSkillsTests(LoggedInAdminTestCase):
 class ReviewJobRoleTests(LoggedInAdminTestCase):
     def test_review_job_role_GET(self):
         saves_job_title_to_session(session=self.client.session)
+        saves_new_added_job_competencies_to_session(session=self.client.session)
         response = self.client.get(reverse('review-job-role-details'))
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'job_roles/review_job_role.html')
@@ -124,13 +124,8 @@ class ReviewJobRoleTests(LoggedInAdminTestCase):
         self.assertRedirects(response, expected_url=reverse('add-job-title'), status_code=302, target_status_code=200)
 
     def test_review_job_role_POST_saves_new_job_role_to_db(self):
-        session = self.client.session
-        session['job_role_title'] = 'Test Job Role'
-        session['new_added_job_competencies'] = [{'test_skill_1': 'test_skill_level_2'},
-                                                 {'test_skill_2': 'test_skill_level_1'}, {'test_skill_3':
-                                                                                          'test_skill_level_4'},
-                                                 {'test_skill_4': 'test_skill_level_3'}]
-        session.save()
+        saves_job_title_to_session(session=self.client.session)
+        saves_new_added_job_competencies_to_session(session=self.client.session)
         creates_job_role_skill_and_skill_level_instances()
         response = self.client.post(reverse('review-job-role-details'), {'save': 'save'})
         test_job_title = Job.objects.get(job_title=response.client.session['job_role_title'])
