@@ -12,14 +12,14 @@ def creates_job_competency_instances():
 
 
 def creates_job_role_skill_and_skill_level_instances():
-    Skill.objects.create(name='skill_1', skill_type='Career skill')
-    Skill.objects.create(name='skill_2', skill_type='Career skill')
-    Skill.objects.create(name='skill_3', skill_type='Career skill')
-    Skill.objects.create(name='skill_4', skill_type='Career skill')
-    SkillLevel.objects.create(name='skill_level_2')
-    SkillLevel.objects.create(name='skill_level_1')
-    SkillLevel.objects.create(name='skill_level_4')
-    SkillLevel.objects.create(name='skill_level_3')
+    Skill.objects.create(name='test_skill_1', skill_type='Career skill')
+    Skill.objects.create(name='test_skill_2', skill_type='Career skill')
+    Skill.objects.create(name='test_skill_3', skill_type='Career skill')
+    Skill.objects.create(name='test_skill_4', skill_type='Career skill')
+    SkillLevel.objects.create(name='test_skill_level_2')
+    SkillLevel.objects.create(name='test_skill_level_1')
+    SkillLevel.objects.create(name='test_skill_level_4')
+    SkillLevel.objects.create(name='test_skill_level_3')
 
 
 def creates_job_role_skill_and_skill_level_form(form_data=None, disabled_choices=None):
