@@ -4,7 +4,7 @@ from .forms import JobSkillsAndSkillLevelForm
 
 def populate_existing_competencies(job, existing_competency=None):
     competencies = Competency.objects.filter(job_role_title=job.id)
-    disabled_choices = []
+    disabled_choices = ['']
     for competency in competencies:
         if existing_competency != competency.job_role_skill.name:
             disabled_choices.append(competency.job_role_skill.name)

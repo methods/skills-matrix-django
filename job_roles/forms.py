@@ -2,7 +2,6 @@ from django import forms
 from common.widgets import GdsStyleTextInput
 from .widgets import CustomisedSelectWidget
 from .validators import validate_input_capitalised
-from .fields import EmptyChoiceField
 from .form_utils import get_skill_choices, get_skill_level_choices
 
 
@@ -29,12 +28,18 @@ class JobSkillsAndSkillLevelForm(forms.Form):
 
     def __init__(self, *args, disabled_choices=None, **kwargs):
         super(JobSkillsAndSkillLevelForm, self).__init__(*args, **kwargs)
-        self.fields['job_role_skill'] = EmptyChoiceField(choices=get_skill_choices(), empty_label='--Select a skill--',
+        self.fields['job_role_skill'] = forms.ChoiceField(choices=get_skill_choices(),
                                                          required=False,
                                                          widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'}))
         self.fields['job_role_skill_level'].choices = get_skill_level_choices()
         if disabled_choices:
             self.fields['job_role_skill'].widget.disabled_choices = disabled_choices
+        attrs = {}
+        attrs.update({"errors": True})
+        attrs['class'] = 'govuk-select govuk-select--error'
+        for field in self.fields:
+            if field in self.errors:
+                self.fields[field].widget.attrs = attrs
 
     def clean_job_role_skill(self):
         job_role_skill = self.cleaned_data.get('job_role_skill')
