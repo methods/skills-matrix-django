@@ -45,3 +45,8 @@ def saves_new_added_job_competencies_to_session(session=None):
                                              {'test_skill_3': 'test_skill_level_4'},
                                              {'test_skill_4': 'test_skill_level_3'}]
     session.save()
+
+
+def saves_new_added_job_competencies_to_session_as_empty_list(session=None):
+    session['new_added_job_competencies'] = []
+    session.save()

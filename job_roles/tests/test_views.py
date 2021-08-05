@@ -4,7 +4,7 @@ from django.urls import reverse
 from job_roles.models import Competency, Job
 from app.models import Skill
 from super_admin.models import SkillLevel
-from .utils import creates_job_competency_instances, creates_job_role_skill_and_skill_level_instances, assigns_users_to_a_specific_group, saves_job_title_to_session, saves_new_added_job_competencies_to_session
+from .utils import creates_job_competency_instances, creates_job_role_skill_and_skill_level_instances, assigns_users_to_a_specific_group, saves_job_title_to_session, saves_new_added_job_competencies_to_session, saves_new_added_job_competencies_to_session_as_empty_list
 from django.utils.text import slugify
 from django.contrib.messages import get_messages
 
@@ -122,6 +122,23 @@ class ReviewJobRoleTests(LoggedInAdminTestCase):
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), 'Please make sure to add a job role title.')
         self.assertRedirects(response, expected_url=reverse('add-job-title'), status_code=302, target_status_code=200)
+
+    def test_review_job_role_redirects_if_no_new_added_job_competencies_in_the_session(self):
+        saves_job_title_to_session(session=self.client.session)
+        response = self.client.get(reverse('review-job-role-details'))
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), 'Please make sure to add the relevant skills to this job role.')
+        self.assertRedirects(response, expected_url=reverse('add-job-skills'), status_code=302, target_status_code=200)
+
+    def test_review_job_role_redirects_if_new_added_job_competencies_length_list_is_zero(self):
+        saves_job_title_to_session(session=self.client.session)
+        saves_new_added_job_competencies_to_session_as_empty_list(session=self.client.session)
+        response = self.client.get(reverse('review-job-role-details'))
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), 'Please make sure to add the relevant skills to this job role.')
+        self.assertRedirects(response, expected_url=reverse('add-job-skills'), status_code=302, target_status_code=200)
 
     def test_review_job_role_POST_saves_new_job_role_to_db(self):
         saves_job_title_to_session(session=self.client.session)
