@@ -211,10 +211,10 @@ class EditJobInformationPageTests(LoggedInUserTestCase):
         team.team_name = "Updated team"
         team.save()
         job = Job()
-        job.job_title = 'Updated job'
+        job.job_title = 'Updated Job'
         job.save()
-        self.client.post(reverse('edit-job-information'), {'team': 'Updated team', 'job': 'Updated job'})
+        self.client.post(reverse('edit-job-information'), {'team': 'Updated team', 'job': 'Updated Job'})
         self.user.refresh_from_db()
-        assert self.user.job_role == 'Updated job'
+        assert self.user.job_role == 'Updated Job'
         assert self.user.team == 'Updated team'
 
