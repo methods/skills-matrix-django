@@ -21,16 +21,31 @@
 
 {% block content %}
 <div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-8">Edit Job Role </h1>
+  </div>
     <form method='post'>
       {% csrf_token %}
       <div class="govuk-grid-column-three-quarters">
-        <h1 class="govuk-heading-xl govuk-!-margin-bottom-8">Edit Job Role </h1>
-        <div class="govuk-grid-column-one-half govuk-!-padding-0">
+        <div class="{% if form_job_role_title.errors %} govuk-grid-column-three-quarters {% else %}govuk-grid-column-one-half govuk-!-padding-0{% endif %}">
         <dl class="govuk-summary-list govuk-!-margin-bottom-8">
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
+              {{form_job_role_title.non_field_errors}}
               {% if form_job_role_title %}
-              {{form_job_role_title.job_role_title}}
+                {% for field in form_job_role_title %}
+                <div class="{% if form_job_role_title.errors %} govuk-form-group--error {% endif %}">
+                  <div >
+                    {% for error in field.errors %}
+                    <span id="addname-error" class="govuk-error-message">
+                      <span class="govuk-visually-hidden">Error:</span>
+                      {{error}}
+                    </span>
+                    {% endfor %}
+                  </div>
+                  {{field}}
+              {% endfor %}
+                </div>
               {% else %}
               {{job_title.job_title}}
               {% endif %}
@@ -45,19 +60,11 @@
         </dl>
         </div>
         </div>
-
     </form>
 </div>
 <div class="govuk-!-margin-top-4">
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <div class="govuk-form-group govuk-form-group--error">
-        {% for message in messages %}
-          <span id="form-error" class="govuk-error-message">
-            <span class="govuk-visually-hidden">Error:</span> {{ message }}
-          </span>
-        {% endfor %}
-        </div>
       <dl class="govuk-summary-list govuk-!-margin-bottom-9">
         <form method="post">
           {% csrf_token %}

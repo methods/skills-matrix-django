@@ -147,7 +147,7 @@ def update_job_role_detail_view(request, job_title):
                 updated_title = form_job_role_title.cleaned_data['job_role_title']
                 Job.objects.filter(id=request.POST['save_job_role_title']).update(job_title=updated_title)
                 return redirect(update_job_role_detail_view, job_title=slugify(updated_title))
-    return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj, 'job_title': job_title})
+    return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj, 'job_title': job_title,'form_job_role_title': False if 'save_job_role_title' not in request.POST.keys() else form_job_role_title})
 
 
 @login_required
