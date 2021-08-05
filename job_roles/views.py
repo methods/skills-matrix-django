@@ -137,17 +137,6 @@ def update_job_role_detail_view(request, job_title):
                 competency.job_role_skill = Skill.objects.get(name=request.POST['job_role_skill'])
                 competency.job_role_skill_level = SkillLevel.objects.get(name=request.POST['job_role_skill_level'])
                 competency.save()
-            else:
-                for field, errors in form.errors.items():
-                    for error in errors:
-                        messages.error(request, error)
-                template_variables = prepare_competency_edit(request.POST['update_competency'], job_title)
-                form.repopulate_dropdown_choices()
-                return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj,
-                                                                          'job_title': job_title,
-                                                                          'form': form,
-                                                                          'edit_competency_id': template_variables[
-                                                                              'edit_competency_id']})
         if 'edit_job_role_title' in request.POST.keys():
             form_job_role_title = JobTitleForm(initial={'job_role_title': job_title.job_title})
             return render(request, "job_roles/update_job_role.html", {'form_job_role_title': form_job_role_title, 'job_title': job_title, 'job_role_obj': job_role_obj
