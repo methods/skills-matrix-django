@@ -185,11 +185,14 @@ class UpdateJobRolePageTests(LoggedInAdminTestCase):
 
     def test_save_job_role_title_POST(self):
         test_job_title = Job.objects.create(job_title='Job Role Title To Be Updated')
-        response = self.client.post(reverse('update-job-role-view', kwargs={'job_title': 'Job Role Title To Be Updated'}),
-                         {'save_job_role_title': test_job_title.id, 'job_role_title': 'New Job Role Title'})
+        response = self.client.post(reverse('update-job-role-view',
+                                            kwargs={'job_title': 'Job Role Title To Be Updated'}),
+                                    {'save_job_role_title': test_job_title.id, 'job_role_title': 'New Job Role Title'})
         test_job_title.refresh_from_db()
         self.assertEquals(test_job_title.job_title, 'New Job Role Title')
-        self.assertRedirects(response, expected_url=reverse('update-job-role-view', kwargs={'job_title': slugify(test_job_title.job_title)}), status_code=302, target_status_code=200)
+        self.assertRedirects(response, expected_url=reverse('update-job-role-view',
+                                                            kwargs={'job_title': slugify(test_job_title.job_title)}),
+                             status_code=302, target_status_code=200)
 
     def test_edit_competency_save_POST(self):
         test_instances = creates_job_competency_instances()
@@ -199,9 +202,9 @@ class UpdateJobRolePageTests(LoggedInAdminTestCase):
                                                     job_role_skill=test_instances['test_skill'],
                                                     job_role_skill_level=test_instances['test_skill_level'])
         test_competency.save()
-        self.client.post(reverse('update-job-role-view', kwargs={'job_title': 'Test Job'}), {'job_role_skill': 'updated',
-                                                                      'job_role_skill_level': 'updated',
-                                                                          'update_competency': test_competency.id})
+        self.client.post(reverse('update-job-role-view', kwargs={'job_title': 'Test Job'}),
+                         {'job_role_skill': 'updated', 'job_role_skill_level': 'updated',
+                          'update_competency': test_competency.id})
         test_competency.refresh_from_db()
         assert test_competency.job_role_skill.name == 'updated'
         assert test_competency.job_role_skill_level.name == 'updated'
@@ -215,19 +218,39 @@ class UpdateJobRolePageTests(LoggedInAdminTestCase):
                                                                      'delete_competency': test_competency.id})
         self.assertFalse(Competency.objects.filter(job_role_title=test_competency.job_role_title.id,
                                                    job_role_skill=test_competency.job_role_skill.id,
-                                                   job_role_skill_level=test_competency.job_role_skill_level.id).exists())
+                                                   job_role_skill_level=test_competency.job_role_skill_level.id).
+                         exists())
+
+    def test_JobTitleForm_input_required_validation_error__msg_is_sent_back_to_updatejobrole_template(self):
+        test_job_title = Job.objects.create(job_title='Test Job')
+        response = self.client.post(reverse('update-job-role-view', kwargs={'job_title': 'Test Job'}),
+                                    {'save_job_role_title': test_job_title.id, 'job_role_title': ''})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "job_roles/update_job_role.html")
+        self.assertContains(response, 'Enter a job role title', count=1)
+
+    def test_JobTitleForm_input_capitalised_validation_error__msg_is_sent_back_to_updatejobrole_template(self):
+        test_job_title = Job.objects.create(job_title='Test Job')
+        response = self.client.post(reverse('update-job-role-view', kwargs={'job_title': 'Test Job'}),
+                                    {'save_job_role_title': test_job_title.id, 'job_role_title': 'New job Role'})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "job_roles/update_job_role.html")
+        self.assertContains(response, 'The job role title should be capitalised.', count=1)
 
 
 class DeleteJobRoleTitleTests(LoggedInAdminTestCase):
     def test_delete_job_role_title_view_GET(self):
         Job.objects.create(job_title='Test Job Role Title To Be Deleted')
-        response = self.client.get(reverse('delete-job-role-view', kwargs={'job_title': 'Test Job Role Title To Be Deleted'}))
+        response = self.client.get(reverse('delete-job-role-view',
+                                   kwargs={'job_title': 'Test Job Role Title To Be Deleted'}))
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, "job_roles/delete_job_role.html")
 
     def test_delete_job_role_title_POST(self):
         job_title_to_be_deleted = Job.objects.create(job_title='Test Job Role Title To Be Deleted')
-        response = self.client.post(reverse('delete-job-role-view', kwargs={'job_title': 'Test Job Role Title To Be Deleted'}),{'delete_job_role': job_title_to_be_deleted.id})
+        response = self.client.post(reverse('delete-job-role-view',
+                                    kwargs={'job_title': 'Test Job Role Title To Be Deleted'}),
+                                    {'delete_job_role': job_title_to_be_deleted.id})
         self.assertTemplateUsed(response, "job_roles/delete_job_role_confirmation.html")
         self.assertFalse(Job.objects.filter(job_title=job_title_to_be_deleted.id).exists())
 
@@ -241,8 +264,9 @@ class AddSkillPageTests(LoggedInAdminTestCase):
 
     def test_valid_post_request(self):
         test_competency = creates_job_competency_instances()
-        self.client.post(reverse('add-a-skill', kwargs={'job_title': 'Test Job'}), {'job_role_skill': 'test_skill',
-                                                                            'job_role_skill_level': 'test_skill_level'})
+        self.client.post(reverse('add-a-skill', kwargs={'job_title': 'Test Job'}),
+                         {'job_role_skill': 'test_skill',
+                          'job_role_skill_level': 'test_skill_level'})
         self.assertTrue(Competency.objects.filter(job_role_title=test_competency['test_job'],
                                                   job_role_skill=test_competency['test_skill'],
                                                   job_role_skill_level=test_competency['test_skill_level']).exists())
@@ -250,8 +274,9 @@ class AddSkillPageTests(LoggedInAdminTestCase):
     def test_form_validation_errors_are_sent_back_to_add_a_skill_page_template(self):
         Job.objects.create(job_title='Test Job')
         SkillLevel.objects.create(name='test_skill_level')
-        response = self.client.post(reverse('add-a-skill', kwargs={'job_title': 'Test Job'}), {'job_role_skill': '',
-                                                                            'job_role_skill_level': 'test_skill_level'})
+        response = self.client.post(reverse('add-a-skill', kwargs={'job_title': 'Test Job'}),
+                                    {'job_role_skill': '',
+                                     'job_role_skill_level': 'test_skill_level'})
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'job_roles/add_job_role_skills.html')
         self.assertContains(response, "Select a skill", count=2)
