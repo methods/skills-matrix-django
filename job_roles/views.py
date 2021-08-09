@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from job_roles.forms import JobTitleForm, JobSkillsAndSkillLevelForm
 from django.contrib import messages
 from .models import Job, Competency
-from app.models import Skill
+from skills.models import Skill
 from super_admin.models import SkillLevel
 from .view_utils import populate_existing_competencies
 from django.utils.text import slugify

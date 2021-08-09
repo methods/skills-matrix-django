@@ -2,7 +2,7 @@ from django.contrib.auth.models import Group
 from common.tests.custom_classes import LoggedInUserTestCase, LoggedInAdminTestCase
 from django.urls import reverse
 from job_roles.models import Competency, Job
-from app.models import Skill
+from skills.models import Skill
 from super_admin.models import SkillLevel
 from .utils import creates_job_competency_instances, creates_job_role_skill_and_skill_level_instances, assigns_users_to_a_specific_group, saves_job_title_to_session, saves_new_added_job_competencies_to_session, saves_new_added_job_competencies_to_session_as_empty_list
 from django.utils.text import slugify

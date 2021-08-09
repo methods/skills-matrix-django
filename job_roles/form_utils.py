@@ -1,5 +1,5 @@
 from super_admin.models import SkillLevel
-from app.models import Skill
+from skills.models import Skill
 
 
 def get_skill_choices():

@@ -1,5 +1,5 @@
 from django.db import models
-from app.models import Skill
+from skills.models import Skill
 from super_admin.models import SkillLevel
 from .validators import validate_input_capitalised
 

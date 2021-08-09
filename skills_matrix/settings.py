@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'auth_processes',
     'career_paths',
     'common',
+    'skills',
 ]
 
 MIDDLEWARE = [

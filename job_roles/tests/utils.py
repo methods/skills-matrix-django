@@ -1,5 +1,5 @@
 from job_roles.models import Job
-from app.models import Skill
+from skills.models import Skill
 from super_admin.models import SkillLevel
 from ..forms import JobSkillsAndSkillLevelForm
 from django.contrib.auth.models import Group
