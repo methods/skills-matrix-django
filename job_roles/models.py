@@ -1,10 +1,15 @@
 from django.db import models
 from app.models import Skill
 from super_admin.models import SkillLevel
+from .validators import validate_input_capitalised
 
 
 class Job(models.Model):
-    job_title = models.CharField(max_length=50,unique=True)
+    job_title = models.CharField(validators=[validate_input_capitalised], max_length=50, unique=True)
+
+    def save(self, *args, **kwargs):
+        validate_input_capitalised(self.job_title)
+        return super().save(*args, **kwargs)
 
 
 class Competency(models.Model):

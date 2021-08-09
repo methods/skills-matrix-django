@@ -41,9 +41,13 @@ def add_job_role(request):
 @user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
                   login_url='/error/not-authorised')
 def add_job_role_skills(request):
-    if 'disabled_choices' not in request.session.keys():
-        request.session['disabled_choices'] = ['']
-    form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
+    if 'job_role_title' in request.session.keys():
+        if 'disabled_choices' not in request.session.keys():
+            request.session['disabled_choices'] = ['']
+        form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
+    else:
+        messages.info(request, 'Please make sure to add a job role title.')
+        return redirect(add_job_role)
     if request.method == 'POST':
         if 'delete' in request.POST.keys():
             if request.POST["delete"] in request.session['disabled_choices'] and len(
@@ -79,7 +83,17 @@ def add_job_role_skills(request):
 @user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
                   login_url='/error/not-authorised')
 def review_job_role(request):
-    job_title = request.session['job_role_title']
+    if 'job_role_title' and 'new_added_job_competencies' in request.session.keys():
+        job_title = request.session['job_role_title']
+        if len(request.session['new_added_job_competencies']) == 0:
+            messages.info(request, 'Please make sure to add the relevant skills to this job role.')
+            return redirect(add_job_role_skills)
+    elif 'job_role_title' not in request.session.keys():
+        messages.info(request, 'Please make sure to add a job role title.')
+        return redirect(add_job_role)
+    elif 'new_added_job_competencies' not in request.session.keys():
+        messages.info(request, 'Please make sure to add the relevant skills to this job role.')
+        return redirect(add_job_role_skills)
     if request.method == 'POST':
         Job(job_title=job_title).save()
         job_role_title = Job.objects.get(job_title=job_title)
@@ -124,17 +138,6 @@ def update_job_role_detail_view(request, job_title):
                 competency.job_role_skill = Skill.objects.get(name=request.POST['job_role_skill'])
                 competency.job_role_skill_level = SkillLevel.objects.get(name=request.POST['job_role_skill_level'])
                 competency.save()
-            else:
-                for field, errors in form.errors.items():
-                    for error in errors:
-                        messages.error(request, error)
-                template_variables = prepare_competency_edit(request.POST['update_competency'], job_title)
-                form.repopulate_dropdown_choices()
-                return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj,
-                                                                          'job_title': job_title,
-                                                                          'form': form,
-                                                                          'edit_competency_id': template_variables[
-                                                                              'edit_competency_id']})
         if 'edit_job_role_title' in request.POST.keys():
             form_job_role_title = JobTitleForm(initial={'job_role_title': job_title.job_title})
             return render(request, "job_roles/update_job_role.html", {'form_job_role_title': form_job_role_title, 'job_title': job_title, 'job_role_obj': job_role_obj
@@ -145,7 +148,7 @@ def update_job_role_detail_view(request, job_title):
                 updated_title = form_job_role_title.cleaned_data['job_role_title']
                 Job.objects.filter(id=request.POST['save_job_role_title']).update(job_title=updated_title)
                 return redirect(update_job_role_detail_view, job_title=slugify(updated_title))
-    return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj, 'job_title': job_title})
+    return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj, 'job_title': job_title,'form_job_role_title': False if 'save_job_role_title' not in request.POST.keys() else form_job_role_title})
 
 
 @login_required
