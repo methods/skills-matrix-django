@@ -77,7 +77,7 @@ class AddJobRoleSkillsTests(LoggedInAdminTestCase):
 
     def test_add_job_role_skills_POST_saves_skill_and_skill_level_in_session(self):
         saves_job_title_to_session(session=self.client.session)
-        Skill.objects.create(name='test_skill', skill_type='Career skill')
+        Skill.objects.create(name='test_skill')
         SkillLevel.objects.create(name='test_skill_level')
         response = self.client.post(reverse('add-job-skills'), {'job_role_skill': 'test_skill', 'job_role_skill_level':
                                                                 'test_skill_level', 'addSkill': ''})
@@ -196,7 +196,7 @@ class UpdateJobRolePageTests(LoggedInAdminTestCase):
 
     def test_edit_competency_save_POST(self):
         test_instances = creates_job_competency_instances()
-        Skill.objects.create(name='updated', skill_type='Career skill').save()
+        Skill.objects.create(name='updated').save()
         SkillLevel.objects.create(name='updated').save()
         test_competency = Competency.objects.create(job_role_title=test_instances['test_job'],
                                                     job_role_skill=test_instances['test_skill'],
