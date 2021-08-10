@@ -9,33 +9,42 @@
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-8">View existing skills</h1>
   </div>
     <div class="govuk-grid-column-two-thirds">
-      <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-        <form method="post">
-          {% csrf_token %}
-          {% for skill in skills %}
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                {{skill.name}}
-            </dt>
-            <dd class='govuk-!-margin-bottom-2 govuk-summary-list__actions'>
-              <button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-right-1" data-module="govuk-button"
-              name="edit_skill"value="{{skill.id}}">
+
+     <table class="govuk-table">
+      <caption class="govuk-table__caption govuk-table__caption--m">Existing skills</caption>
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Skill</th>
+          <th scope="col" class="govuk-table__header">Team (optional)</th>
+          <th scope="col" class="govuk-table__header">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+      <form method="post">
+      {% csrf_token %}
+      {% for skill in skills %}
+        <tr class="govuk-table__row">
+          <th scope="row" class="govuk-table__header">{{skill.name}}</th>
+          <td class="govuk-table__cell">{{skill.team}}</td>
+          <td class="govuk-table__cell">
+            <button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-right-1" data-module="govuk-button"
+              name="edit"value="{{skill.id}}">
                 Edit
               </button>
               <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button"
-                name="delete_skill" value="{{skill.id}}">
+                name="delete" value="{{skill.id}}">
                 Delete
               </button>
-            </dd>
-          </div>
+          </td>
+        </tr>
           {% endfor %}
+          </form>
+    </table>
           <div class="govuk-!-margin-top-4">
             <a class="govuk-button" href="" >
               Add skill
             </a>
           </div>
-        </form>
-      </dl>
 
 
 
