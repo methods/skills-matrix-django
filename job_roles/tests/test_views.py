@@ -65,7 +65,7 @@ class AddJobRoleSkillsTests(LoggedInAdminTestCase):
     def test_add_job_role_skills_GET(self):
         saves_job_title_to_session(session=self.client.session)
         response = self.client.get(reverse('add-job-skills'))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'job_roles/add_job_role_skills.html')
 
     def test_add_job_role_skills_redirects_if_no_job_role_title_in_the_session(self):
@@ -113,7 +113,7 @@ class ReviewJobRoleTests(LoggedInAdminTestCase):
         saves_job_title_to_session(session=self.client.session)
         saves_new_added_job_competencies_to_session(session=self.client.session)
         response = self.client.get(reverse('review-job-role-details'))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'job_roles/review_job_role.html')
 
     def test_review_job_role_redirects_if_no_job_role_title_in_the_session(self):
@@ -157,7 +157,7 @@ class DynamicJobRoleLookUpTests(LoggedInAdminTestCase):
     def test_dynamic_job_role_lookup_view_GET(self):
         Job.objects.create(job_title='Test Job Role Title')
         response = self.client.get(reverse('job-role-view', kwargs={'job': 'Test Job Role Title'}))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'job_roles/job_role_detail.html')
 
 
@@ -165,7 +165,7 @@ class UpdateJobRolePageTests(LoggedInAdminTestCase):
     def test_update_job_role_detail_view_GET(self):
         Job.objects.create(job_title='Test Job Role Update View')
         response = self.client.get(reverse('update-job-role-view', kwargs={'job_title': 'Test Job Role Update View'}))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'job_roles/update_job_role.html')
 
     def test_edit_competency_renders_template_POST(self):
@@ -189,7 +189,7 @@ class UpdateJobRolePageTests(LoggedInAdminTestCase):
                                             kwargs={'job_title': 'Job Role Title To Be Updated'}),
                                     {'save_job_role_title': test_job_title.id, 'job_role_title': 'New Job Role Title'})
         test_job_title.refresh_from_db()
-        self.assertEquals(test_job_title.job_title, 'New Job Role Title')
+        self.assertEqual(test_job_title.job_title, 'New Job Role Title')
         self.assertRedirects(response, expected_url=reverse('update-job-role-view',
                                                             kwargs={'job_title': slugify(test_job_title.job_title)}),
                              status_code=302, target_status_code=200)
@@ -243,7 +243,7 @@ class DeleteJobRoleTitleTests(LoggedInAdminTestCase):
         Job.objects.create(job_title='Test Job Role Title To Be Deleted')
         response = self.client.get(reverse('delete-job-role-view',
                                    kwargs={'job_title': 'Test Job Role Title To Be Deleted'}))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "job_roles/delete_job_role.html")
 
     def test_delete_job_role_title_POST(self):

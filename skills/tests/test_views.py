@@ -18,3 +18,10 @@ class ViewSkillsPageTests(LoggedInAdminTestCase):
         test_skill = Skill.objects.create(name='test_skill')
         self.client.post(reverse('view-skills'), {'delete': test_skill.id})
         assert not Skill.objects.filter(name='test_skill').exists()
+
+
+class AddSkillPageTests(LoggedInAdminTestCase):
+    def test_GET_request_logged_in_user(self):
+        response = self.client.get(reverse('admin-create-skill'))
+        assert response.status_code == 200
+        self.assertTemplateUsed(response, 'skills/create_skill.html')
