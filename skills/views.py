@@ -6,5 +6,8 @@ from .models import Skill
 
 class ViewSkills(AdminUserMixin, View):
     def get(self, request):
-        skills = Skill.objects.all()
+        skills = Skill.objects.order_by('name')
         return render(request, 'skills/view_skills.html', {'skills': skills})
+
+
+
