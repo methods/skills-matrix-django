@@ -15,6 +15,6 @@ class ViewSkillsPageTests(LoggedInAdminTestCase):
         self.assertContains(response, 'test_skill')
 
     def test_delete_skill_functionality(self):
-        Skill.objects.create(name='test_skill')
-        self.client.post(reverse('view-skills'), {'delete': 'test_skill'})
+        test_skill = Skill.objects.create(name='test_skill')
+        self.client.post(reverse('view-skills'), {'delete': test_skill.id})
         assert not Skill.objects.filter(name='test_skill').exists()
