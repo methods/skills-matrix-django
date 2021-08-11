@@ -39,3 +39,13 @@ class EditSkillPageTests(LoggedInAdminTestCase):
         response = self.client.get(reverse('admin-edit-skill', args=[skill.pk]))
         assert response.status_code == 200
         self.assertTemplateUsed(response, 'skills/create_edit_skill.html')
+
+    def test_valid_post_request(self):
+        test_team = Team.objects.create(team_name='test_team')
+        updated_test_team = Team.objects.create(team_name='updated_test_team')
+        skill = Skill.objects.create(name='Test skill', team=test_team)
+        self.client.post(reverse('admin-edit-skill', args=[skill.pk]),
+                                    {'skill_name': 'Updated test skill', 'skill_description': 'updated description',
+                                     'team': 'updated_test_team'})
+        assert Skill.objects.filter(name='Updated test skill', description='updated description',
+                                    team=updated_test_team).exists()

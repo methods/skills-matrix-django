@@ -34,3 +34,8 @@ class EditSkillView(AdminUserMixin, CustomView):
         form = SkillForm(initial={'skill_name': skill.name, 'skill_description': skill.description, 'team': skill.team})
         return render(request, 'skills/create_edit_skill.html', {'form': form})
 
+    def post(self, request, pk):
+        form = SkillForm(request.POST)
+        if form.is_valid():
+            form.process_edit(pk)
+        return redirect('view-skills')

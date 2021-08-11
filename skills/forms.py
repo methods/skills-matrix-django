@@ -33,7 +33,15 @@ class SkillForm(forms.Form):
 
     def process(self):
         skill_name = self.cleaned_data['skill_name']
-        skill_description = self.cleaned_data['skill_description'] or ''
+        skill_description = self.cleaned_data['skill_description']
         team = Team.objects.get(team_name=self.cleaned_data['team'])
         Skill.objects.create(name=skill_name, description=skill_description, team=team)
+
+    def process_edit(self, pk):
+        skill = Skill.objects.get(pk=pk)
+        skill.name = self.cleaned_data['skill_name']
+        skill.description = self.cleaned_data['skill_description']
+        team = Team.objects.get(team_name=self.cleaned_data['team'])
+        skill.team = team
+        skill.save()
 
