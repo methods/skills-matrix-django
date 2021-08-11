@@ -1,6 +1,7 @@
 from common.tests.custom_classes import LoggedInAdminTestCase
 from django.urls import reverse
 from skills.models import Skill
+from super_admin.models import Team
 
 
 class ViewSkillsPageTests(LoggedInAdminTestCase):
@@ -25,3 +26,8 @@ class AddSkillPageTests(LoggedInAdminTestCase):
         response = self.client.get(reverse('admin-create-skill'))
         assert response.status_code == 200
         self.assertTemplateUsed(response, 'skills/create_skill.html')
+
+    def test_valid_POST_request(self):
+        test_team = Team.objects.create(team_name='test_team')
+        self.client.post(reverse('admin-create-skill'), {'skill_name': 'Test skill', 'team': 'test_team'})
+        assert Skill.objects.filter(name='Test skill', team=test_team).exists()

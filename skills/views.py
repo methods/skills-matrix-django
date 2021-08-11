@@ -20,3 +20,9 @@ class AddSkillsView(AdminUserMixin, CustomView):
     def get(self, request):
         form = SkillForm()
         return render(request, 'skills/create_skill.html', {'form': form})
+
+    def post(self, request):
+        form = SkillForm(request.POST)
+        if form.is_valid():
+            form.process()
+        return redirect('view-skills')

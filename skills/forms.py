@@ -2,6 +2,8 @@ from django import forms
 from common.widgets import GdsStyleTextInput
 from common.widgets import CustomisedSelectWidget
 from skills.form_utils import get_team_choices
+from skills.models import Skill
+from super_admin.models import Team
 
 
 class SkillForm(forms.Form):
@@ -28,3 +30,10 @@ class SkillForm(forms.Form):
             if field in self.errors and field == 'team':
                 attrs['class'] = 'govuk-select govuk-select--error'
                 self.fields[field].widget.attrs = attrs
+
+    def process(self):
+        skill_name = self.cleaned_data['skill_name']
+        skill_description = self.cleaned_data['skill_description'] or ''
+        team = Team.objects.get(team_name=self.cleaned_data['team'])
+        Skill.objects.create(name=skill_name, description=skill_description, team=team)
+
