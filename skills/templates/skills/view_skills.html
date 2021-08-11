@@ -25,7 +25,7 @@
       {% for skill in skills %}
         <tr class="govuk-table__row">
           <th scope="row" class="govuk-table__header">{{skill.name}}</th>
-          <td class="govuk-table__cell">{{skill.team}}</td>
+          <td class="govuk-table__cell">{{skill.team.team_name}}</td>
           <td class="govuk-table__cell">
             <button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-right-1" data-module="govuk-button"
               name="edit"value="{{skill.id}}">
