@@ -6,4 +6,4 @@ class CustomView(View):
         if 'delete' in request.POST.keys():
             handler = getattr(self, 'delete', self.http_method_not_allowed)
             return handler(request, *args, **kwargs)
-        return super().dispatch(request)
+        return super().dispatch(request, *args, **kwargs)

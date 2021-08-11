@@ -16,13 +16,21 @@ class ViewSkillsView(AdminUserMixin, CustomView):
         return render(request, 'skills/view_skills.html', {'skills': skills})
 
 
-class AddSkillsView(AdminUserMixin, CustomView):
+class AddSkillView(AdminUserMixin, CustomView):
     def get(self, request):
         form = SkillForm()
-        return render(request, 'skills/create_skill.html', {'form': form})
+        return render(request, 'skills/create_edit_skill.html', {'form': form})
 
     def post(self, request):
         form = SkillForm(request.POST)
         if form.is_valid():
             form.process()
         return redirect('view-skills')
+
+
+class EditSkillView(AdminUserMixin, CustomView):
+    def get(self, request, pk):
+        skill = Skill.objects.get(pk=pk)
+        form = SkillForm(initial={'skill_name': skill.name, 'skill_description': skill.description, 'team': skill.team})
+        return render(request, 'skills/create_edit_skill.html', {'form': form})
+
