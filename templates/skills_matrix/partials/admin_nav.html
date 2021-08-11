@@ -1,30 +1,44 @@
 <nav class="govuk-grid-column-one-quarter" aria-labelledby="govuk-subnav-heading">
   <h2 class="govuk-visually-hidden" id="govuk-subnav-heading">Pages in this section</h2>
 
-  <ul class="govuk-app-subnav__list">
+  <ul class="govuk-app-subnav__section" id="sub-nav">
 
-    <li class="govuk-app-subnav__list-item govuk-app-subnav__list-item--curent">
-      <a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline"
-      href="{% url 'job-roles' %}">Job roles</a>
-     
-    </li>
-
-    <li class="govuk-app-subnav__list-item govuk-app-subnav__list-item--curent">
-      <a class="app-subnav__link govuk-link govuk-link--no-visited-state govuk-link--no-underline"
-      href="{% url 'browse-career-paths' %}">Career paths</a>
+    <li class="govuk-app-subnav__section-item">
+      <a class="govuk-link govuk-link--no-visited-state govuk-link--no-underline govuk-app-subnav__link"
+        href="{% url 'job-roles' %}">Job roles</a>
 
     </li>
 
-    <li class="govuk-app-subnav__list-item govuk-app-subnav__list-item--curent">
-      <a class="app-subnav__link govuk-link govuk-link--no-visited-state govuk-link--no-underline"
+    <li class="govuk-app-subnav__section-item ">
+      <a class="govuk-app-subnav__link govuk-link govuk-link--no-visited-state govuk-link--no-underline"
+        href="{% url 'browse-career-paths' %}">Career paths</a>
+
+    </li>
+
+    <li class="govuk-app-subnav__section-item ">
+      <a class="govuk-app-subnav__link govuk-link govuk-link--no-visited-state govuk-link--no-underline"
         href="#">Skills</a>
 
     </li>
 
-    <li class="govuk-app-subnav__list-item govuk-app-subnav__list-item--curent">
-      <a class="app-subnav__link govuk-link govuk-link--no-visited-state govuk-link--no-underline"
-      href="{% url 'view-skill-levels' %}">Skill levels</a>
+    <li class="govuk-app-subnav__section-item  ">
+      <a class="govuk-app-subnav__link govuk-link govuk-link--no-visited-state govuk-link--no-underline"
+        href="{% url 'view-skill-levels' %}">Skill levels</a>
 
     </li>
   </ul>
+  <script>
+    // ---------------------
+    window.onload = function() { 
+    var all_links = document.getElementById("sub-nav").getElementsByTagName("a");
+    var full_path = location.href.split('#')[0]; //Ignore hashes?
+
+    // Loop through each link.
+    for(i=0; i<all_links.length; i++) {
+        if(all_links[i].href.split("#")[0] == full_path) {
+            all_links[i].className += " govuk-app-subnav__section-item-anchor--current";
+        }
+    }
+}
+  </script>
 </nav>
