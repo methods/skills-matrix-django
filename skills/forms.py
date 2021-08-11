@@ -7,11 +7,11 @@ from super_admin.models import Team
 
 
 class SkillForm(forms.Form):
-    skill_name = forms.CharField(label="Enter a skill", max_length=100,
+    skill_name = forms.CharField(label="Skill name", max_length=100,
                                            widget=GdsStyleTextInput(attrs={'class': 'govuk-input'}),
                                            error_messages={'required': 'Enter the name of the skill'})
 
-    skill_description = forms.CharField(label="Enter a description of the skill (optional)", max_length=400,
+    skill_description = forms.CharField(label="Skill description (optional)", max_length=400,
                                            widget=GdsStyleTextInput(attrs={'class': 'govuk-input'}),
                                            required=False)
 
