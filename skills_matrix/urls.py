@@ -10,4 +10,5 @@ urlpatterns = [
     path('auth/', include('auth_processes.urls')),
     path('career-paths/', include('career_paths.urls')),
     path('super-admin/', include('super_admin.urls')),
+    path('skills/', include('skills.urls')),
 ]
