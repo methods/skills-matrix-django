@@ -30,11 +30,10 @@
   <script>
     window.onload = function() { 
     var all_links = document.getElementById("sub-nav").getElementsByTagName("a");
-    var full_path = location.href.split('#')[0]; //Ignore hashes?
-
+    var full_path = location.href.split('#')[0];
     // Loop through each link.
     for(i=0; i<all_links.length; i++) {
-        if(all_links[i].href.split("#")[0] == full_path) {
+        if(full_path.includes(all_links[i].href.split("#")[0])) {
             all_links[i].className += " govuk-app-subnav__section-item-anchor--current";
         }
     }
