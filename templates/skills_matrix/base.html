@@ -18,15 +18,26 @@
 
 <body class="govuk-template__body  js-enabled">
     {% include 'skills_matrix/partials/header.html' %}
-        {% if request.user.is_admin %}
-        {% include 'skills_matrix/partials/admin_nav.html' %}
-        {% endif%}
-       <div class="govuk-width-container ">
-        {% block beforeContent %} {% endblock %}
-          <main  id="main-content" tabindex="-1" class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" role="main">
-            {% block content %}{% endblock %}
-          </main>
-       </div>
+  
+      <div class="govuk-app-pane__body">
+        <div class="govuk-app-pane__subnav">
+          {% if request.user.is_admin %}
+          {% include 'skills_matrix/partials/admin_nav.html' %}
+          {% endif%}
+        </div>
+        <div class="govuk-app-pane__content"> 
+             <div class="govuk-app-content">
+              {% block beforeContent %} {% endblock %}
+                <main  id="main-content" tabindex="-1" class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" role="main">
+                  {% block content %}{% endblock %}
+                </main>
+             </div>
+    
+        </div>
+      </div>
+    
+    
+  
   {% include 'skills_matrix/partials/footer.html' %}
 
   <script src="/static/js/all.js"></script>

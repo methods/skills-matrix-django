@@ -30,7 +30,6 @@ $govuk-assets-path: '../assets/';
 
 .govuk-app-subnav__section-item-anchor--current{
     font-weight: bold;
-    margin-left: -14px;
     padding-left: 10px;
     border-left: 4px solid #1d70b8;
     background-color: #fff;
@@ -38,4 +37,57 @@ $govuk-assets-path: '../assets/';
 
 .govuk-link:hover {
     text-decoration-thickness: max(0.15rem, .1875rem, .12rem);
+}
+
+.govuk-app-subnav {
+    padding: 30px 15px 0 0;
+    margin-bottom: 100px;
+    font-family: "GDS Transport",arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    font-size: 14px;
+    font-size: .875rem;
+    line-height: 1.14286;
+}
+
+.govuk-app-content {
+    padding:30px;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 50px;
+}
+
+.govuk-breadcrumbs__list:after {
+    content: "";
+    display: inline-block;
+    clear: both;
+}
+
+.govuk-app-pane__body {
+    display: flex;
+    position: relative;
+    min-height: 0;
+    flex: 1 1 100%;
+    max-width: 1100px;
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.govuk-app-subnav{
+    display: block;
+    padding: 50px 0 0;
+}
+
+.govuk-app-pane__content {
+    display: flex;
+    margin-left: auto;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.govuk-app-pane__subnav{
+    flex: 0 0 auto;
+    width: 260px;
 }
