@@ -138,7 +138,7 @@ STATICFILES_FINDERS = [
 ]
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR/'static'
+STATIC_ROOT = BASE_DIR / 'static'
 
 AUTH_USER_MODEL = 'user_management.NewUser'
 AUTHENTICATION_BACKENDS = ['auth_processes.backends.EmailAuthBackend']
