@@ -1,38 +1,49 @@
 {% load sass_tags %}
 <!DOCTYPE html>
 <html lang="en" class="govuk-template app-html-class">
-  <head>
-    <meta charset="utf-8"/>
-    <title>
-      {% block title %}
-        Methods skills matrix
-      {% endblock %}
-    </title>
 
-    <link href="{% sass_src 'scss/global.scss' %}" rel="stylesheet" type="text/css">
-    {% block extra_css %}
+<head>
+  <meta charset="utf-8" />
+  <title>
+    {% block title %}
+    Methods skills matrix
     {% endblock %}
-  </head>
+  </title>
+
+  <link href="{% sass_src 'scss/global.scss' %}" rel="stylesheet" type="text/css">
+  {% block extra_css %}
+  {% endblock %}
+</head>
 
 
-    <body class="govuk-template__body  js-enabled">
+<body class="govuk-template__body  js-enabled">
     {% include 'skills_matrix/partials/header.html' %}
-    <div class="govuk-width-container">
+  
+      <div class="govuk-app-pane__body">
+        <div class="govuk-app-pane__subnav">
+          {% if request.user.is_admin %}
+          {% include 'skills_matrix/partials/admin_nav.html' %}
+          {% endif%}
+        </div>
+        <div class="govuk-app-pane__content"> 
+             <div class="govuk-app-content">
               {% block beforeContent %} {% endblock %}
-      <main id="main-content" tabindex="-1" class="govuk-main-wrapper govuk-main-wrapper--auto-spacing">
-        {% block content %}{% endblock %}
-      </main>
-    </div>
-    {% include 'skills_matrix/partials/footer.html' %}
-    <script src="/static/js/all.js"></script>
-    <script>
-      window.GOVUKFrontend.initAll()
-    </script>
-  </body>
+                <main  id="main-content" tabindex="-1" class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" role="main">
+                  {% block content %}{% endblock %}
+                </main>
+             </div>
+    
+        </div>
+      </div>
+    
+    
+  
+  {% include 'skills_matrix/partials/footer.html' %}
+
+  <script src="/static/js/all.js"></script>
+  <script>
+    window.GOVUKFrontend.initAll()
+  </script>
+</body>
+
 </html>
-
-
-
-
-
-

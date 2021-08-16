@@ -36,84 +36,87 @@
         {% else %}
         <h1 class="govuk-heading-xl govuk-!-margin-bottom-5">{{request.session.job_role_title}}</h1>
         {% endif %}
-    </div>
-</div>
-<div class="govuk-!-margin-top-4">
-    <div class="govuk-grid-row">
-                <h2 class="govuk-heading-m">Select skills</h2>
-            <div  class="govuk-form-group govuk-form-group--error">
-                {% if messages %}
-                <div>
-                    {% for message in messages %}
-                    <span id="redirect-error" class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span> {{ message }}
-                    </span>
-                    {% endfor %}
-                </div>
-                {% endif %}
-            </div>
-        
-       
-
-            <form class="form" method="post">
-                {% csrf_token %}
-                
-                <dl class="govuk-summary-list">
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            <div class="govuk-form-group">
-                                {{form.job_role_skill}}
-                            </div>
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            <div class="govuk-form-group">
-                                {{form.job_role_skill_level}}
-                            </div>
-                        </dd>
-                        <dd class="govuk-summary-list__actions">
-                            <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" name="addSkill" {% if form.job_role_skill|length|add:"-1" == competencies|length %} disabled="disabled" aria-disabled="true" {% endif %} >
-                                Add Skill
-                            </button>
-                        </dd>
-                    </div>
-                </dl>
-                {% if competencies %}
-                <h2 class="govuk-heading-m">Job role skills</h2>
-                <dl class="govuk-summary-list">
-
-                    {% for competency in competencies %}
-                        {% for key,value in competency.items %}
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                {{key}}
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                {{value}}
-                            </dd>
-                            {% if new_role %}
-                            <dd class="govuk-summary-list__actions">
-                                <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
-                                    data-module="govuk-button" name="delete" value="{{key}}">
-                                    Delete
-                                </button>
-                            </dd>
-                            {% endif %}
+        <div class="govuk-!-margin-top-4">
+            <div class="govuk-grid-row">
+                        <h2 class="govuk-heading-m">Select skills</h2>
+                    <div  class="govuk-form-group govuk-form-group--error">
+                        {% if messages %}
+                        <div>
+                            {% for message in messages %}
+                            <span id="redirect-error" class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span> {{ message }}
+                            </span>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
-                    {% endfor %}
-                </dl>
+                        {% endif %}
+                    </div>
+                
+               
+        
+                    <form class="form" method="post">
+                        {% csrf_token %}
+                        
+                        <dl class="govuk-summary-list">
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    <div class="govuk-form-group">
+                                        {{form.job_role_skill}}
+                                    </div>
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    <div class="govuk-form-group">
+                                        {{form.job_role_skill_level}}
+                                    </div>
+                                </dd>
+                                <dd class="govuk-summary-list__actions">
+                                    <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" name="addSkill" {% if form.job_role_skill|length|add:"-1" == competencies|length %} disabled="disabled" aria-disabled="true" {% endif %} >
+                                        Add Skill
+                                    </button>
+                                </dd>
+                            </div>
 
-
-                 <a class="govuk-button" data-module="govuk-button"
-                     {% if job_title %} href="{% url 'update-job-role-view' job_title|slugify %}"
-                    {% else %} href={% url 'review-job-role-details' %} {% endif %}>Continue</a>
-                                {% endif %}
-            </form>
-            <p class="govuk-body">If the skill you are looking for is not in the list, you can <a
-                    href="{% url 'admin-create-skill' %}">create a new skill
-                    here</a>.</p>
+                        </dl>
+                        {% if competencies %}
+                        <h2 class="govuk-heading-m">Job role skills</h2>
+                        <dl class="govuk-summary-list">
+        
+                            {% for competency in competencies %}
+                                {% for key,value in competency.items %}
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        {{key}}
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        {{value}}
+                                    </dd>
+                                    {% if new_role %}
+                                    <dd class="govuk-summary-list__actions">
+                                        <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
+                                            data-module="govuk-button" name="delete" value="{{key}}">
+                                            Delete
+                                        </button>
+                                    </dd>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            {% endfor %}
+                        </dl>
+        
+        
+                         <a class="govuk-button" data-module="govuk-button"
+                             {% if job_title %} href="{% url 'update-job-role-view' job_title|slugify %}"
+                            {% else %} href={% url 'review-job-role-details' %} {% endif %}>Continue</a>
+                                        {% endif %}
+                    </form>
+                    <p class="govuk-body">If the skill you are looking for is not in the list, you can <a
+                            href="/add-job-role-skills/create-skill">create a new skill
+                            here</a>.</p>
+                </div>
+             </div>
+           </div>
         </div>
     </div>
-    </div>
 </div>
+
+                    
 {% endblock %}
