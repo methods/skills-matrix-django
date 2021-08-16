@@ -8,6 +8,7 @@ class DashboardTests(LoggedInUserTestCase):
     def test_home_page_status_code(self):
         creates_job_role_title_instance()
         response = self.client.get(reverse('dashboard'))
+        self.assertTemplateUsed(response, 'app/dashboard.html')
         assert response.status_code == 200
 
     def test_home_page_body_resp(self):
