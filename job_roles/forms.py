@@ -3,7 +3,9 @@ from common.widgets import GdsStyleTextInput
 from common.widgets import CustomisedSelectWidget
 from .validators import validate_input_capitalised
 from .form_utils import get_skill_choices, get_skill_level_choices
-from .models import Job
+from .models import Job, Competency
+from skills.models import Skill
+from super_admin.models import SkillLevel
 
 
 class JobTitleForm(forms.Form):
@@ -58,11 +60,22 @@ class JobSkillsAndSkillLevelForm(forms.Form):
             if field in self.errors:
                 self.fields[field].widget.attrs = attrs
 
-    def process(self):
+    def process_session_save(self):
         self.request.session['disabled_choices'].append(self.request.POST['job_role_skill'])
         self.request.session['new_added_job_competencies'].append({self.request.POST['job_role_skill']:
                                                                   self.request.POST['job_role_skill_level']})
         self.request.session.save()
+
+    def process(self, request, job=None):
+        job_role_skill = Skill.objects.get(name=request['job_role_skill'])
+        job_role_skill_level = SkillLevel.objects.get(name=request['job_role_skill_level'])
+        if job:
+            Competency(job_role_title=job, job_role_skill=job_role_skill,
+                       job_role_skill_level=job_role_skill_level).save()
+        else:
+            competency = Competency.objects.filter(id=request['update_competency'])
+            competency.update(job_role_skill=job_role_skill,
+                       job_role_skill_level=job_role_skill_level)
 
     def clean_job_role_skill(self):
         job_role_skill = self.cleaned_data.get('job_role_skill')

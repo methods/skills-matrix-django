@@ -63,7 +63,7 @@ def add_job_role_skills(request):
                 request.session['new_added_job_competencies'] = []
             if 'addSkill' in request.POST.keys():
                 if form.is_valid():
-                    form.process()
+                    form.process_session_save()
                     form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
                 else:
                     for field, errors in form.errors.items():
@@ -129,10 +129,7 @@ def update_job_role_detail_view(request, job_title):
             disabled_choices = populate_existing_competencies(job_title)
             form = JobSkillsAndSkillLevelForm(request.POST, disabled_choices=disabled_choices)
             if form.is_valid():
-                competency = Competency.objects.get(id=request.POST['update_competency'])
-                competency.job_role_skill = Skill.objects.get(name=request.POST['job_role_skill'])
-                competency.job_role_skill_level = SkillLevel.objects.get(name=request.POST['job_role_skill_level'])
-                competency.save()
+                form.process(request.POST)
         if 'edit_job_role_title' in request.POST.keys():
             form_job_role_title = JobTitleForm(initial={'job_role_title': job_title.job_title})
             return render(request, "job_roles/update_job_role.html", {'form_job_role_title': form_job_role_title, 'job_title': job_title, 'job_role_obj': job_role_obj
@@ -171,12 +168,9 @@ def add_a_skill(request, job_title):
         skill_level = SkillLevel.objects.filter(id=competency.job_role_skill_level.id)
         competencies_by_name.append({skill[0].name: skill_level[0].name})
     if request.POST:
-        form = JobSkillsAndSkillLevelForm(request.POST, disabled_choices=disabled_choices)
+        form = JobSkillsAndSkillLevelForm(request.POST, disabled_choices=disabled_choices, request=request)
         if form.is_valid():
-            job_role_skill = Skill.objects.get(name=request.POST['job_role_skill'])
-            job_role_skill_level = SkillLevel.objects.get(name=request.POST['job_role_skill_level'])
-            Competency(job_role_title=job, job_role_skill=job_role_skill,
-                       job_role_skill_level=job_role_skill_level).save()
+            form.process(request.POST, job)
             return redirect(add_a_skill, job_title=job_title)
         else:
             for field, errors in form.errors.items():
