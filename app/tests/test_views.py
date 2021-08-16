@@ -1,18 +1,22 @@
 from common.tests.custom_classes import LoggedInUserTestCase
 from django.urls import reverse
+from .utils import creates_job_role_title_instance
 
 
 class DashboardTests(LoggedInUserTestCase):
 
     def test_home_page_status_code(self):
+        creates_job_role_title_instance()
         response = self.client.get(reverse('dashboard'))
         assert response.status_code == 200
 
     def test_home_page_body_resp(self):
+        creates_job_role_title_instance()
         response = self.client.get(reverse('dashboard'))
         assert "Welcome" in response.content.decode()
 
     def test_user_details(self):
+        creates_job_role_title_instance()
         response = self.client.get(reverse('dashboard'))
         assert "test_first_name" in response.content.decode()
         assert "OPC" in response.content.decode()
