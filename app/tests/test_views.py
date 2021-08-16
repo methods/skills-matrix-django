@@ -15,7 +15,9 @@ class DashboardTests(LoggedInUserTestCase):
     def test_user_details(self):
         response = self.client.get(reverse('dashboard'))
         assert "test_first_name" in response.content.decode()
-        assert "test_surname" in response.content.decode()
+        assert "OPC" in response.content.decode()
+        assert "Junior Developer" in response.content.decode()
+        self.assertNotIn('test_surname', response.content.decode())
 
 
 class BrowseProfileTests(LoggedInUserTestCase):

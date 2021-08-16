@@ -1,36 +1,14 @@
 {% extends "app/app_base.html" %}
 {% load sass_tags %}
 
-<head>
-  <link href="{% sass_src 'scss/_global.scss' %}" rel="stylesheet" type="text/css" />
-</head>
-
-
-{% block pageTitle %}
-Home
-{% endblock %}
 
 {% block content %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-
-    <div>{{users}}</div>
-
-    {% if name %}
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Welcome, {{name}}</h1>
-    {% elif profile %}
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Welcome, {{profile.firstName}}</h1>
-    {% else %}
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Welcome</h1>
-    {% endif %}
-    {{profile.name}}
-
-
-    {% if profile %}
-    <span class="govuk-caption-xl">{{profile.job}} | {{profile.team}}</span>
-    {% endif %}
-    <div class="govuk-!-margin-top-4">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Welcome, {{user.first_name}}</h1>
+    <span class="govuk-caption-xl">{{user.job_role}} | {{user.team}}</span>
+    <div class="govuk-!-margin-top-8">
       <table class="govuk-table">
         <caption class="govuk-table__caption govuk-table__caption--l">Your Skills</caption>
         <thead class="govuk-table__head">
