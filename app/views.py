@@ -1,10 +1,13 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from job_roles.models import Competency, Job
 
 
 @login_required
 def dashboard(request):
-    return render(request, "app/dashboard.html")
+    job_role_title = Job.objects.get(job_title=request.user.job_role)
+    competency_list = Competency.objects.filter(job_role_title=job_role_title.id)
+    return render(request, "app/dashboard.html", {"competency_list": competency_list})
 
 
 @login_required
