@@ -43,18 +43,26 @@ class JobSkillsAndSkillLevelForm(forms.Form):
                                              widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'},
                                                                  disabled_choices=['']))
 
-    def __init__(self, *args, disabled_choices=None, **kwargs):
+    def __init__(self, *args, disabled_choices=None, request=None, **kwargs):
         super(JobSkillsAndSkillLevelForm, self).__init__(*args, **kwargs)
         self.fields['job_role_skill'].choices = get_skill_choices()
         self.fields['job_role_skill_level'].choices = get_skill_level_choices()
         if disabled_choices:
             self.fields['job_role_skill'].widget.disabled_choices = disabled_choices
+        if request:
+            self.request = request
         attrs = {}
         attrs.update({"errors": True})
         attrs['class'] = 'govuk-select govuk-select--error'
         for field in self.fields:
             if field in self.errors:
                 self.fields[field].widget.attrs = attrs
+
+    def process(self):
+        self.request.session['disabled_choices'].append(self.request.POST['job_role_skill'])
+        self.request.session['new_added_job_competencies'].append({self.request.POST['job_role_skill']:
+                                                                  self.request.POST['job_role_skill_level']})
+        self.request.session.save()
 
     def clean_job_role_skill(self):
         job_role_skill = self.cleaned_data.get('job_role_skill')
