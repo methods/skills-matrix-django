@@ -9,8 +9,7 @@ urlpatterns = [
     path('job-roles/', include('job_roles.urls')),
     path('auth/', include('auth_processes.urls')),
     path('career-paths/', include('career_paths.urls')),
-    path('super-admin/', include('super_admin.urls')),
-    path('admin', admin.site.urls),
+    path('skill-levels/', include('super_admin.urls_skill_level')),
     path('skills/', include('skills.urls')),
-
+    path('admin', admin.site.urls),
 ]
