@@ -11,4 +11,6 @@ urlpatterns = [
     path('career-paths/', include('career_paths.urls')),
     path('super-admin/', include('super_admin.urls')),
     path('admin', admin.site.urls),
+    path('skills/', include('skills.urls')),
+
 ]
