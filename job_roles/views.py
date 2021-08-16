@@ -8,7 +8,6 @@ from super_admin.models import SkillLevel
 from .view_utils import populate_existing_competencies
 from django.utils.text import slugify
 from .view_utils import prepare_competency_edit
-from django.contrib.messages import get_messages
 
 
 @login_required
@@ -26,13 +25,12 @@ def job_roles(request):
                   login_url='/error/not-authorised')
 def add_job_role(request):
     if request.method == 'POST':
-        form = JobTitleForm(request.POST)
+        form = JobTitleForm(request.POST, request=request)
         if form.is_valid():
-            request.session['job_role_title'] = request.POST['job_role_title']
-            request.session.save()
+            form.process_session_save()
             return redirect(add_job_role_skills)
     else:
-        form = JobTitleForm()
+        form = JobTitleForm(request=request)
         form.fields['job_role_title'].initial = request.session['job_role_title'] if 'job_role_title' in request.session else ''
     return render(request, "job_roles/add_job_role.html", {'form': form})
 
@@ -145,8 +143,7 @@ def update_job_role_detail_view(request, job_title):
         if 'save_job_role_title' in request.POST.keys():
             form_job_role_title = JobTitleForm(request.POST)
             if form_job_role_title.is_valid():
-                updated_title = form_job_role_title.cleaned_data['job_role_title']
-                Job.objects.filter(id=request.POST['save_job_role_title']).update(job_title=updated_title)
+                updated_title = form_job_role_title.process_edit(request.POST['save_job_role_title'])
                 return redirect(update_job_role_detail_view, job_title=slugify(updated_title))
     return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj, 'job_title': job_title,'form_job_role_title': False if 'save_job_role_title' not in request.POST.keys() else form_job_role_title})
 

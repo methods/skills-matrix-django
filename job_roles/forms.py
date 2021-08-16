@@ -3,6 +3,7 @@ from common.widgets import GdsStyleTextInput
 from common.widgets import CustomisedSelectWidget
 from .validators import validate_input_capitalised
 from .form_utils import get_skill_choices, get_skill_level_choices
+from .models import Job
 
 
 class JobTitleForm(forms.Form):
@@ -11,8 +12,10 @@ class JobTitleForm(forms.Form):
                                            widget=GdsStyleTextInput(attrs={'class': 'govuk-input'}),
                                            error_messages={'required': 'Enter a job role title'})
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, request=None, **kwargs):
         super(JobTitleForm, self).__init__(*args, **kwargs)
+        if request:
+            self.request = request
         attrs = {}
         attrs.update({"errors": True})
         attrs['class'] = 'govuk-input--error'
@@ -20,11 +23,20 @@ class JobTitleForm(forms.Form):
             if field in self.errors:
                 self.fields[field].widget = GdsStyleTextInput(attrs=attrs)
 
+    def process_session_save(self):
+        self.request.session['job_role_title'] = self.request.POST['job_role_title']
+        self.request.session.save()
+
+    def process_edit(self, pk):
+        updated_title = self.cleaned_data['job_role_title']
+        Job.objects.filter(id=pk).update(job_title=updated_title)
+        return updated_title
+
 
 class JobSkillsAndSkillLevelForm(forms.Form):
 
     job_role_skill = forms.ChoiceField(choices=[], required=False,
-                                        widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'}))
+                                    widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'}))
 
     job_role_skill_level = forms.ChoiceField(choices=[],
                                              required=False,
