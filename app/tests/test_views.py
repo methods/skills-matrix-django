@@ -27,7 +27,7 @@ class DashboardTests(LoggedInUserTestCase):
     def test_message_renders_when_no_skills(self):
         creates_job_role_title_instance()
         response = self.client.get(reverse('dashboard'))
-        self.assertIn('Sorry, but at the moment this job role has no skills assigned to.',
+        self.assertIn('Sorry, but at the moment this job role has no skills assigned to it.',
                       response.content.decode())
 
     def test_skill_skill_levels_renders(self):
@@ -35,7 +35,7 @@ class DashboardTests(LoggedInUserTestCase):
         response = self.client.get(reverse('dashboard'))
         assert "test_skill_1" in response.content.decode()
         assert "test_skill_level_1" in response.content.decode()
-        self.assertNotIn('Sorry, but at the moment this job role has no skills assigned to.',
+        self.assertNotIn('Sorry, but at the moment this job role has no skills assigned to it.',
                          response.content.decode())
 
 
