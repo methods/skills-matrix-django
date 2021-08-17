@@ -9,8 +9,11 @@ class AdminUserMixin(UserPassesTestMixin):
         if group.filter(name='Super admins').exists() or group.filter(name='Admins').exists():
             return True
         else:
-            if self.request.user.is_authenticated():
-                return redirect(reverse('not authorised'))
+            if self.request.user.is_authenticated:
+                return False
+
+    def handle_no_permission(self):
+        return redirect(reverse('not authorised'))
 
 
 class SuperAdminUserMixin(UserPassesTestMixin):
@@ -19,5 +22,8 @@ class SuperAdminUserMixin(UserPassesTestMixin):
         if group.filter(name='Super admins').exists():
             return True
         else:
-            if self.request.user.is_authenticated():
-                return redirect(reverse('not authorised'))
+            if self.request.user.is_authenticated:
+                return False
+
+    def handle_no_permission(self):
+        return redirect(reverse('not authorised'))

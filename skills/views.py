@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from common.custom_class_view import CustomView
-from common.user_group_check_mixins import AdminUserMixin
+from common.user_group_check_mixins import SuperAdminUserMixin, AdminUserMixin
 from .models import Skill
 from .forms import SkillForm
 
