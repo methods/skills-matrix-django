@@ -8,16 +8,17 @@ from super_admin.models import SkillLevel
 from .view_utils import populate_existing_competencies
 from django.utils.text import slugify
 from .view_utils import prepare_competency_edit
+from common.custom_class_view import CustomView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-@login_required
-def job_roles(request):
-    if request.method == "GET":
+class JobRoles(LoginRequiredMixin, CustomView):
+    def get(self, request):
         if 'job_role_title' in request.session.keys(): del request.session['job_role_title']
         if 'disabled_choices' in request.session.keys(): del request.session['disabled_choices']
         if 'new_added_job_competencies' in request.session.keys(): del request.session['new_added_job_competencies']
-    job_role_list = Job.objects.all().order_by('id')
-    return render(request, "job_roles/job-roles.html", {"user": request.user, 'job_role_list': job_role_list})
+        job_role_list = Job.objects.all().order_by('id')
+        return render(request, "job_roles/job-roles.html", {"user": request.user, 'job_role_list': job_role_list})
 
 
 @login_required
@@ -98,7 +99,7 @@ def review_job_role(request):
                 job_role_skill_level = SkillLevel.objects.get(name=value)
                 Competency(job_role_title=job_role_title, job_role_skill=job_role_skill, job_role_skill_level=job_role_skill_level).save()
         messages.success(request, 'The new job role was added successfully.')
-        return redirect(job_roles)
+        return redirect('job-roles')
     return render(request, "job_roles/review_job_role.html")
 
 @login_required
