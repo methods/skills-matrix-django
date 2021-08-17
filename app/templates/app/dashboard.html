@@ -30,7 +30,7 @@
           {% csrf_token %}
           <div class="govuk-tabs__panel" id="required-skills">
             <h2 class="govuk-heading-l">{{user.job_role}}</h2>
-            {% if competency_list|length > 0 %}
+            {% if job_role_competency_list|length > 0 %}
             <table class="govuk-table">
               <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
@@ -39,10 +39,9 @@
                 </tr>
               </thead>
               <tbody class="govuk-table__body">
-                {% for competency in competency_list %}
+                {% for competency in job_role_competency_list %}
                 <tr class="govuk-table__row">
-                              <td class="govuk-table__cell">{{competency.job_role_skill.name}}</th>
-                                  
+                              <td class="govuk-table__cell">{{competency.job_role_skill.name}}</th>     
                               <td class="govuk-table__cell">{% if form and update_competency_id == competency.id %}
                                 {{form.user_skill_level}}
                                 {% else %}

@@ -1,26 +1,33 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from job_roles.models import Competency, Job
-from skills.models import UserCompetencies
+from skills.models import UserCompetencies, Skill
 from app.forms import UserSkillLevelForm
 from app.view_utils import prepare_competency_update
 from super_admin.models import SkillLevel
+from user_management.models import NewUser
 
 
 @login_required
 def dashboard(request):
-    job_role_title = Job.objects.get(job_title=request.user.job_role)
-    competency_list = Competency.objects.filter(job_role_title=job_role_title.id).order_by('id')
-    individual_competency_list = UserCompetencies.objects.filter(user=request.user.id).order_by('id')
+    job_role_competency_list = Competency.objects.filter(job_role_title=Job.objects.get(job_title=request.user.job_role).id).order_by('id')
+    individual_competency_list = UserCompetencies.objects.filter(job_role_related=False).order_by('id')
+    for competency in job_role_competency_list:
+        if not UserCompetencies.objects.filter(skill=competency.job_role_skill.id).exists():
+            UserCompetencies.objects.create(user=NewUser.objects.get(id=request.user.id),
+                                            skill=Skill.objects.get(id=competency.job_role_skill.id),
+                                            skill_level=SkillLevel.objects.get(id=competency.job_role_skill_level.id))
+    individual_job_related_competency_list = UserCompetencies.objects.filter(job_role_related=True).order_by('id')
     if 'update-competency' in request.POST.keys():
         template_variables = prepare_competency_update(request.POST['update-competency'])
-        return render(request, "app/dashboard.html", {'form': template_variables['form'], "competency_list": competency_list,'update_competency_id': template_variables['update_competency_id']})
+        return render(request, "app/dashboard.html", {'form': template_variables['form'], "job_role_competency_list": job_role_competency_list,'update_competency_id': template_variables['update_competency_id']})
     if 'save-skill-level' in request.POST.keys():
         form = UserSkillLevelForm(request.POST)
         if form.is_valid():
             Competency.objects.filter(id=request.POST['save-skill-level']).update(job_role_skill_level=SkillLevel.objects.get(name=form.cleaned_data['user_skill_level']).id)
-    return render(request, "app/dashboard.html", {"competency_list": competency_list,
-                                                  "individual_competency_list": individual_competency_list})
+    return render(request, "app/dashboard.html", {"job_role_competency_list": job_role_competency_list,
+                                                  "individual_competency_list": individual_competency_list,
+                                                  "individual_job_related_competency_list": individual_job_related_competency_list})
 
 
 @login_required
