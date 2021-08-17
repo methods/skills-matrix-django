@@ -1,5 +1,6 @@
 from .models import Competency
 from .forms import JobSkillsAndSkillLevelForm
+from django.contrib import messages
 
 
 def populate_existing_competencies(job, existing_competency=None):
@@ -21,7 +22,13 @@ def prepare_competency_edit(competency_id, job_title):
     return {'form': form, 'edit_competency_id': edit_competency_id}
 
 
-def sets_disabled_choices_to_empty_list(request):
+def set_disabled_choices_to_empty_string_list(request):
     if 'disabled_choices' not in request.session.keys():
         request.session['disabled_choices'] = ['']
         return
+
+
+def handle_form_errors(form, request):
+    for field, errors in form.errors.items():
+        for error in errors:
+            messages.error(request, error)

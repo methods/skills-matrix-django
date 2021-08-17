@@ -5,7 +5,7 @@ from django.contrib import messages
 from .models import Job, Competency
 from skills.models import Skill
 from super_admin.models import SkillLevel
-from .view_utils import populate_existing_competencies, sets_disabled_choices_to_empty_list
+from .view_utils import populate_existing_competencies, set_disabled_choices_to_empty_string_list, handle_form_errors
 from django.utils.text import slugify
 from .view_utils import prepare_competency_edit
 from common.custom_class_view import CustomView
@@ -40,7 +40,7 @@ class AddJobRole(LoginRequiredMixin, AdminUserMixin, CustomView):
 class AddJobRoleSkills(LoginRequiredMixin, AdminUserMixin, CustomView):
     def get(self, request):
         if 'job_role_title' in request.session.keys():
-            sets_disabled_choices_to_empty_list(request)
+            set_disabled_choices_to_empty_string_list(request)
             form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
             competencies = request.session[
                 'new_added_job_competencies'] if 'new_added_job_competencies' in request.session.keys() else []
@@ -52,7 +52,7 @@ class AddJobRoleSkills(LoginRequiredMixin, AdminUserMixin, CustomView):
 
     def post(self, request):
         if 'job_role_title' in request.session.keys():
-            sets_disabled_choices_to_empty_list(request)
+            set_disabled_choices_to_empty_string_list(request)
         form = JobSkillsAndSkillLevelForm(request.POST, disabled_choices=request.session['disabled_choices'],
                                               request=request)
         if 'new_added_job_competencies' not in request.session.keys():
@@ -62,9 +62,7 @@ class AddJobRoleSkills(LoginRequiredMixin, AdminUserMixin, CustomView):
                 form.process_session_save()
                 form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
             else:
-                for field, errors in form.errors.items():
-                    for error in errors:
-                        messages.error(request, error)
+                handle_form_errors(form, request)
             competencies = request.session[
                 'new_added_job_competencies'] if 'new_added_job_competencies' in request.session.keys() else []
             return render(request, "job_roles/add_job_role_skills.html", {'form': form, 'competencies': competencies,
