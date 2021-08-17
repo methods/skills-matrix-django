@@ -131,3 +131,8 @@ $govuk-assets-path: '../assets/';
     border-top: 1px solid #b1b4b6;
     }
 }
+
+.govuk-anchor-disabled {
+    pointer-events: none;
+    cursor: default;
+  }

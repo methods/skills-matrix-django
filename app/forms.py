@@ -8,7 +8,7 @@ class UserSkillLevelForm(forms.Form):
                                          widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'},
                                          disabled_choices=['']))
 
-    def __init__(self, *args, disabled_choices=None, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(UserSkillLevelForm, self).__init__(*args, **kwargs)
         self.fields['user_skill_level'].choices = get_skill_level_choices()
 
