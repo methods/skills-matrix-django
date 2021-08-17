@@ -117,5 +117,7 @@ $govuk-assets-path: '../assets/';
 @media (min-width: 40.0625em){
     .js-enabled .govuk-tabs__panel {
         border:none;
+        padding: 30px 20px;
+        padding-right: 0px;
     }
 }
