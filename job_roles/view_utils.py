@@ -21,5 +21,7 @@ def prepare_competency_edit(competency_id, job_title):
     return {'form': form, 'edit_competency_id': edit_competency_id}
 
 
-
-
+def sets_disabled_choices_to_empty_list(request):
+    if 'disabled_choices' not in request.session.keys():
+        request.session['disabled_choices'] = ['']
+        return
