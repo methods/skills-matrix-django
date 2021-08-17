@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from job_roles.models import Competency, Job
 from skills.models import UserCompetencies
+from app.forms import UserSkillLevelForm
 
 
 @login_required
@@ -15,7 +16,14 @@ def dashboard(request):
 
 @login_required
 def edit_skills(request):
-    return render(request, "app/edit_skills.html")
+    job_role_title = Job.objects.get(job_title=request.user.job_role)
+    competency_list = Competency.objects.filter(job_role_title=job_role_title.id)
+    # form = UserSkillLevelForm(initial={'user_skill_level': competency.job_role_skill_level.name})
+    if request.method == 'POST':
+        form = UserSkillLevelForm(request.POST)
+        if form.is_valid():
+            return redirect(dashboard)
+    return render(request, "app/edit_skills.html", {"competency_list": competency_list, "form": form})
 
 
 @login_required

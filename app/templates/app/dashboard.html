@@ -39,8 +39,9 @@
               <tbody class="govuk-table__body">
                 {% for competency in competency_list %}
                 <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">{{competency.job_role_skill.name}}</th>
+                  <td class="govuk-table__cell">{{competency.job_role_skill.name}}</th>
                   <td class="govuk-table__cell">{{competency.job_role_skill_level.name}}</td>
+                  <td class="govuk-table-action__cell"><button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" > Edit skill</button></td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -52,11 +53,6 @@
             </tbody>
             {% endif %}
           </table>
-          {% if competency_list|length > 0 %}
-          <a class="govuk-button" data-module="govuk-button" href="/edit-skills">
-            Edit skills
-          </a>
-          {% endif %}
         </div>
         <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="additional-skills">
           <h2 class="govuk-heading-l">Personal profile</h2>
