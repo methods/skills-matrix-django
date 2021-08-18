@@ -136,3 +136,7 @@ $govuk-assets-path: '../assets/';
     pointer-events: none;
     cursor: default;
   }
+
+.govuk-table-cell-border{
+    border-top: 1px solid #b1b4b6
+}

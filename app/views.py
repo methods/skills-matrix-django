@@ -20,14 +20,17 @@ def dashboard(request):
     individual_job_related_competency_list = UserCompetencies.objects.filter(job_role_related=True, user=request.user.id).order_by('id')
     if 'update-competency' in request.POST.keys():
         template_variables = prepare_competency_update(request.POST['update-competency'])
-        return render(request, "app/dashboard.html", {'form': template_variables['form'], 'update_indiviudal_competency_id': template_variables['update_indiviudal_competency_id'], "individual_job_related_competency_list": individual_job_related_competency_list})
+        return render(request, "app/dashboard.html", {'form': template_variables['form'],
+                                                      'update_indiviudal_competency_id': template_variables['update_indiviudal_competency_id'],
+                                                      "individual_job_related_competency_list": individual_job_related_competency_list,
+                                                      "job_role_competency_list": job_role_competency_list})
     if 'save-skill-level' in request.POST.keys():
         form = UserSkillLevelForm(request.POST)
         if form.is_valid():
             UserCompetencies.objects.filter(id=request.POST['save-skill-level']).update(skill_level=SkillLevel.objects.get(name=form.cleaned_data['user_skill_level']).id)
     return render(request, "app/dashboard.html", {"job_role_competency_list": job_role_competency_list,
                                                   "individual_competency_list": individual_competency_list,
-                                                  "individual_job_related_competency_list": individual_job_related_competency_list})
+                                                  "individual_job_related_competency_list": individual_job_related_competency_list, "job_role_competency_list": job_role_competency_list})
 
 
 @login_required

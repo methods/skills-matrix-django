@@ -35,14 +35,20 @@
               <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                   <th scope="col" class="govuk-table__header">Skill</th>
-                  <th scope="col" class="govuk-table__header">Skill Level</th>
+                  <th scope="col" class="govuk-table__header">Expected - Skill Level</th>
+                  <th scope="col" class="govuk-table__header">Current - Skill Level</th>
                 </tr>
               </thead>
               <tbody class="govuk-table__body">
                 {% for individual_job_related_competency in individual_job_related_competency_list %}
                 <tr class="govuk-table__row">
-                              <td class="govuk-table__cell">{{individual_job_related_competency.skill.name}}</th>     
-                              <td class="govuk-table__cell">{% if form and update_indiviudal_competency_id == individual_job_related_competency.id %}
+                              <td class="govuk-table__cell">{{individual_job_related_competency.skill.name}}</td>
+                              {% for job_role_competency in job_role_competency_list%}
+                                {% if job_role_competency.job_role_skill == individual_job_related_competency.skill %}
+                                  <td class="govuk-table__cell">{{job_role_competency.job_role_skill_level.name}}</td>
+                                {% endif %}
+                              {% endfor %}     
+                              <td class="govuk-table__cell govuk-table-cell-border">{% if form and update_indiviudal_competency_id == individual_job_related_competency.id %}
                                 {{form.user_skill_level}}
                                 {% else %}
                                 {{individual_job_related_competency.skill_level.name}}
