@@ -30,11 +30,11 @@ class DashboardTests(LoggedInUserTestCase):
         self.assertIn('Sorry, but at the moment this job role has no skills assigned to it.',
                       response.content.decode())
 
-    def test_skill_skill_levels_renders(self):
+    def test_skill_levels_renders(self):
         creates_job_role_competency_instance()
         response = self.client.get(reverse('dashboard'))
         assert "test_skill_1" in response.content.decode()
-        assert "test_skill_level_1" in response.content.decode()
+        assert "Beginner" in response.content.decode()
         self.assertNotIn('Sorry, but at the moment this job role has no skills assigned to it.',
                          response.content.decode())
 
