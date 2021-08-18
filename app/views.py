@@ -17,6 +17,8 @@ def dashboard(request):
             UserCompetencies.objects.create(user=NewUser.objects.get(id=request.user.id),
                                             skill=Skill.objects.get(id=competency.job_role_skill.id),
                                             skill_level=SkillLevel.objects.get(name="Beginner"))
+        elif UserCompetencies.objects.filter(skill=competency.job_role_skill.id,user=request.user.id,job_role_related=False).exists():
+            UserCompetencies.objects.filter(skill=competency.job_role_skill.id,user=request.user.id,job_role_related=False).update(job_role_related=True)
     individual_job_related_competency_list = UserCompetencies.objects.filter(job_role_related=True, user=request.user.id).order_by('id')
     for individual_job_related_competency in individual_job_related_competency_list:
         if not Competency.objects.filter(job_role_title=Job.objects.get(job_title=request.user.job_role), job_role_skill=individual_job_related_competency.skill).exists():
