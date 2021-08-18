@@ -250,7 +250,7 @@ class DeleteJobRoleTitleTests(LoggedInAdminTestCase):
         job_title_to_be_deleted = Job.objects.create(job_title='Test Job Role Title To Be Deleted')
         response = self.client.post(reverse('delete-job-role-view',
                                     kwargs={'job_title': 'Test Job Role Title To Be Deleted'}),
-                                    {'delete_job_role': job_title_to_be_deleted.id})
+                                    {'delete': job_title_to_be_deleted.id})
         self.assertTemplateUsed(response, "job_roles/delete_job_role_confirmation.html")
         self.assertFalse(Job.objects.filter(job_title=job_title_to_be_deleted.id).exists())
 

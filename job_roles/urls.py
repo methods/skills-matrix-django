@@ -10,5 +10,5 @@ urlpatterns = [
     path('<str:job>/', views.DynamicJobRoleLookup.as_view(), name='job-role-view'),
     path('update/<str:job_title>/', views.UpdateJobRoleDetail.as_view(), name='update-job-role-view'),
     path('update/<str:job_title>/add-a-skill/', views.add_a_skill, name='add-a-skill'),
-    path('delete/<str:job_title>/', views.delete_job_role_title_view, name='delete-job-role-view')
+    path('delete/<str:job_title>/', views.DeleteJobRole.as_view(), name='delete-job-role-view')
 ]

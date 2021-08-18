@@ -115,10 +115,6 @@ class DynamicJobRoleLookup(LoginRequiredMixin, AdminUserMixin, CustomView):
 
 
 class UpdateJobRoleDetail(LoginRequiredMixin, AdminUserMixin, CustomView):
-    def set_job_and_competencies(self, job_title):
-        job = Job.objects.get(job_title=job_title.title().replace('-', ' '))
-        competencies = Competency.objects.filter(job_role_title=job.id).order_by('id')
-        return job, competencies
 
     def get(self, request, job_title):
         job, competencies = self.set_job_and_competencies(job_title)
@@ -160,16 +156,15 @@ class UpdateJobRoleDetail(LoginRequiredMixin, AdminUserMixin, CustomView):
                                                                     'form_job_role_title': False})
 
 
-@login_required
-@user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
-                  login_url='/error/not-authorised')
-def delete_job_role_title_view(request, job_title):
-    job_title = Job.objects.get(job_title=job_title.title().replace('-', ' '))
-    if request.method == 'POST':
-        if "delete_job_role" in request.POST.keys():
-            Job.objects.get(id=request.POST['delete_job_role']).delete()
-            return render(request, "job_roles/delete_job_role_confirmation.html", {'job_title': job_title})
-    return render(request, "job_roles/delete_job_role.html", {'job_title': job_title})
+class DeleteJobRole(LoginRequiredMixin, AdminUserMixin, CustomView):
+    def get(self, request, job_title):
+        job = Job.objects.get(job_title=job_title.title().replace('-', ' '))
+        return render(request, "job_roles/delete_job_role.html", {'job_title': job})
+
+    def delete(self, request, job_title):
+        job = Job.objects.get(job_title=job_title.title().replace('-', ' '))
+        Job.objects.get(id=request.POST['delete']).delete()
+        return render(request, "job_roles/delete_job_role_confirmation.html", {'job_title': job})
 
 
 @login_required
@@ -179,7 +174,7 @@ def add_a_skill(request, job_title):
     job = Job.objects.get(job_title=job_title.title().replace('-', ' '))
     disabled_choices = populate_existing_competencies(job)
     form = JobSkillsAndSkillLevelForm(disabled_choices=disabled_choices) if 'disabled_choices' != [] else JobSkillsAndSkillLevelForm()
-    competencies_by_id = Competency.objects.filter(job_role_title=job.id)
+    competencies_by_id = Competency.objects.filter(job_role_title=job.id).order_by('id')
     competencies_by_name = []
     for competency in competencies_by_id:
         skill = Skill.objects.filter(id=competency.job_role_skill.id)
