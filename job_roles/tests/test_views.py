@@ -215,7 +215,7 @@ class UpdateJobRolePageTests(LoggedInAdminTestCase):
                                                     job_role_skill=test_instances['test_skill'],
                                                     job_role_skill_level=test_instances['test_skill_level'])
         self.client.post(reverse('update-job-role-view', kwargs={'job_title': 'Test Job'}), {
-                                                                     'delete_competency': test_competency.id})
+                                                                     'delete': test_competency.id})
         self.assertFalse(Competency.objects.filter(job_role_title=test_competency.job_role_title.id,
                                                    job_role_skill=test_competency.job_role_skill.id,
                                                    job_role_skill_level=test_competency.job_role_skill_level.id).

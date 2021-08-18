@@ -114,36 +114,50 @@ class DynamicJobRoleLookup(LoginRequiredMixin, AdminUserMixin, CustomView):
         return render(request, "job_roles/job_role_detail.html", {'job_role_obj': job_role_obj, 'job_title': job_title})
 
 
-@login_required
-@user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
-                  login_url='/error/not-authorised')
-def update_job_role_detail_view(request, job_title):
-    job_title = Job.objects.get(job_title=job_title.title().replace('-', ' '))
-    job_role_obj = Competency.objects.filter(job_role_title=job_title.id).order_by('id')
-    if request.method == 'POST':
-        if 'delete_competency' in request.POST.keys():
-            Competency.objects.get(id=request.POST['delete_competency']).delete()
+class UpdateJobRoleDetail(LoginRequiredMixin, AdminUserMixin, CustomView):
+    def set_job_and_competencies(self, job_title):
+        job = Job.objects.get(job_title=job_title.title().replace('-', ' '))
+        competencies = Competency.objects.filter(job_role_title=job.id).order_by('id')
+        return job, competencies
+
+    def get(self, request, job_title):
+        job, competencies = self.set_job_and_competencies(job_title)
+        return render(request, "job_roles/update_job_role.html", {'competencies': competencies,
+                                                                  'job_title': job, 'form_job_role_title': False})
+
+    def post(self, request, job_title):
+        job, competencies = self.set_job_and_competencies(job_title)
         if 'edit_competency' in request.POST.keys():
-            template_variables = prepare_competency_edit(request.POST['edit_competency'], job_title)
-            return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj,
-                                                                      'job_title': job_title,
+            template_variables = prepare_competency_edit(request.POST['edit_competency'], job)
+            return render(request, "job_roles/update_job_role.html", {'competencies': competencies, 'job_title': job,
                                                                       'form': template_variables['form'],
-                                                                      'edit_competency_id': template_variables['edit_competency_id']})
+                                                                      'edit_competency_id': template_variables[
+                                                                          'edit_competency_id']})
         if 'update_competency' in request.POST.keys():
-            disabled_choices = populate_existing_competencies(job_title)
+            disabled_choices = populate_existing_competencies(job)
             form = JobSkillsAndSkillLevelForm(request.POST, disabled_choices=disabled_choices)
             if form.is_valid():
                 form.process(request.POST)
         if 'edit_job_role_title' in request.POST.keys():
-            form_job_role_title = JobTitleForm(initial={'job_role_title': job_title.job_title})
-            return render(request, "job_roles/update_job_role.html", {'form_job_role_title': form_job_role_title, 'job_title': job_title, 'job_role_obj': job_role_obj
-                                                                      })
+            form_job_role_title = JobTitleForm(initial={'job_role_title': job.job_title})
+            return render(request, "job_roles/update_job_role.html",
+                          {'form_job_role_title': form_job_role_title, 'job_title': job,
+                           'competencies': competencies
+                           })
         if 'save_job_role_title' in request.POST.keys():
             form_job_role_title = JobTitleForm(request.POST)
             if form_job_role_title.is_valid():
                 updated_title = form_job_role_title.process_edit(request.POST['save_job_role_title'])
-                return redirect(update_job_role_detail_view, job_title=slugify(updated_title))
-    return render(request, "job_roles/update_job_role.html", {'job_role_obj': job_role_obj, 'job_title': job_title,'form_job_role_title': False if 'save_job_role_title' not in request.POST.keys() else form_job_role_title})
+                return redirect('update-job-role-view', job_title=slugify(updated_title))
+        return render(request, "job_roles/update_job_role.html", {'competencies': competencies,
+                                                                  'job_title': job, 'form_job_role_title': False if
+                                            'save_job_role_title' not in request.POST.keys() else form_job_role_title})
+
+    def delete(self, request, job_title):
+        job, competencies = self.set_job_and_competencies(job_title)
+        Competency.objects.get(id=request.POST['delete']).delete()
+        return render(request, "job_roles/update_job_role.html", {'competencies': competencies, 'job_title': job,
+                                                                    'form_job_role_title': False})
 
 
 @login_required

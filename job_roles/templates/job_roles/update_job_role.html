@@ -68,7 +68,7 @@
       <dl class="govuk-summary-list govuk-!-margin-bottom-9">
         <form method="post">
           {% csrf_token %}
-          {% for competency in job_role_obj %}
+          {% for competency in competencies %}
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
               {% if form and edit_competency_id == competency.id %}
@@ -92,7 +92,7 @@
               </button>
               {% if not form or form and not edit_competency_id == competency.id %}
               <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button"
-                name="delete_competency" value="{{competency.id}}" {% if form or form_job_role_title %} disabled {% endif %}>
+                name="delete" value="{{competency.id}}" {% if form or form_job_role_title %} disabled {% endif %}>
                 Delete
               </button>
               {% endif %}

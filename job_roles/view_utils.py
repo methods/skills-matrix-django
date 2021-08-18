@@ -1,4 +1,4 @@
-from .models import Competency
+from .models import Competency, Job
 from .forms import JobSkillsAndSkillLevelForm
 from django.contrib import messages
 from skills.models import Skill
