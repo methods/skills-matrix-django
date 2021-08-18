@@ -16,7 +16,7 @@ def dashboard(request):
         if not UserCompetencies.objects.filter(skill=competency.job_role_skill.id).exists():
             UserCompetencies.objects.create(user=NewUser.objects.get(id=request.user.id),
                                             skill=Skill.objects.get(id=competency.job_role_skill.id),
-                                            skill_level=SkillLevel.objects.get(id=competency.job_role_skill_level.id))
+                                            skill_level=SkillLevel.objects.get(name="Beginner"))
     individual_job_related_competency_list = UserCompetencies.objects.filter(job_role_related=True, user=request.user.id).order_by('id')
     if 'update-competency' in request.POST.keys():
         template_variables = prepare_competency_update(request.POST['update-competency'])
