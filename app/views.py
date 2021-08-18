@@ -11,13 +11,13 @@ from user_management.models import NewUser
 @login_required
 def dashboard(request):
     job_role_competency_list = Competency.objects.filter(job_role_title=Job.objects.get(job_title=request.user.job_role).id).order_by('id')
-    individual_competency_list = UserCompetencies.objects.filter(job_role_related=False).order_by('id')
+    individual_competency_list = UserCompetencies.objects.filter(job_role_related=False, user=request.user.id).order_by('id')
     for competency in job_role_competency_list:
         if not UserCompetencies.objects.filter(skill=competency.job_role_skill.id).exists():
             UserCompetencies.objects.create(user=NewUser.objects.get(id=request.user.id),
                                             skill=Skill.objects.get(id=competency.job_role_skill.id),
                                             skill_level=SkillLevel.objects.get(id=competency.job_role_skill_level.id))
-    individual_job_related_competency_list = UserCompetencies.objects.filter(job_role_related=True).order_by('id')
+    individual_job_related_competency_list = UserCompetencies.objects.filter(job_role_related=True, user=request.user.id).order_by('id')
     if 'update-competency' in request.POST.keys():
         template_variables = prepare_competency_update(request.POST['update-competency'])
         return render(request, "app/dashboard.html", {'form': template_variables['form'], 'update_indiviudal_competency_id': template_variables['update_indiviudal_competency_id'], "individual_job_related_competency_list": individual_job_related_competency_list})
