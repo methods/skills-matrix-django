@@ -5,7 +5,8 @@ from django.contrib import messages
 from .models import Job, Competency
 from skills.models import Skill
 from super_admin.models import SkillLevel
-from .view_utils import populate_existing_competencies, set_disabled_choices_to_empty_string_list, handle_form_errors
+from .view_utils import populate_existing_competencies, set_disabled_choices_to_empty_string_list, handle_form_errors, \
+    create_competencies
 from django.utils.text import slugify
 from .view_utils import prepare_competency_edit
 from common.custom_class_view import CustomView
@@ -82,40 +83,35 @@ class AddJobRoleSkills(LoginRequiredMixin, AdminUserMixin, CustomView):
                                                                       'new_role': True})
 
 
-@login_required
-@user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
-                  login_url='/error/not-authorised')
-def review_job_role(request):
-    if 'job_role_title' and 'new_added_job_competencies' in request.session.keys():
-        job_title = request.session['job_role_title']
-        if len(request.session['new_added_job_competencies']) == 0:
+class ReviewJobRole(LoginRequiredMixin, AdminUserMixin, CustomView):
+    def get(self, request):
+        if 'job_role_title' and 'new_added_job_competencies' in request.session.keys():
+            if len(request.session['new_added_job_competencies']) == 0:
+                messages.info(request, 'Please make sure to add the relevant skills to this job role.')
+                return redirect('add-job-skills')
+        elif 'job_role_title' not in request.session.keys():
+            messages.info(request, 'Please make sure to add a job role title.')
+            return redirect('add-job-title')
+        elif 'new_added_job_competencies' not in request.session.keys():
             messages.info(request, 'Please make sure to add the relevant skills to this job role.')
             return redirect('add-job-skills')
-    elif 'job_role_title' not in request.session.keys():
-        messages.info(request, 'Please make sure to add a job role title.')
-        return redirect('add-job-title')
-    elif 'new_added_job_competencies' not in request.session.keys():
-        messages.info(request, 'Please make sure to add the relevant skills to this job role.')
-        return redirect('add-job-skills')
-    if request.method == 'POST':
+        return render(request, "job_roles/review_job_role.html")
+
+    def post(self, request):
+        job_title = request.session['job_role_title']
         Job(job_title=job_title).save()
         job_role_title = Job.objects.get(job_title=job_title)
         for new_job_competencies in request.session['new_added_job_competencies']:
-            for key, value in new_job_competencies.items():
-                job_role_skill = Skill.objects.get(name=key)
-                job_role_skill_level = SkillLevel.objects.get(name=value)
-                Competency(job_role_title=job_role_title, job_role_skill=job_role_skill, job_role_skill_level=job_role_skill_level).save()
+            create_competencies(new_job_competencies, job_role_title)
         messages.success(request, 'The new job role was added successfully.')
         return redirect('job-roles')
-    return render(request, "job_roles/review_job_role.html")
 
-@login_required
-@user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
-                  login_url='/error/not-authorised')
-def dynamic_job_role_lookup_view(request, job):
-    job_title = Job.objects.get(job_title=job.title().replace('-', ' '))
-    job_role_obj = Competency.objects.filter(job_role_title=job_title.id)
-    return render(request, "job_roles/job_role_detail.html", {'job_role_obj': job_role_obj, 'job_title': job_title})
+
+class DynamicJobRoleLookup(LoginRequiredMixin, AdminUserMixin, CustomView):
+    def get(self, request, job):
+        job_title = Job.objects.get(job_title=job.title().replace('-', ' '))
+        job_role_obj = Competency.objects.filter(job_role_title=job_title.id)
+        return render(request, "job_roles/job_role_detail.html", {'job_role_obj': job_role_obj, 'job_title': job_title})
 
 
 @login_required

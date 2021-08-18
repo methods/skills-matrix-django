@@ -1,6 +1,8 @@
 from .models import Competency
 from .forms import JobSkillsAndSkillLevelForm
 from django.contrib import messages
+from skills.models import Skill
+from super_admin.models import SkillLevel
 
 
 def populate_existing_competencies(job, existing_competency=None):
@@ -32,3 +34,11 @@ def handle_form_errors(form, request):
     for field, errors in form.errors.items():
         for error in errors:
             messages.error(request, error)
+
+
+def create_competencies(new_competencies, job_title):
+    for key, value in new_competencies.items():
+        job_role_skill = Skill.objects.get(name=key)
+        job_role_skill_level = SkillLevel.objects.get(name=value)
+        Competency(job_role_title=job_title, job_role_skill=job_role_skill,
+                   job_role_skill_level=job_role_skill_level).save()
