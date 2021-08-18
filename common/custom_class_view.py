@@ -1,5 +1,6 @@
 from django.views import View
 from job_roles.models import Job, Competency
+from django.contrib import messages
 
 
 class CustomView(View):
@@ -13,3 +14,16 @@ class CustomView(View):
         job = Job.objects.get(job_title=job_title.title().replace('-', ' '))
         competencies = Competency.objects.filter(job_role_title=job.id).order_by('id')
         return job, competencies
+
+    def handle_form_errors(self, form, request):
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(request, error)
+
+    def populate_existing_competencies(self, job, existing_competency=None):
+        competencies = Competency.objects.filter(job_role_title=job.id)
+        disabled_choices = ['']
+        for competency in competencies:
+            if existing_competency != competency.job_role_skill.name:
+                disabled_choices.append(competency.job_role_skill.name)
+        return disabled_choices

@@ -1,14 +1,10 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import user_passes_test, login_required
 from job_roles.forms import JobTitleForm, JobSkillsAndSkillLevelForm
 from django.contrib import messages
 from .models import Job, Competency
 from skills.models import Skill
 from super_admin.models import SkillLevel
-from .view_utils import populate_existing_competencies, set_disabled_choices_to_empty_string_list, handle_form_errors, \
-    create_competencies
 from django.utils.text import slugify
-from .view_utils import prepare_competency_edit
 from common.custom_class_view import CustomView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from common.user_group_check_mixins import AdminUserMixin
@@ -39,9 +35,13 @@ class AddJobRole(LoginRequiredMixin, AdminUserMixin, CustomView):
 
 
 class AddJobRoleSkills(LoginRequiredMixin, AdminUserMixin, CustomView):
+    def set_disabled_choices_to_empty_string_list(self, request):
+        if 'disabled_choices' not in request.session.keys():
+            request.session['disabled_choices'] = ['']
+
     def get(self, request):
         if 'job_role_title' in request.session.keys():
-            set_disabled_choices_to_empty_string_list(request)
+            self.set_disabled_choices_to_empty_string_list(request)
             form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
             competencies = request.session[
                 'new_added_job_competencies'] if 'new_added_job_competencies' in request.session.keys() else []
@@ -53,7 +53,7 @@ class AddJobRoleSkills(LoginRequiredMixin, AdminUserMixin, CustomView):
 
     def post(self, request):
         if 'job_role_title' in request.session.keys():
-            set_disabled_choices_to_empty_string_list(request)
+            self.set_disabled_choices_to_empty_string_list(request)
         form = JobSkillsAndSkillLevelForm(request.POST, disabled_choices=request.session['disabled_choices'],
                                               request=request)
         if 'new_added_job_competencies' not in request.session.keys():
@@ -63,7 +63,7 @@ class AddJobRoleSkills(LoginRequiredMixin, AdminUserMixin, CustomView):
                 form.process_session_save()
                 form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
             else:
-                handle_form_errors(form, request)
+                self.handle_form_errors(form, request)
             competencies = request.session[
                 'new_added_job_competencies'] if 'new_added_job_competencies' in request.session.keys() else []
             return render(request, "job_roles/add_job_role_skills.html", {'form': form, 'competencies': competencies,
@@ -84,6 +84,13 @@ class AddJobRoleSkills(LoginRequiredMixin, AdminUserMixin, CustomView):
 
 
 class ReviewJobRole(LoginRequiredMixin, AdminUserMixin, CustomView):
+    def create_competency(self, new_competencies, job_title):
+        for key, value in new_competencies.items():
+            job_role_skill = Skill.objects.get(name=key)
+            job_role_skill_level = SkillLevel.objects.get(name=value)
+            Competency(job_role_title=job_title, job_role_skill=job_role_skill,
+                       job_role_skill_level=job_role_skill_level).save()
+
     def get(self, request):
         if 'job_role_title' and 'new_added_job_competencies' in request.session.keys():
             if len(request.session['new_added_job_competencies']) == 0:
@@ -102,7 +109,7 @@ class ReviewJobRole(LoginRequiredMixin, AdminUserMixin, CustomView):
         Job(job_title=job_title).save()
         job_role_title = Job.objects.get(job_title=job_title)
         for new_job_competencies in request.session['new_added_job_competencies']:
-            create_competencies(new_job_competencies, job_role_title)
+            self.create_competency(new_job_competencies, job_role_title)
         messages.success(request, 'The new job role was added successfully.')
         return redirect('job-roles')
 
@@ -115,6 +122,14 @@ class DynamicJobRoleLookup(LoginRequiredMixin, AdminUserMixin, CustomView):
 
 
 class UpdateJobRoleDetail(LoginRequiredMixin, AdminUserMixin, CustomView):
+    def prepare_competency_edit(self, competency_id, job_title):
+        competency = Competency.objects.get(id=competency_id)
+        disabled_choices = self.populate_existing_competencies(job_title, competency.job_role_skill.name)
+        form = JobSkillsAndSkillLevelForm(initial={'job_role_skill': competency.job_role_skill.name,
+                                                   'job_role_skill_level': competency.job_role_skill_level.name},
+                                          disabled_choices=disabled_choices)
+        edit_competency_id = int(competency_id)
+        return form, edit_competency_id
 
     def get(self, request, job_title):
         job, competencies = self.set_job_and_competencies(job_title)
@@ -124,13 +139,12 @@ class UpdateJobRoleDetail(LoginRequiredMixin, AdminUserMixin, CustomView):
     def post(self, request, job_title):
         job, competencies = self.set_job_and_competencies(job_title)
         if 'edit_competency' in request.POST.keys():
-            template_variables = prepare_competency_edit(request.POST['edit_competency'], job)
+            form, edit_competency_id = self.prepare_competency_edit(request.POST['edit_competency'], job)
             return render(request, "job_roles/update_job_role.html", {'competencies': competencies, 'job_title': job,
-                                                                      'form': template_variables['form'],
-                                                                      'edit_competency_id': template_variables[
-                                                                          'edit_competency_id']})
+                                                                      'form': form,
+                                                                      'edit_competency_id': edit_competency_id})
         if 'update_competency' in request.POST.keys():
-            disabled_choices = populate_existing_competencies(job)
+            disabled_choices = self.populate_existing_competencies(job)
             form = JobSkillsAndSkillLevelForm(request.POST, disabled_choices=disabled_choices)
             if form.is_valid():
                 form.process(request.POST)
@@ -179,7 +193,7 @@ class AddASkill(LoginRequiredMixin, AdminUserMixin, CustomView):
 
     def get(self, request, job_title):
         job, _ = self.set_job_and_competencies(job_title)
-        disabled_choices = populate_existing_competencies(job)
+        disabled_choices = self.populate_existing_competencies(job)
         form = JobSkillsAndSkillLevelForm(disabled_choices=disabled_choices)
         competencies_by_name = self.create_competencies_list(job_title)
         return render(request, "job_roles/add_job_role_skills.html", {'form': form, 'competencies': competencies_by_name
@@ -187,13 +201,13 @@ class AddASkill(LoginRequiredMixin, AdminUserMixin, CustomView):
 
     def post(self, request, job_title):
         job, _ = self.set_job_and_competencies(job_title)
-        disabled_choices = populate_existing_competencies(job)
+        disabled_choices = self.populate_existing_competencies(job)
         form = JobSkillsAndSkillLevelForm(request.POST, disabled_choices=disabled_choices, request=request)
         if form.is_valid():
             form.process(request.POST, job)
             return redirect('add-a-skill', job_title=job_title)
         else:
-            handle_form_errors(form, request)
+            self.handle_form_errors(form, request)
             competencies_by_name = self.create_competencies_list(job_title)
             return render(request, "job_roles/add_job_role_skills.html",
                           {'form': form, 'competencies': competencies_by_name,
