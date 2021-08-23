@@ -5,8 +5,7 @@ from django.contrib import messages
 from .models import Job, Competency
 from skills.models import Skill
 from super_admin.models import SkillLevel
-from .view_utils import populate_existing_competencies, set_disabled_choices_to_empty_string_list, handle_form_errors, \
-    create_competencies
+from .view_utils import populate_existing_competencies, set_disabled_choices_to_empty_string_list
 from django.utils.text import slugify
 from .view_utils import prepare_competency_edit
 from common.custom_class_view import CustomView
@@ -62,7 +61,7 @@ class AddJobRoleSkills(CustomLoginRequiredMixin, AdminUserMixin, CustomView):
                 form.process_session_save()
                 form = JobSkillsAndSkillLevelForm(disabled_choices=request.session['disabled_choices'])
             else:
-                handle_form_errors(form, request)
+                self.handle_form_errors(form, request)
             competencies = request.session[
                 'new_added_job_competencies'] if 'new_added_job_competencies' in request.session.keys() else []
             return render(request, "job_roles/add_job_role_skills.html", {'form': form, 'competencies': competencies,
@@ -83,6 +82,14 @@ class AddJobRoleSkills(CustomLoginRequiredMixin, AdminUserMixin, CustomView):
 
 
 class ReviewJobRole(CustomLoginRequiredMixin, AdminUserMixin, CustomView):
+
+    def create_competencies(self, new_competencies, job_title):
+        for key, value in new_competencies.items():
+            job_role_skill = Skill.objects.get(name=key)
+            job_role_skill_level = SkillLevel.objects.get(name=value)
+            Competency(job_role_title=job_title, job_role_skill=job_role_skill,
+                       job_role_skill_level=job_role_skill_level).save()
+
     def get(self, request):
         if 'job_role_title' and 'new_added_job_competencies' in request.session.keys():
             if len(request.session['new_added_job_competencies']) == 0:
@@ -101,7 +108,7 @@ class ReviewJobRole(CustomLoginRequiredMixin, AdminUserMixin, CustomView):
         Job(job_title=job_title).save()
         job_role_title = Job.objects.get(job_title=job_title)
         for new_job_competencies in request.session['new_added_job_competencies']:
-            create_competencies(new_job_competencies, job_role_title)
+            self.create_competencies(new_job_competencies, job_role_title)
         messages.success(request, 'The new job role was added successfully.')
         return redirect('job-roles')
 
@@ -189,6 +196,6 @@ def add_a_skill(request, job_title):
             form.process(request.POST, job)
             return redirect(add_a_skill, job_title=job_title)
         else:
-            handle_form_errors(form, request)
+            self.handle_form_errors(form, request)
     return render(request, "job_roles/add_job_role_skills.html", {'form': form, 'competencies': competencies_by_name,
                                                                   'job_title': job.job_title, 'existing_role': True})

@@ -34,16 +34,22 @@ class AddEmail(CustomView):
         return render(request, 'user_management/email_address.html', {'form': form})
 
 
-# def add_email(request):
-#     if request.method == 'POST':
-#         form = EmailForm(request.POST)
-#         if form.is_valid():
-#             request.session['email_address'] = request.POST['email_address']
-#             request.session.save()
-#             return redirect(add_job)
-#     else:
-#         form = EmailForm()
-#     return render(request, 'user_management/email_address.html', {'form': form})
+class AddJob(CustomView):
+    def get(self, request):
+        form = JobForm()
+        return render(request, 'user_management/job_info.html', {'form': form})
+
+    def post(self, request):
+        form = JobForm(request.POST)
+        if form.is_valid():
+            request.session['team'] = request.POST['team']
+            request.session['job'] = request.POST['job']
+            request.session.save()
+            return redirect(create_password)
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, error)
 
 
 def add_job(request):
