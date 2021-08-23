@@ -121,7 +121,7 @@ class UpdateJobRoleDetail(LoginRequiredMixin, AdminUserMixin, CustomView):
         return render(request, "job_roles/update_job_role.html", {'competencies': competencies,
                                                                   'job_title': job, 'form_job_role_title': False})
 
-    def post(self, request, job_title):
+    def edit(self, request, job_title):
         job, competencies = self.set_job_and_competencies(job_title)
         if 'edit_competency' in request.POST.keys():
             template_variables = prepare_competency_edit(request.POST['edit_competency'], job)
@@ -129,17 +129,21 @@ class UpdateJobRoleDetail(LoginRequiredMixin, AdminUserMixin, CustomView):
                                                                       'form': template_variables['form'],
                                                                       'edit_competency_id': template_variables[
                                                                           'edit_competency_id']})
-        if 'update_competency' in request.POST.keys():
-            disabled_choices = populate_existing_competencies(job)
-            form = JobSkillsAndSkillLevelForm(request.POST, disabled_choices=disabled_choices)
-            if form.is_valid():
-                form.process(request.POST)
         if 'edit_job_role_title' in request.POST.keys():
             form_job_role_title = JobTitleForm(initial={'job_role_title': job.job_title})
             return render(request, "job_roles/update_job_role.html",
                           {'form_job_role_title': form_job_role_title, 'job_title': job,
                            'competencies': competencies
                            })
+
+    def post(self, request, job_title):
+        job, competencies = self.set_job_and_competencies(job_title)
+        if 'save_competency' in request.POST.keys():
+            disabled_choices = populate_existing_competencies(job)
+            form = JobSkillsAndSkillLevelForm(request.POST, disabled_choices=disabled_choices)
+            if form.is_valid():
+                form.process(request.POST)
+
         if 'save_job_role_title' in request.POST.keys():
             form_job_role_title = JobTitleForm(request.POST)
             if form_job_role_title.is_valid():
