@@ -9,6 +9,6 @@ urlpatterns = [
     path('review-job-role/', views.ReviewJobRole.as_view(), name='review-job-role-details'),
     path('<str:job>/', views.DynamicJobRoleLookup.as_view(), name='job-role-view'),
     path('update/<str:job_title>/', views.UpdateJobRoleDetail.as_view(), name='update-job-role-view'),
-    path('update/<str:job_title>/add-a-skill/', views.add_a_skill, name='add-a-skill'),
+    path('update/<str:job_title>/add-a-skill/', views.AddASkill.as_view(), name='add-a-skill'),
     path('delete/<str:job_title>/', views.DeleteJobRole.as_view(), name='delete-job-role-view')
 ]
