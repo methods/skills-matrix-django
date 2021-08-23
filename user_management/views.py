@@ -56,27 +56,34 @@ class CreatePassword(CustomView):
         form = PasswordForm(request.POST)
         if form.is_valid():
             form.process(request)
-            return redirect(summary)
+            return redirect('summary')
         return render(request, 'user_management/create_password.html', {'form': form})
 
 
-def summary(request):
-    first_name = request.session['first_name'] if 'first_name' in request.session else ""
-    surname = request.session['surname'] if 'surname' in request.session else ""
-    full_name = f'{first_name} {surname}'
-    email_address = request.session['email_address'] if 'email_address' in request.session else ''
-    team = request.session['team'] if 'team' in request.session else ''
-    job = request.session['job'] if 'job' in request.session else ''
-    hashed_password = request.session['hashed_password'] if 'hashed_password' in request.session else ''
-    if request.method == 'POST':
+class Summary(CustomView):
+    def set_user_details(self, request):
+        self.first_name = request.session['first_name'] if 'first_name' in request.session else ""
+        self.surname = request.session['surname'] if 'surname' in request.session else ""
+        self.full_name = f'{self.first_name} {self.surname}'
+        self.email_address = request.session['email_address'] if 'email_address' in request.session else ''
+        self.team = request.session['team'] if 'team' in request.session else ''
+        self.job = request.session['job'] if 'job' in request.session else ''
+        self.hashed_password = request.session['hashed_password'] if 'hashed_password' in request.session else ''
+
+    def get(self, request):
+        self.set_user_details(request)
+        return render(request, 'user_management/summary.html', {'full_name': self.full_name,
+                                                                'email_address': self.email_address, 'team': self.team,
+                                                                'job': self.job})
+
+    def post(self, request):
         user = get_user_model()
-        new_user = user.objects.create_user(email_address, first_name, surname, team, job, hashed_password)
+        new_user = user.objects.create_user(self.email_address, self.first_name, self.surname, self.team, self.job,
+                                            self.hashed_password)
         group = Group.objects.get(name='Staff')
         new_user.groups.add(group)
         messages.success(request, 'Your registration was successful.')
-        return redirect('login') 
-    return render(request, 'user_management/summary.html', {'full_name': full_name, 'email_address': email_address,
-                                                   'team': team, 'job': job})
+        return redirect('login')
 
 
 def edit_name_signup(request):
@@ -84,7 +91,7 @@ def edit_name_signup(request):
         form = NameForm(request.POST)
         if form.is_valid():
             form.process_in_signup(request)
-            return redirect(summary)
+            return redirect('summary')
     else:
         first_name = request.session['first_name'] if 'first_name' in request.session else ""
         surname = request.session['surname'] if 'surname' in request.session else ""
@@ -97,7 +104,7 @@ def edit_email_address_signup(request):
         form = EmailForm(request.POST)
         if form.is_valid():
             form.process_in_signup(request)
-            return redirect(summary)
+            return redirect('summary')
     else:
         form = EmailForm()
         form.fields['email_address'].initial = request.session[
@@ -112,7 +119,7 @@ def edit_job_information_signup(request):
             request.session['team'] = request.POST['team']
             request.session['job'] = request.POST['job']
             request.session.save()
-            return redirect(summary)
+            return redirect('summary')
     else:
         form = JobForm()
         form.fields['team'].initial = request.session['team'] if 'team' in request.session else ''
