@@ -5,6 +5,9 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    {% if unauthorised %}
+    <h1>Please login to continue.</h1>
+    {% endif %}
     {% if messages %}
     <div class="govuk-notification-banner govuk-notification-banner--success" role="alert"
       aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">

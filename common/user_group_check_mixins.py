@@ -13,7 +13,7 @@ class AdminUserMixin(UserPassesTestMixin):
                 return False
 
     def handle_no_permission(self):
-        return redirect(reverse('not authorised'))
+        return redirect(reverse('forbidden'))
 
 
 class SuperAdminUserMixin(UserPassesTestMixin):
@@ -26,4 +26,4 @@ class SuperAdminUserMixin(UserPassesTestMixin):
                 return False
 
     def handle_no_permission(self):
-        return redirect(reverse('not authorised'))
+        return redirect(reverse('forbidden'))
