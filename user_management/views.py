@@ -45,6 +45,7 @@ class AddJob(CustomView):
             return redirect('create-password')
         else:
             self.handle_form_errors(form, request)
+            return render(request, 'user_management/job_info.html', {'form': form})
 
 
 class CreatePassword(CustomView):
@@ -77,6 +78,7 @@ class Summary(CustomView):
                                                                 'job': self.job})
 
     def post(self, request):
+        self.set_user_details(request)
         user = get_user_model()
         new_user = user.objects.create_user(self.email_address, self.first_name, self.surname, self.team, self.job,
                                             self.hashed_password)
@@ -86,45 +88,49 @@ class Summary(CustomView):
         return redirect('login')
 
 
-def edit_name_signup(request):
-    if request.method == 'POST':
-        form = NameForm(request.POST)
-        if form.is_valid():
-            form.process_in_signup(request)
-            return redirect('summary')
-    else:
+class EditNameSignup(CustomView):
+    def get(self, request):
         first_name = request.session['first_name'] if 'first_name' in request.session else ""
         surname = request.session['surname'] if 'surname' in request.session else ""
         form = NameForm(initial={'first_name': first_name, 'surname': surname})
         return render(request, 'user_management/name.html', {'form': form, 'edit': True})
 
+    def post(self, request):
+        if request.method == 'POST':
+            form = NameForm(request.POST)
+            if form.is_valid():
+                form.process_in_signup(request)
+                return redirect('summary')
 
-def edit_email_address_signup(request):
-    if request.method == 'POST':
+
+class EditEmailAddressSignup(CustomView):
+    def get(self, request):
+        form = EmailForm()
+        form.fields['email_address'].initial = request.session[
+            'email_address'] if 'email_address' in request.session else ''
+        return render(request, 'user_management/email_address.html', {'form': form, 'edit': True})
+
+    def post(self, request):
         form = EmailForm(request.POST)
         if form.is_valid():
             form.process_in_signup(request)
             return redirect('summary')
-    else:
-        form = EmailForm()
-        form.fields['email_address'].initial = request.session[
-            'email_address'] if 'email_address' in request.session else ''
-    return render(request, 'user_management/email_address.html', {'form': form, 'edit': True})
+        return render(request, 'user_management/email_address.html', {'form': form, 'edit': True})
 
 
-def edit_job_information_signup(request):
-    if request.method == 'POST':
-        form = JobForm(request.POST)
-        if form.is_valid():
-            request.session['team'] = request.POST['team']
-            request.session['job'] = request.POST['job']
-            request.session.save()
-            return redirect('summary')
-    else:
+class EditJobInformationSignup(CustomView):
+    def get(self, request):
         form = JobForm()
         form.fields['team'].initial = request.session['team'] if 'team' in request.session else ''
         form.fields['job'].initial = request.session['job'] if 'job' in request.session else ''
-    return render(request, 'user_management/job_info.html', {'form': form, 'edit': True})
+        return render(request, 'user_management/job_info.html', {'form': form, 'edit': True})
+
+    def post(self, request):
+        form = JobForm(request.POST)
+        if form.is_valid():
+            form.process_in_signup(request)
+            return redirect('summary')
+        return render(request, 'user_management/job_info.html', {'form': form, 'edit': True})
 
 
 @login_required
