@@ -30,7 +30,7 @@
           {% csrf_token %}
           <div class="govuk-tabs__panel" id="required-skills">
             <h2 class="govuk-heading-l">{{user.job_role}}</h2>
-            {% if individual_job_related_competency_list|length > 0 %}
+            {% if job_role_competency_list|length > 0 %}
             <table class="govuk-table">
               <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
@@ -40,20 +40,22 @@
                 </tr>
               </thead>
               <tbody class="govuk-table__body">
-                {% for individual_job_related_competency in individual_job_related_competency_list %}
+                {% for job_role_competency in job_role_competency_list %}
                 <tr class="govuk-table__row">
-                              <td class="govuk-table__cell">{{individual_job_related_competency.skill.name}}</td>
-                              {% for job_role_competency in job_role_competency_list%}
-                                {% if job_role_competency.job_role_skill == individual_job_related_competency.skill %}
-                                  <td class="govuk-table__cell">{{job_role_competency.job_role_skill_level.name}}</td>
+                              <td class="govuk-table__cell">{{job_role_competency.job_role_skill.name}}</td>
+                              <td class="govuk-table__cell">{{job_role_competency.job_role_skill_level.name}}</td>
+                              {% if job_role_competency.job_role_skill.id not in user_skills %}
+                              <td class="govuk-table__cell govuk-table-cell-border">{% if form and job_role_competency.job_role_skill.id == update_existing_skill_id %} {{form.user_skill_level}} {% else %}Enter your skill level {% endif %}
+                              </td>
+                              {% else %}
+                              {% for user_competency in all_user_competency %}
+                              {% if job_role_competency.job_role_skill == user_competency.skill %}
+                              <td class="govuk-table__cell govuk-table-cell-border">{% if form and job_role_competency.job_role_skill.id == update_existing_skill_id %} {{form.user_skill_level}} {% else %}{{user_competency.skill_level.name}} {% endif %}
+                               </td>
+                               {% endif %}
+                                {% endfor %}
                                 {% endif %}
-                              {% endfor %}     
-                              <td class="govuk-table__cell govuk-table-cell-border">{% if form and update_indiviudal_competency_id == individual_job_related_competency.id %}
-                                {{form.user_skill_level}}
-                                {% else %}
-                                {{individual_job_related_competency.skill_level.name}}
-                                {% endif %}</td>
-                              <td class="govuk-table-action__cell"><button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" {% if form and update_indiviudal_competency_id != individual_job_related_competency.id %} disabled {% endif %} {% if form and update_indiviudal_competency_id == individual_job_related_competency.id %} name="save-skill-level" value="{{individual_job_related_competency.id}}" {% else %} name="update-competency" value="{{individual_job_related_competency.id}}" {% endif %}> {% if form and update_indiviudal_competency_id == individual_job_related_competency.id%} Save {% else %} Edit{% endif %}</button></td>
+                              <td class="govuk-table-action__cell"><button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" {% if form and update_indiviudal_competency_id != individual_job_related_competency.id %} disabled {% endif %} {% if form and update_indiviudal_competency_id == individual_job_related_competency.id %} name="save-skill-level" value="{{job_role_competency.job_role_skill.id}}" {% else %} name="update-competency" value="{{job_role_competency.job_role_skill.id}}" {% endif %}> {% if form and update_indiviudal_competency_id == individual_job_related_competency.id%} Save {% else %} Edit{% endif %}</button></td>
                             </tr>
                 {% endfor %}
               </tbody>
