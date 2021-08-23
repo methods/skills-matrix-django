@@ -215,7 +215,7 @@ class UpdateJobRolePageTests(LoggedInAdminTestCase):
                                                     job_role_skill=test_instances['test_skill'],
                                                     job_role_skill_level=test_instances['test_skill_level'])
         self.client.post(reverse('update-job-role-view', kwargs={'job_title': 'Test Job'}), {
-                                                                     'delete_competency': test_competency.id})
+                                                                     'delete': test_competency.id})
         self.assertFalse(Competency.objects.filter(job_role_title=test_competency.job_role_title.id,
                                                    job_role_skill=test_competency.job_role_skill.id,
                                                    job_role_skill_level=test_competency.job_role_skill_level.id).
@@ -250,7 +250,7 @@ class DeleteJobRoleTitleTests(LoggedInAdminTestCase):
         job_title_to_be_deleted = Job.objects.create(job_title='Test Job Role Title To Be Deleted')
         response = self.client.post(reverse('delete-job-role-view',
                                     kwargs={'job_title': 'Test Job Role Title To Be Deleted'}),
-                                    {'delete_job_role': job_title_to_be_deleted.id})
+                                    {'delete': job_title_to_be_deleted.id})
         self.assertTemplateUsed(response, "job_roles/delete_job_role_confirmation.html")
         self.assertFalse(Job.objects.filter(job_title=job_title_to_be_deleted.id).exists())
 
