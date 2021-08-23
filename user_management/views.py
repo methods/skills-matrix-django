@@ -5,19 +5,22 @@ from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
+from common.custom_class_view import CustomView
 
 
-def add_name(request):
-    if request.method == 'POST':
+class AddName(CustomView):
+    def get(self, request):
+        form = NameForm()
+        return render(request, 'user_management/name.html', {'form': form})
+
+    def post(self, request):
         form = NameForm(request.POST)
         if form.is_valid():
             request.session['first_name'] = request.POST['first_name']
             request.session['surname'] = request.POST['surname']
             request.session.save()
             return redirect(add_email)
-    else:
-        form = NameForm()
-    return render(request, 'user_management/name.html', {'form': form})
+        return render(request, 'user_management/name.html', {'form': form})
 
 
 def add_email(request):
