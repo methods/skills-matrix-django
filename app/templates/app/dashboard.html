@@ -48,7 +48,7 @@
                               <td class="govuk-table__cell govuk-table-cell-border">{% if form and job_role_competency.job_role_skill.id == update_existing_skill_id %} {{form.user_skill_level}} {% else %}Enter your skill level {% endif %}
                               </td>
                               {% else %}
-                              {% for user_competency in all_user_competency %}
+                              {% for user_competency in all_user_competencies %}
                               {% if job_role_competency.job_role_skill == user_competency.skill %}
                               <td class="govuk-table__cell govuk-table-cell-border">{% if form and job_role_competency.job_role_skill.id == update_existing_skill_id %} {{form.user_skill_level}} {% else %}{{user_competency.skill_level.name}} {% endif %}
                                </td>

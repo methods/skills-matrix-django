@@ -12,9 +12,8 @@ from user_management.models import NewUser
 def dashboard(request):
     job_role_competency_list = Competency.objects.filter(job_role_title=Job.objects.get(job_title=request.user.job_role).id).order_by('id')
     individual_competency_list = UserCompetencies.objects.filter(job_role_related=False, user=request.user.id).order_by('id')
-    all_user_competency = UserCompetencies.objects.filter(user=request.user.id).order_by('id')
     user_skills = []
-    existing_skill_list=retrieve_user_skills(all_user_competency,user_skills)
+    existing_skill_list=retrieve_user_skills(user_skills, request)
     # for competency in job_role_competency_list:
     #     if not UserCompetencies.objects.filter(skill=competency.job_role_skill.id,user=request.user.id).exists():
     #         UserCompetencies.objects.create(user=NewUser.objects.get(id=request.user.id),
@@ -30,19 +29,25 @@ def dashboard(request):
         template_variables = prepare_competency_update(request.POST['update-competency'], request)
         return render(request, "app/dashboard.html", {'form': template_variables['form'],
                                                       'update_existing_skill_id': template_variables['update_existing_skill_id'],
-                                                      "individual_job_related_competency_list": individual_job_related_competency_list,
                                                       "job_role_competency_list": job_role_competency_list,
-                                                      "all_user_competency": all_user_competency,
+                                                      "all_user_competencies": UserCompetencies.objects.filter(user=request.user.id).order_by('id'),
                                                       "user_skills": existing_skill_list})
-    if 'save-skill-level' in request.POST.keys():
-        if not UserCompetencies.objects.filter(skill=request.POST['update-competency'],user=request.user.id).exists():
-            form = UserSkillLevelForm(request.POST)
-            if form.is_valid():
-                UserCompetencies.objects.filter(user=request.user.id, id=request.POST['save-skill-level']).update(skill_level=SkillLevel.objects.get(name=form.cleaned_data['user_skill_level']).id)
+    if 'save' in request.POST.keys():
+        form = UserSkillLevelForm(request.POST)
+        if form.is_valid():
+            if not UserCompetencies.objects.filter(skill=Skill.objects.get(id=request.POST['save']),user=request.user.id).exists():
+                job_competency = Competency.objects.get(job_role_skill=Skill.objects.get(id=request.POST['save']), job_role_title=Job.objects.get(job_title=request.user.job_role).id)
+                print(form.cleaned_data['user_skill_level'])
+                UserCompetencies.objects.create(user=NewUser.objects.get(id=request.user.id),
+                                                skill=Skill.objects.get(id=job_competency.job_role_skill.id),
+                                                skill_level=SkillLevel.objects.get(name=form.cleaned_data['user_skill_level']))
+                user_skills = []
+                existing_skill_list = retrieve_user_skills(user_skills, request)
+            elif UserCompetencies.objects.filter(skill=Skill.objects.get(id=request.POST['save']),job_role_related=True,user=request.user.id).exists():
+                UserCompetencies.objects.filter(user=request.user.id, job_role_related=True, skill=Skill.objects.get(id=request.POST['save'])).update(skill_level=SkillLevel.objects.get(name=form.cleaned_data['user_skill_level']).id)
     return render(request, "app/dashboard.html", {"job_role_competency_list": Competency.objects.filter(job_role_title=Job.objects.get(job_title=request.user.job_role).id).order_by('id'),
                                                   "individual_competency_list": individual_competency_list,
-                                                  "individual_job_related_competency_list": UserCompetencies.objects.filter(job_role_related=True, user=request.user.id).order_by('id'), "job_role_competency_list": job_role_competency_list,
-                                                  "all_user_competency":all_user_competency,
+                                                  "all_user_competencies":UserCompetencies.objects.filter(user=request.user.id).order_by('id'),
                                                   "user_skills":existing_skill_list})
 
 
