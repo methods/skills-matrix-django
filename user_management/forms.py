@@ -73,6 +73,10 @@ class EmailForm(forms.Form):
             if field in self.errors:
                 self.fields[field].widget = GdsStyleEmailInput(attrs=attrs)
 
+    def process_in_signup(self, request):
+        request.session['email_address'] = request.POST['email_address']
+        request.session.save()
+
 
 class PasswordForm(forms.Form):
     password = forms.CharField(widget=GdsStylePasswordInput(),

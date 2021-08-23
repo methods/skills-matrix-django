@@ -17,20 +17,33 @@ class AddName(CustomView):
         form = NameForm(request.POST)
         if form.is_valid():
             form.process_in_signup(request)
-            return redirect(add_email)
+            return redirect('add-email')
         return render(request, 'user_management/name.html', {'form': form})
 
 
-def add_email(request):
-    if request.method == 'POST':
+class AddEmail(CustomView):
+    def get(self, request):
+        form = EmailForm()
+        return render(request, 'user_management/email_address.html', {'form': form})
+
+    def post(self, request):
         form = EmailForm(request.POST)
         if form.is_valid():
-            request.session['email_address'] = request.POST['email_address']
-            request.session.save()
+            form.process_in_signup(request)
             return redirect(add_job)
-    else:
-        form = EmailForm()
-    return render(request, 'user_management/email_address.html', {'form': form})
+        return render(request, 'user_management/email_address.html', {'form': form})
+
+
+# def add_email(request):
+#     if request.method == 'POST':
+#         form = EmailForm(request.POST)
+#         if form.is_valid():
+#             request.session['email_address'] = request.POST['email_address']
+#             request.session.save()
+#             return redirect(add_job)
+#     else:
+#         form = EmailForm()
+#     return render(request, 'user_management/email_address.html', {'form': form})
 
 
 def add_job(request):
@@ -100,8 +113,7 @@ def edit_email_address_signup(request):
     if request.method == 'POST':
         form = EmailForm(request.POST)
         if form.is_valid():
-            request.session['email_address'] = request.POST['email_address']
-            request.session.save()
+            form.process_in_signup(request)
             return redirect(summary)
     else:
         form = EmailForm()
