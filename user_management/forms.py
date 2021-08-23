@@ -2,6 +2,7 @@ from django import forms
 from common.widgets import GdsStylePasswordInput, GdsStyleTextInput, GdsStyleEmailInput, CustomisedSelectWidget
 from .validators import validate_domain_email
 from .utils import get_job_choices, get_team_choices
+from django.contrib.auth.hashers import make_password
 
 
 class NameForm(forms.Form):
@@ -107,3 +108,9 @@ class PasswordForm(forms.Form):
         if self.errors:
             for field in self.fields:
                 self.fields[field].widget = GdsStylePasswordInput(attrs=attrs)
+
+    def process(self, request):
+        password = request.POST['password']
+        hashed_password = make_password(password)
+        request.session['hashed_password'] = hashed_password
+        request.session.save()

@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import NameForm, JobForm, EmailForm, PasswordForm
 from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
@@ -43,40 +42,22 @@ class AddJob(CustomView):
         form = JobForm(request.POST)
         if form.is_valid():
             form.process_in_signup(request)
-            return redirect(create_password)
+            return redirect('create-password')
         else:
             self.handle_form_errors(form, request)
 
 
-# def add_job(request):
-#     if request.method == 'POST':
-#         form = JobForm(request.POST)
-#         if form.is_valid():
-#             request.session['team'] = request.POST['team']
-#             request.session['job'] = request.POST['job']
-#             request.session.save()
-#             return redirect(create_password)
-#         else:
-#             for field, errors in form.errors.items():
-#                 for error in errors:
-#                     messages.error(request, error)
-#     else:
-#         form = JobForm()
-#     return render(request, 'user_management/job_info.html', {'form': form})
+class CreatePassword(CustomView):
+    def get(self, request):
+        form = PasswordForm()
+        return render(request, 'user_management/create_password.html', {'form': form})
 
-
-def create_password(request):
-    if request.method == 'POST':
+    def post(self, request):
         form = PasswordForm(request.POST)
         if form.is_valid():
-            password = request.POST['password']
-            hashed_password = make_password(password)
-            request.session['hashed_password'] = hashed_password
-            request.session.save()
+            form.process(request)
             return redirect(summary)
-    else:
-        form = PasswordForm()
-    return render(request, 'user_management/create_password.html', {'form': form})
+        return render(request, 'user_management/create_password.html', {'form': form})
 
 
 def summary(request):
