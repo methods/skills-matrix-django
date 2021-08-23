@@ -86,7 +86,7 @@
             </dt>
             <dd class='govuk-!-margin-bottom-2 govuk-summary-list__actions'>
               <button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-right-1" data-module="govuk-button" 
-              {% if form and edit_competency_id == competency.id %}name="update_competency" {% else %}
+              {% if form and edit_competency_id == competency.id %}name="save_competency" {% else %}
                 name="edit_competency" {% endif %} value="{{competency.id}}" {% if form and edit_competency_id != competency.id or form_job_role_title %} disabled {% endif %}>
                 {% if form and edit_competency_id == competency.id %}Save{% else %}Edit{% endif %}
               </button>

@@ -73,7 +73,7 @@ class JobSkillsAndSkillLevelForm(forms.Form):
             Competency(job_role_title=job, job_role_skill=job_role_skill,
                        job_role_skill_level=job_role_skill_level).save()
         else:
-            competency = Competency.objects.filter(id=request['update_competency'])
+            competency = Competency.objects.filter(id=request['save_competency'])
             competency.update(job_role_skill=job_role_skill,
                        job_role_skill_level=job_role_skill_level)
 
