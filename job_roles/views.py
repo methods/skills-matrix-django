@@ -189,7 +189,7 @@ class DeleteJobRole(CustomLoginRequiredMixin, AdminUserMixin, CustomView):
         return render(request, "job_roles/delete_job_role_confirmation.html", {'job_title': job})
 
 
-class AddASkill(LoginRequiredMixin, AdminUserMixin, CustomView):
+class AddASkill(CustomLoginRequiredMixin, AdminUserMixin, CustomView):
     def create_competencies_list(self, job_title):
         _, competencies_by_id = self.set_job_and_competencies(job_title)
         competencies_by_name = []

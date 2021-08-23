@@ -30,7 +30,7 @@ class AddEmail(CustomView):
         form = EmailForm(request.POST)
         if form.is_valid():
             form.process_in_signup(request)
-            return redirect(add_job)
+            return redirect('add-job')
         return render(request, 'user_management/email_address.html', {'form': form})
 
 
@@ -42,31 +42,27 @@ class AddJob(CustomView):
     def post(self, request):
         form = JobForm(request.POST)
         if form.is_valid():
-            request.session['team'] = request.POST['team']
-            request.session['job'] = request.POST['job']
-            request.session.save()
+            form.process_in_signup(request)
             return redirect(create_password)
         else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, error)
+            self.handle_form_errors(form, request)
 
 
-def add_job(request):
-    if request.method == 'POST':
-        form = JobForm(request.POST)
-        if form.is_valid():
-            request.session['team'] = request.POST['team']
-            request.session['job'] = request.POST['job']
-            request.session.save()
-            return redirect(create_password)
-        else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, error)
-    else:
-        form = JobForm()
-    return render(request, 'user_management/job_info.html', {'form': form})
+# def add_job(request):
+#     if request.method == 'POST':
+#         form = JobForm(request.POST)
+#         if form.is_valid():
+#             request.session['team'] = request.POST['team']
+#             request.session['job'] = request.POST['job']
+#             request.session.save()
+#             return redirect(create_password)
+#         else:
+#             for field, errors in form.errors.items():
+#                 for error in errors:
+#                     messages.error(request, error)
+#     else:
+#         form = JobForm()
+#     return render(request, 'user_management/job_info.html', {'form': form})
 
 
 def create_password(request):

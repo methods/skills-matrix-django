@@ -57,6 +57,11 @@ class JobForm(forms.Form):
             raise forms.ValidationError('Select a job')
         return job
 
+    def process_in_signup(self, request):
+        request.session['team'] = request.POST['team']
+        request.session['job'] = request.POST['job']
+        request.session.save()
+
 
 class EmailForm(forms.Form):
     email_address = forms.EmailField(validators=[validate_domain_email], label='Email address', max_length=100,
