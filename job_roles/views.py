@@ -10,11 +10,10 @@ from .view_utils import populate_existing_competencies, set_disabled_choices_to_
 from django.utils.text import slugify
 from .view_utils import prepare_competency_edit
 from common.custom_class_view import CustomView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from common.user_group_check_mixins import AdminUserMixin
+from common.user_group_check_mixins import AdminUserMixin, CustomLoginRequiredMixin
 
 
-class JobRoles(LoginRequiredMixin, CustomView):
+class JobRoles(CustomLoginRequiredMixin, CustomView):
     def get(self, request):
         if 'job_role_title' in request.session.keys(): del request.session['job_role_title']
         if 'disabled_choices' in request.session.keys(): del request.session['disabled_choices']
@@ -23,7 +22,7 @@ class JobRoles(LoginRequiredMixin, CustomView):
         return render(request, "job_roles/job-roles.html", {"user": request.user, 'job_role_list': job_role_list})
 
 
-class AddJobRole(LoginRequiredMixin, AdminUserMixin, CustomView):
+class AddJobRole(CustomLoginRequiredMixin, AdminUserMixin, CustomView):
     def get(self, request):
         form = JobTitleForm(request=request)
         form.fields['job_role_title'].initial = request.session[
@@ -38,7 +37,7 @@ class AddJobRole(LoginRequiredMixin, AdminUserMixin, CustomView):
         return render(request, "job_roles/add_job_role.html", {'form': form})
 
 
-class AddJobRoleSkills(LoginRequiredMixin, AdminUserMixin, CustomView):
+class AddJobRoleSkills(CustomLoginRequiredMixin, AdminUserMixin, CustomView):
     def get(self, request):
         if 'job_role_title' in request.session.keys():
             set_disabled_choices_to_empty_string_list(request)
@@ -83,7 +82,7 @@ class AddJobRoleSkills(LoginRequiredMixin, AdminUserMixin, CustomView):
                                                                       'new_role': True})
 
 
-class ReviewJobRole(LoginRequiredMixin, AdminUserMixin, CustomView):
+class ReviewJobRole(CustomLoginRequiredMixin, AdminUserMixin, CustomView):
     def get(self, request):
         if 'job_role_title' and 'new_added_job_competencies' in request.session.keys():
             if len(request.session['new_added_job_competencies']) == 0:
@@ -107,14 +106,14 @@ class ReviewJobRole(LoginRequiredMixin, AdminUserMixin, CustomView):
         return redirect('job-roles')
 
 
-class DynamicJobRoleLookup(LoginRequiredMixin, AdminUserMixin, CustomView):
+class DynamicJobRoleLookup(CustomLoginRequiredMixin, AdminUserMixin, CustomView):
     def get(self, request, job):
         job_title = Job.objects.get(job_title=job.title().replace('-', ' '))
         job_role_obj = Competency.objects.filter(job_role_title=job_title.id)
         return render(request, "job_roles/job_role_detail.html", {'job_role_obj': job_role_obj, 'job_title': job_title})
 
 
-class UpdateJobRoleDetail(LoginRequiredMixin, AdminUserMixin, CustomView):
+class UpdateJobRoleDetail(CustomLoginRequiredMixin, AdminUserMixin, CustomView):
 
     def get(self, request, job_title):
         job, competencies = self.set_job_and_competencies(job_title)
@@ -160,7 +159,7 @@ class UpdateJobRoleDetail(LoginRequiredMixin, AdminUserMixin, CustomView):
                                                                     'form_job_role_title': False})
 
 
-class DeleteJobRole(LoginRequiredMixin, AdminUserMixin, CustomView):
+class DeleteJobRole(CustomLoginRequiredMixin, AdminUserMixin, CustomView):
     def get(self, request, job_title):
         job = Job.objects.get(job_title=job_title.title().replace('-', ' '))
         return render(request, "job_roles/delete_job_role.html", {'job_title': job})
@@ -173,7 +172,7 @@ class DeleteJobRole(LoginRequiredMixin, AdminUserMixin, CustomView):
 
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
-                  login_url='/error/not-authorised')
+                  login_url='/error/forbidden')
 def add_a_skill(request, job_title):
     job = Job.objects.get(job_title=job_title.title().replace('-', ' '))
     disabled_choices = populate_existing_competencies(job)
