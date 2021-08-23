@@ -173,7 +173,7 @@ class DeleteJobRole(LoginRequiredMixin, AdminUserMixin, CustomView):
 
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name='Admins').exists() or u.groups.filter(name='Super admins').exists(),
-                  login_url='/error/not-authorised')
+                  login_url='/error/forbidden')
 def add_a_skill(request, job_title):
     job = Job.objects.get(job_title=job_title.title().replace('-', ' '))
     disabled_choices = populate_existing_competencies(job)
