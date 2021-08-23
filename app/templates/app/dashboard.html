@@ -55,7 +55,7 @@
                                {% endif %}
                                 {% endfor %}
                                 {% endif %}
-                              <td class="govuk-table-action__cell"><button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" {% if form and update_indiviudal_competency_id != individual_job_related_competency.id %} disabled {% endif %} {% if form and update_indiviudal_competency_id == individual_job_related_competency.id %} name="save-skill-level" value="{{job_role_competency.job_role_skill.id}}" {% else %} name="update-competency" value="{{job_role_competency.job_role_skill.id}}" {% endif %}> {% if form and update_indiviudal_competency_id == individual_job_related_competency.id%} Save {% else %} Edit{% endif %}</button></td>
+                              <td class="govuk-table-action__cell"><button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" {% if form and update_existing_skill_id != job_role_competency.job_role_skill.id %} disabled {% endif %} {% if form and update_existing_skill_id == job_role_competency.job_role_skill.id %} name="save" value="{{job_role_competency.job_role_skill.id}}" {% else %} name="update-competency" value="{{job_role_competency.job_role_skill.id}}" {% endif %}> {% if form and update_existing_skill_id == job_role_competency.job_role_skill.id %} Save {% else %} Edit{% endif %}</button></td>
                             </tr>
                 {% endfor %}
               </tbody>
