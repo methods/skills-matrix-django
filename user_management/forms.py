@@ -21,6 +21,11 @@ class NameForm(forms.Form):
             if field in self.errors:
                 self.fields[field].widget = GdsStyleTextInput(attrs=attrs)
 
+    def process_in_signup(self, request):
+        request.session['first_name'] = request.POST['first_name']
+        request.session['surname'] = request.POST['surname']
+        request.session.save()
+
 
 class JobForm(forms.Form):
 

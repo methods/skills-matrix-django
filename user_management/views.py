@@ -16,9 +16,7 @@ class AddName(CustomView):
     def post(self, request):
         form = NameForm(request.POST)
         if form.is_valid():
-            request.session['first_name'] = request.POST['first_name']
-            request.session['surname'] = request.POST['surname']
-            request.session.save()
+            form.process_in_signup(request)
             return redirect(add_email)
         return render(request, 'user_management/name.html', {'form': form})
 
@@ -89,9 +87,7 @@ def edit_name_signup(request):
     if request.method == 'POST':
         form = NameForm(request.POST)
         if form.is_valid():
-            request.session['first_name'] = request.POST['first_name']
-            request.session['surname'] = request.POST['surname']
-            request.session.save()
+            form.process_in_signup(request)
             return redirect(summary)
     else:
         first_name = request.session['first_name'] if 'first_name' in request.session else ""
