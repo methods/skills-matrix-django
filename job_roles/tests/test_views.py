@@ -204,7 +204,7 @@ class UpdateJobRolePageTests(LoggedInAdminTestCase):
         test_competency.save()
         self.client.post(reverse('update-job-role-view', kwargs={'job_title': 'Test Job'}),
                          {'job_role_skill': 'updated', 'job_role_skill_level': 'updated',
-                          'update_competency': test_competency.id})
+                          'save_competency': test_competency.id})
         test_competency.refresh_from_db()
         assert test_competency.job_role_skill.name == 'updated'
         assert test_competency.job_role_skill_level.name == 'updated'

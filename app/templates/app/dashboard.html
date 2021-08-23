@@ -1,60 +1,108 @@
 {% extends "app/app_base.html" %}
 {% load sass_tags %}
 
-<head>
-  <link href="{% sass_src 'scss/_global.scss' %}" rel="stylesheet" type="text/css" />
-</head>
-
-
-{% block pageTitle %}
-Home
-{% endblock %}
 
 {% block content %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-
-    <div>{{users}}</div>
-
-    {% if name %}
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Welcome, {{name}}</h1>
-    {% elif profile %}
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Welcome, {{profile.firstName}}</h1>
-    {% else %}
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Welcome</h1>
-    {% endif %}
-    {{profile.name}}
-
-
-    {% if profile %}
-    <span class="govuk-caption-xl">{{profile.job}} | {{profile.team}}</span>
-    {% endif %}
-    <div class="govuk-!-margin-top-4">
-      <table class="govuk-table">
-        <caption class="govuk-table__caption govuk-table__caption--l">Your Skills</caption>
-        <thead class="govuk-table__head">
-          <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header">Skill</th>
-            <th scope="col" class="govuk-table__header">Skill Level</th>
-          </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-          {% for skill in skills %}
-          <tr class="govuk-table__row">
-            <th scope="row" class="govuk-table__header">{{skill.skillName}}</th>
-            <td class="govuk-table__cell">{{skill.skillLevel}}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Welcome, {{user.first_name}}</h1>
+    <span class="govuk-caption-xl">{{user.job_role}} | {{user.team}}</span>
+    <div class="govuk-!-margin-top-7">
+      <h2 class="govuk-heading-l">Your Skills</h2>
+      <div class="govuk-tabs" data-module="govuk-tabs">
+        <h2 class="govuk-tabs__title">
+          Contents
+        </h2>
+        <ul class="govuk-tabs__list">
+          <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+            <a class="govuk-tabs__tab" href="#required-skills">
+              Required skills
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#additional-skills">
+              Additional skills
+            </a>
+          </li>
+        </ul>
+        <div class="govuk-tabs__panel" id="required-skills">
+          <h2 class="govuk-heading-l">{{user.job_role}}</h2>
+          <table class="govuk-table">
+            {% if competency_list|length > 0 %}
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Skill</th>
+                  <th scope="col" class="govuk-table__header">Skill Level</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                {% for competency in competency_list %}
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">{{competency.job_role_skill.name}}</th>
+                  <td class="govuk-table__cell">{{competency.job_role_skill_level.name}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            {% else %}
+            <tbody class="govuk-table__body">
+              <tr class="govuk-table__row">
+                <td>Sorry, but at the moment this job role has no skills assigned to it.</td>
+              </tr>
+            </tbody>
+            {% endif %}
+          </table>
+          {% if competency_list|length > 0 %}
+          <a class="govuk-button" data-module="govuk-button" href="/edit-skills">
+            Edit skills
+          </a>
+          {% endif %}
+        </div>
+        <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="additional-skills">
+          <h2 class="govuk-heading-l">Personal profile</h2>
+          {% if individual_competency_list|length > 0 %}
+          <table class="govuk-table">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Skill</th>
+                  <th scope="col" class="govuk-table__header">Skill Level</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                {% for individual_competency in individual_competency_list %}
+                <tr class="govuk-table__row">
+                  <th scope="row" class="govuk-table__header">{{individual_competency.skill.name}}</th>
+                  <td class="govuk-table__cell">{{individual_competency.skill_level.name}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+          </table>
+          <a class="govuk-button" data-module="govuk-button" href="/edit-skills">
+            Add skills
+          </a>
+          <a class="govuk-button" data-module="govuk-button" href="/edit-skills">
+            Edit skills
+          </a>
+          {% else %}
+          <table class="govuk-table">
+            <tbody class="govuk-table__body">
+              <tr class="govuk-table__row">
+                <td>If you have any other skills that you would like to add to your profile, please add them in this section .</td>
+              </tr>
+            </tbody>
+          </table>
+          <a class="govuk-button" data-module="govuk-button" href="/edit-skills">
+            Add skills
+          </a>
+          {% endif %}
+        </div>
+      </div>
     </div>
-    
-    <a class="govuk-button" data-module="govuk-button" href="/edit-skills">
-      Edit skills
-    </a>
   </div>
 </div>
 
 
 {% endblock %}
+
+
+

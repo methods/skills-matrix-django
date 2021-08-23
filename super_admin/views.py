@@ -6,7 +6,7 @@ from .forms import SkillLevelForm
 
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name='Super admins').exists(),
-                  login_url='/error/not-authorised')
+                  login_url='/error/forbidden')
 def view_skill_levels(request):
     if request.POST:
         SkillLevel.objects.filter(name=request.POST['delete']).delete()
@@ -16,7 +16,7 @@ def view_skill_levels(request):
 
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name='Super admins').exists(),
-                  login_url='/error/not-authorised')
+                  login_url='/error/forbidden')
 def add_skill_level(request):
     if request.POST:
         form = SkillLevelForm(request.POST)
@@ -31,7 +31,7 @@ def add_skill_level(request):
 
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name='Super admins').exists(),
-                  login_url='/error/not-authorised')
+                  login_url='/error/forbidden')
 def edit_skill_level(request, pk):
     skill_level = SkillLevel.objects.filter(pk=pk)
     if request.POST:

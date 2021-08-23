@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.shortcuts import redirect
 from django.urls import reverse
 
@@ -13,7 +13,7 @@ class AdminUserMixin(UserPassesTestMixin):
                 return False
 
     def handle_no_permission(self):
-        return redirect(reverse('not authorised'))
+        return redirect(reverse('forbidden'))
 
 
 class SuperAdminUserMixin(UserPassesTestMixin):
@@ -26,4 +26,8 @@ class SuperAdminUserMixin(UserPassesTestMixin):
                 return False
 
     def handle_no_permission(self):
-        return redirect(reverse('not authorised'))
+        return redirect(reverse('forbidden'))
+
+
+class CustomLoginRequiredMixin(LoginRequiredMixin):
+    login_url = '/auth/login/unauthorised/'
