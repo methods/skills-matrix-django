@@ -83,18 +83,58 @@
                   <tbody class="govuk-table__body">
                     {% for individual_competency in individual_competency_list %}
                     <tr class="govuk-table__row">
-                      <td scope="row" class="govuk-table__header">{{individual_competency.skill.name}}</td>
-                      <td class="govuk-table__cell">{{individual_competency.skill_level.name}}</td>
-                      <td class="govuk-table-action__cell"><button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-right-2" name="edit-user-skill" value='{{individual_competency.id}}' data-module="govuk-button">Edit</button><button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" name='delete' value='{{individual_competency.id}}'data-module="govuk-button">
+                      <td scope="row" class="govuk-table__header">{{form_user_skill.non_field_errors}}
+                        {% if form_user_skill and individual_competency.id == existing_user_competency_id %}
+                          {% for field in form_user_skill %}
+                          <div class="{% if form_user_skill.errors %} govuk-form-group--error {% endif %}">
+                            <div >
+                              {% for error in field.errors %}
+                              <span id="addname-error" class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span>
+                                {{error}}
+                              </span>
+                              {% endfor %}
+                            </div>
+                            {{field}}
+                        {% endfor %}
+                          </div>
+                        {% else %}
+                        {{individual_competency.skill.name}}
+                        {% endif %}</td>
+                      <td class="govuk-table__cell">{{form_user_skill_level.non_field_errors}}
+                        {% if form_user_skill_level and individual_competency.id == existing_user_competency_id %}
+                          {% for field in form_user_skill_level %}
+                          <div class="{% if form_user_skill_level.errors %} govuk-form-group--error {% endif %}">
+                            <div >
+                              {% for error in field.errors %}
+                              <span id="addname-error" class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span>
+                                {{error}}
+                              </span>
+                              {% endfor %}
+                            </div>
+                            {{field}}
+                        {% endfor %}
+                          </div>
+                        {% else %}
+                        {{individual_competency.skill_level.name}}
+                        {% endif %}</td>
+                      <td class="govuk-table-action__cell"><button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-right-2" {% if form_user_skill_level and existing_user_competency_id == individual_competency.id or form_user_skill and existing_user_competency_id == individual_competency.id %} name="save_existing_user_competency" {% else %} name="edit-user-skill" {% endif %} value='{{individual_competency.id}}' {% if existing_user_competency_id and existing_user_competency_id != individual_competency.id  %} disabled="disabled" aria-disabled="true" {% endif %} data-module="govuk-button">{% if form_user_skill_level and existing_user_competency_id == individual_competency.id or form_user_skill and existing_user_competency_id == individual_competency.id %} Save {% else %} Edit {% endif %}</button>
+                        {% if not form_user_skill_level and existing_user_competency_id != individual_competency.id or form_user_skill and existing_user_competency_id != individual_competency.id or not form_user_skill and existing_user_competency_id != individual_competency.id %}
+                      <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" name='delete' value='{{individual_competency.id}}'data-module="govuk-button" {% if form_user_skill_level or form_user_skill %} disabled="disabled" aria-disabled="true" {% endif %}>
                   Delete
-                </button></td>
+                </button>
+                {% endif %}
+              </td>
                     </tr>
                     {% endfor %}
                   </tbody>
               </table>
+              {% if not form_user_skill_level and not existing_user_competency_id or not form_user_skill and not existing_user_competency_id %}
               <a class="govuk-button" data-module="govuk-button" href="{% url 'non-admin-create-skill' %}">
                 Add skills
               </a>
+              {% endif %}
               {% else %}
               <table class="govuk-table">
                 <tbody class="govuk-table__body">
@@ -103,7 +143,7 @@
                   </tr>
                 </tbody>
               </table>
-              <a class="govuk-button" data-module="govuk-button" href="/edit-skills">
+              <a class="govuk-button" data-module="govuk-button" href="{% url 'non-admin-create-skill' %}">
                 Add skills
               </a>
               {% endif %}

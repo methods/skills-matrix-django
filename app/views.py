@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from job_roles.models import Competency, Job
 from skills.models import UserCompetencies, Skill
 from app.forms import UserSkillLevelForm
-from app.view_utils import prepare_competency_update,retrieve_user_skills
+from app.view_utils import prepare_competency_update,retrieve_user_skills, prepare_non_job_related_competency_update
 from super_admin.models import SkillLevel
 from user_management.models import NewUser
 
@@ -44,6 +44,16 @@ def dashboard(request):
     if 'delete' in request.POST.keys():
         if UserCompetencies.objects.filter(id=request.POST['delete'], user=request.user.id, job_role_related=False).exists():
             UserCompetencies.objects.get(id=request.POST['delete'], user=request.user.id, job_role_related=False).delete()
+    if "edit-user-skill" in request.POST.keys():
+        if UserCompetencies.objects.filter(id=request.POST['edit-user-skill'], user=request.user.id, job_role_related=False).exists():
+            user_template_variables=prepare_non_job_related_competency_update(request.POST['edit-user-skill'], request)
+        return render(request, "app/dashboard.html", {'form_user_skill': user_template_variables['form_user_skill'],
+                                                      'form_user_skill_level': user_template_variables['form_user_skill_level'],
+                                                      'existing_user_competency_id': user_template_variables['existing_user_competency_id'],
+                                                      "job_role_competency_list": job_role_competency_list,
+                                                      "individual_competency_list": UserCompetencies.objects.filter(job_role_related=False, user=request.user.id).order_by('id'),
+                                                      "all_user_competencies": UserCompetencies.objects.filter(user=request.user.id).order_by('id'),
+                                                      "user_skills": existing_skill_list})
     return render(request, "app/dashboard.html", {"job_role_competency_list": Competency.objects.filter(job_role_title=Job.objects.get(job_title=request.user.job_role).id).order_by('id'),
                                                   "individual_competency_list": individual_competency_list,
                                                   "all_user_competencies":UserCompetencies.objects.filter(user=request.user.id).order_by('id'),
