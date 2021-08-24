@@ -13,6 +13,6 @@ urlpatterns = [
     path('signup/edit-job-information/', views.EditJobInformationSignup.as_view(), name='edit-job-information-signup'),
     path('profile/', views.Profile.as_view(), name='profile'),
     path('profile/edit-name/', views.EditName.as_view(), name='edit-name'),
-    path('profile/edit-email-address/', views.edit_email, name='edit-email-address'),
-    path('profile/edit-job-information/', views.edit_job_information, name='edit-job-information'),
+    path('profile/edit-email-address/', views.EditEmail.as_view(), name='edit-email-address'),
+    path('profile/edit-job-information/', views.EditJobInformation.as_view(), name='edit-job-information'),
 ]

@@ -154,31 +154,30 @@ class EditName(CustomLoginRequiredMixin, CustomView):
         return render(request, 'user_management/name.html', {'form': form, 'edit_profile': True})
 
 
-@login_required
-def edit_email(request):
-    if request.method == 'POST':
-        form = EmailForm(request.POST)
-        if form.is_valid():
-            request.user.email = request.POST['email_address']
-            request.user.save()
-            return redirect('profile')
-    else:
+class EditEmail(CustomLoginRequiredMixin, CustomView):
+    def get(self, request):
         email_address = request.user.email
         form = EmailForm(initial={'email_address': email_address})
         return render(request, 'user_management/email_address.html', {'form': form, 'edit_profile': True})
 
-
-@login_required
-def edit_job_information(request):
-    if request.method == 'POST':
-        form = JobForm(request.POST)
+    def post(self, request):
+        form = EmailForm(request.POST)
         if form.is_valid():
-            request.user.team = request.POST['team']
-            request.user.job_role = request.POST['job']
-            request.user.save()
+            form.process_profile_edit(request)
             return redirect('profile')
-    else:
+        return render(request, 'user_management/email_address.html', {'form': form, 'edit_profile': True})
+
+
+class EditJobInformation(CustomLoginRequiredMixin, CustomView):
+    def get(self, request):
         job = request.user.job_role
         team = request.user.team
         form = JobForm(initial={'team': team, 'job': job})
-    return render(request, 'user_management/job_info.html', {'form': form, 'edit_profile': True})
+        return render(request, 'user_management/job_info.html', {'form': form, 'edit_profile': True})
+
+    def post(self, request):
+        form = JobForm(request.POST)
+        if form.is_valid():
+            form.process_profile_edit(request)
+            return redirect('profile')
+        return render(request, 'user_management/job_info.html', {'form': form, 'edit_profile': True})

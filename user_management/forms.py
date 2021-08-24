@@ -68,6 +68,11 @@ class JobForm(forms.Form):
         request.session['job'] = request.POST['job']
         request.session.save()
 
+    def process_profile_edit(self, request):
+        request.user.team = request.POST['team']
+        request.user.job_role = request.POST['job']
+        request.user.save()
+
 
 class EmailForm(forms.Form):
     email_address = forms.EmailField(validators=[validate_domain_email], label='Email address', max_length=100,
@@ -87,6 +92,10 @@ class EmailForm(forms.Form):
     def process_in_signup(self, request):
         request.session['email_address'] = request.POST['email_address']
         request.session.save()
+
+    def process_profile_edit(self, request):
+        request.user.email = request.POST['email_address']
+        request.user.save()
 
 
 class PasswordForm(forms.Form):
