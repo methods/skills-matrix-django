@@ -49,6 +49,10 @@ def dashboard(request):
                                                   "all_user_competencies":UserCompetencies.objects.filter(user=request.user.id).order_by('id'),
                                                   "user_skills":existing_skill_list})
 
+@login_required
+def non_admin_add_skill(request):
+    return render(request, "skills/create_edit_skill.html")
+
 
 @login_required
 def edit_skills(request, pk):
