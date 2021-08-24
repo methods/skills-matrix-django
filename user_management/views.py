@@ -172,7 +172,7 @@ class EditJobInformation(CustomLoginRequiredMixin, CustomView):
     def get(self, request):
         job = request.user.job_role
         team = request.user.team
-        form = JobForm(initial={'team': team, 'job': job})
+        form = JobForm(initial={'team': team, 'job_role': job})
         return render(request, 'user_management/job_info.html', {'form': form, 'edit_profile': True})
 
     def post(self, request):

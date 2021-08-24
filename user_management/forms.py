@@ -27,11 +27,6 @@ class NameForm(forms.Form):
         request.session['surname'] = request.POST['surname']
         request.session.save()
 
-    def process_profile_edit(self, request):
-        request.user.first_name = request.POST['first_name']
-        request.user.surname = request.POST['surname']
-        request.user.save()
-
 
 class JobForm(forms.Form):
 
@@ -68,11 +63,6 @@ class JobForm(forms.Form):
         request.session['job'] = request.POST['job_role']
         request.session.save()
 
-    def process_profile_edit(self, request):
-        request.user.team = request.POST['team']
-        request.user.job_role = request.POST['job']
-        request.user.save()
-
 
 class EmailForm(forms.Form):
     email = forms.EmailField(validators=[validate_domain_email], label='Email address', max_length=100,
@@ -92,10 +82,6 @@ class EmailForm(forms.Form):
     def process_in_signup(self, request):
         request.session['email_address'] = request.POST['email']
         request.session.save()
-
-    def process_profile_edit(self, request):
-        request.user.email = request.POST['email']
-        request.user.save()
 
 
 class PasswordForm(forms.Form):
