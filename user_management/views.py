@@ -123,7 +123,7 @@ class EditJobInformationSignup(CustomView):
     def get(self, request):
         form = JobForm()
         form.fields['team'].initial = request.session['team'] if 'team' in request.session else ''
-        form.fields['job'].initial = request.session['job'] if 'job' in request.session else ''
+        form.fields['job_role'].initial = request.session['job'] if 'job' in request.session else ''
         return render(request, 'user_management/job_info.html', {'form': form, 'edit': True})
 
     def post(self, request):
@@ -149,7 +149,7 @@ class EditName(CustomLoginRequiredMixin, CustomView):
     def post(self, request):
         form = NameForm(request.POST)
         if form.is_valid():
-            form.process_profile_edit(request)
+            request.user.update_from_request(form.cleaned_data)
             return redirect('profile')
         return render(request, 'user_management/name.html', {'form': form, 'edit_profile': True})
 
@@ -178,6 +178,6 @@ class EditJobInformation(CustomLoginRequiredMixin, CustomView):
     def post(self, request):
         form = JobForm(request.POST)
         if form.is_valid():
-            form.process_profile_edit(request)
+            request.user.update_from_request(form.cleaned_data)
             return redirect('profile')
         return render(request, 'user_management/job_info.html', {'form': form, 'edit_profile': True})

@@ -57,7 +57,7 @@ class AddJobSignup(TestCase):
         job = Job()
         job.job_title = 'Junior Developer'
         job.save()
-        response = self.client.post(reverse('add-job'), {'team': 'OPC', 'job': 'Junior Developer'})
+        response = self.client.post(reverse('add-job'), {'team': 'OPC', 'job_role': 'Junior Developer'})
         self.assertRedirects(response, '/user/signup/create-password/')
 
 
@@ -143,7 +143,7 @@ class EditJobInformation(TestCase):
         job = Job()
         job.job_title = 'Junior Developer'
         job.save()
-        self.client.post(reverse('edit-job-information-signup'), {'team': 'OPC', 'job': 'Junior Developer'})
+        self.client.post(reverse('edit-job-information-signup'), {'team': 'OPC', 'job_role': 'Junior Developer'})
         session = self.client.session
         assert session['job'] == 'Junior Developer'
         assert session['team'] == 'OPC'
@@ -213,7 +213,7 @@ class EditJobInformationPageTests(LoggedInUserTestCase):
         job = Job()
         job.job_title = 'Updated Job'
         job.save()
-        self.client.post(reverse('edit-job-information'), {'team': 'Updated team', 'job': 'Updated Job'})
+        self.client.post(reverse('edit-job-information'), {'team': 'Updated team', 'job_role': 'Updated Job'})
         self.user.refresh_from_db()
         assert self.user.job_role == 'Updated Job'
         assert self.user.team == 'Updated team'

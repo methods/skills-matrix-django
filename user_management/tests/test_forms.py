@@ -47,11 +47,11 @@ class JobFormTests(TestCase):
     def test_add_job_form(self):
         form = JobForm()
         assert ('', '--Select a team--') in form.fields['team'].choices
-        assert ('', '--Select a job--') in form.fields['job'].choices
+        assert ('', '--Select a job--') in form.fields['job_role'].choices
 
     def test_form_submit_empty_strings(self):
-        form = JobForm({'team': '', 'job': ''})
+        form = JobForm({'team': '', 'job_role': ''})
         assert not form.is_valid()
         self.assertEqual(form.errors['team'], ['Select a team'])
-        self.assertEqual(form.errors['job'], ['Select a job'])
+        self.assertEqual(form.errors['job_role'], ['Select a job'])
 

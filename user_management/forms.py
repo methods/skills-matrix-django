@@ -37,13 +37,13 @@ class JobForm(forms.Form):
 
     team = forms.ChoiceField(choices=[], required=False, widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'},
                                                                        disabled_choices=['']))
-    job = forms.ChoiceField(choices=[], required=False, widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'},
+    job_role = forms.ChoiceField(choices=[], required=False, widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'},
                                                                       disabled_choices=['']))
 
     def __init__(self, *args, **kwargs):
         super(JobForm, self).__init__(*args, **kwargs)
         self.fields['team'].choices = get_team_choices()
-        self.fields['job'].choices = get_job_choices()
+        self.fields['job_role'].choices = get_job_choices()
         attrs = {}
         attrs.update({"errors": True})
         attrs['class'] = 'govuk-select govuk-select--error'
@@ -57,15 +57,15 @@ class JobForm(forms.Form):
             raise forms.ValidationError('Select a team')
         return team
 
-    def clean_job(self):
-        job = self.cleaned_data.get('job')
+    def clean_job_role(self):
+        job = self.cleaned_data.get('job_role')
         if not job:
             raise forms.ValidationError('Select a job')
         return job
 
     def process_in_signup(self, request):
         request.session['team'] = request.POST['team']
-        request.session['job'] = request.POST['job']
+        request.session['job'] = request.POST['job_role']
         request.session.save()
 
     def process_profile_edit(self, request):
@@ -90,7 +90,6 @@ class EmailForm(forms.Form):
                 self.fields[field].widget = GdsStyleEmailInput(attrs=attrs)
 
     def process_in_signup(self, request):
-        breakpoint()
         request.session['email_address'] = request.POST['email']
         request.session.save()
 
