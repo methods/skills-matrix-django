@@ -11,8 +11,14 @@ class UserSkillLevelForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(UserSkillLevelForm, self).__init__(*args, **kwargs)
         self.fields['user_skill_level'].choices = get_skill_level_choices()
+        attrs = {}
+        attrs.update({"errors": True})
+        attrs['class'] = 'govuk-select govuk-select--error'
+        for field in self.fields:
+            if field in self.errors:
+                self.fields[field].widget.attrs = attrs
 
-    def clean_job_role_skill_level(self):
+    def clean_user_skill_level(self):
         skill_level = self.cleaned_data.get('user_skill_level')
         if not skill_level:
             raise forms.ValidationError('Select a skill level')
@@ -33,17 +39,25 @@ class UserSkillDefinitionForm(forms.Form):
             if field in self.errors:
                 self.fields[field].widget = GdsStyleTextInput(attrs=attrs)
 
+
 class UserSkillForm(forms.Form):
     user_skill = forms.ChoiceField(choices=[], required=False,
-                                         widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'},
-                                         disabled_choices=['']))
+                                   widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'}))
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args,disabled_choices=None, **kwargs):
         super(UserSkillForm, self).__init__(*args, **kwargs)
         self.fields['user_skill'].choices = get_skill_choices()
+        if disabled_choices:
+            self.fields['user_skill'].widget.disabled_choices = disabled_choices
+        attrs = {}
+        attrs.update({"errors": True})
+        attrs['class'] = 'govuk-select govuk-select--error'
+        for field in self.fields:
+            if field in self.errors:
+                self.fields[field].widget.attrs = attrs
 
-    def clean_job_role_skill_level(self):
+    def clean_user_skill(self):
         user_skill = self.cleaned_data.get('user_skill')
         if not user_skill:
-            raise forms.ValidationError('Select a skill level')
+            raise forms.ValidationError('Select a skill')
         return user_skill

@@ -13,13 +13,13 @@
       <form method="post">
         {% csrf_token %}
       <div class="govuk-grid-column-two-thirds-from-desktop">
-          <div class="govuk-form-group">
+          <div class="govuk-form-group {% if form_user_skill.errors %} govuk-form-group--error {% endif %}">
             {{form_user_skill.non_field_errors}}
             {% for field in form_user_skill %}
             <div>
               <div>
                 {% for error in field.errors %}
-                <span id="addname-error" class="govuk-error-message">
+                <span id="addname-error" class="govuk-error-message govuk-!-margin-bottom-1">
                   <span class="govuk-visually-hidden">Error:</span>
                   {{error}}
                 </span>
@@ -32,13 +32,13 @@
             </div>
             {% endfor %}
           </div>
-          <div class="govuk-form-group">
+          <div class="govuk-form-group {% if form_user_skill_level.errors %} govuk-form-group--error {% endif %}">
             {{form_user_skill_level.non_field_errors}}
             {% for field in form_user_skill_level %}
             <div>
             <div>
                 {% for error in field.errors %}
-                <span id="addname-error" class="govuk-error-message">
+                <span id="addname-error" class="govuk-error-message govuk-!-margin-bottom-1">
                 <span class="govuk-visually-hidden">Error:</span>
                 {{error}}
                 </span>

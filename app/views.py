@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from job_roles.models import Competency, Job
 from skills.models import UserCompetencies, Skill
 from app.forms import UserSkillLevelForm, UserSkillDefinitionForm, UserSkillForm
-from app.view_utils import prepare_competency_update,retrieve_user_skills, prepare_non_job_related_competency_update
+from app.view_utils import prepare_competency_update,retrieve_user_skills, prepare_non_job_related_competency_update,populate_existing_user_competencies
 from super_admin.models import SkillLevel
 from user_management.models import NewUser
 
@@ -75,8 +75,9 @@ def dashboard(request):
 @login_required
 def non_admin_add_skill(request):
     if request.POST:
+        disabled_choices = populate_existing_user_competencies(request)
         form_user_skill_level = UserSkillLevelForm(request.POST)
-        form_user_skill = UserSkillForm(request.POST)
+        form_user_skill = UserSkillForm(request.POST, disabled_choices=disabled_choices)
         if form_user_skill_level.is_valid() and form_user_skill.is_valid():
             UserCompetencies.objects.create(user=NewUser.objects.get(id=request.user.id),
                                             skill=Skill.objects.get(name=form_user_skill.cleaned_data['user_skill']),
@@ -84,8 +85,9 @@ def non_admin_add_skill(request):
                                             job_role_related=False)
             return redirect('/dashboard/#additional-skills')
     else:
+        disabled_choices = populate_existing_user_competencies(request)
         form_user_skill_level = UserSkillLevelForm()
-        form_user_skill = UserSkillForm()
+        form_user_skill = UserSkillForm(disabled_choices=disabled_choices)
     return render(request, "app/add_skill.html", {'form_user_skill_level': form_user_skill_level, "form_user_skill": form_user_skill})
 
 

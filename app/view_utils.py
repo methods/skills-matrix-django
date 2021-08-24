@@ -31,3 +31,12 @@ def prepare_non_job_related_competency_update(existing_user_competency_id, reque
     existing_user_competency_id = int(existing_user_competency_id)
     return {'form_user_skill': False if UserCompetencies.objects.get(id=existing_user_competency_id, user=request.user.id, job_role_related=False).skill.team else form_user_skill, 'form_user_skill_level': form_user_skill_level,
             'existing_user_competency_id': existing_user_competency_id}
+
+
+def populate_existing_user_competencies(request):
+    user_competencies = UserCompetencies.objects.filter(user=request.user.id)
+    disabled_choices = []
+    for user_competency in user_competencies:
+        if user_competency.skill.name:
+            disabled_choices.append(user_competency.skill.name)
+    return disabled_choices
