@@ -74,7 +74,7 @@ def dashboard(request):
 
 @login_required
 def non_admin_add_skill(request):
-    return render(request, "skills/create_edit_skill.html")
+    return render(request, "app/add_skill.html")
 
 
 @login_required

@@ -1,0 +1,41 @@
+{% extends "app/app_base.html" %}
+{% load sass_tags %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Add a skill to your profile</h1>
+    </div>
+  </div>
+<div class="govuk-!-margin-top-4">
+    <div class="govuk-grid-row">
+      <form method="post">
+      <div class="govuk-grid-column-two-thirds-from-desktop">
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="skill">
+              Skill
+            </label>
+            <select class="govuk-select" id="skillname" name="skillname">
+              {% for skill in skillList %}
+              <option value="{{skill}}">{{skill}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="govuk-form-group">
+            <label class="govuk-label" for="skillLevel">
+              Skill level
+            </label>
+            <select class="govuk-select" id="skillLevel" name="skillLevel">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+                <option value="Expert">Expert</option>
+            </select>
+          </div>
+  <button class="govuk-button" data-module="govuk-button">Save</button>
+</form>
+  <p>If your skill isn't in the list, you can <a href="/add-skill/create-skill">create a new skill here</a>.</p>
+</div>
+
+{% endblock %}
