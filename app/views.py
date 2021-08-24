@@ -74,8 +74,18 @@ def dashboard(request):
 
 @login_required
 def non_admin_add_skill(request):
-    form_user_skill_level = UserSkillLevelForm()
-    form_user_skill = UserSkillForm()
+    if request.POST:
+        form_user_skill_level = UserSkillLevelForm(request.POST)
+        form_user_skill = UserSkillForm(request.POST)
+        if form_user_skill_level.is_valid() and form_user_skill.is_valid():
+            UserCompetencies.objects.create(user=NewUser.objects.get(id=request.user.id),
+                                            skill=Skill.objects.get(name=form_user_skill.cleaned_data['user_skill']),
+                                            skill_level=SkillLevel.objects.get(name=form_user_skill_level.cleaned_data['user_skill_level']),
+                                            job_role_related=False)
+            return redirect('/dashboard/#additional-skills')
+    else:
+        form_user_skill_level = UserSkillLevelForm()
+        form_user_skill = UserSkillForm()
     return render(request, "app/add_skill.html", {'form_user_skill_level': form_user_skill_level, "form_user_skill": form_user_skill})
 
 

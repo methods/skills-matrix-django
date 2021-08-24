@@ -11,6 +11,7 @@
 <div class="govuk-!-margin-top-4">
     <div class="govuk-grid-row">
       <form method="post">
+        {% csrf_token %}
       <div class="govuk-grid-column-two-thirds-from-desktop">
           <div class="govuk-form-group">
             {{form_user_skill.non_field_errors}}
