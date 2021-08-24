@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from job_roles.models import Competency, Job
 from skills.models import UserCompetencies, Skill
-from app.forms import UserSkillLevelForm, UserSkillDefinitionForm
+from app.forms import UserSkillLevelForm, UserSkillDefinitionForm, UserSkillForm
 from app.view_utils import prepare_competency_update,retrieve_user_skills, prepare_non_job_related_competency_update
 from super_admin.models import SkillLevel
 from user_management.models import NewUser
@@ -74,7 +74,9 @@ def dashboard(request):
 
 @login_required
 def non_admin_add_skill(request):
-    return render(request, "app/add_skill.html")
+    form_user_skill_level = UserSkillLevelForm()
+    form_user_skill = UserSkillForm()
+    return render(request, "app/add_skill.html", {'form_user_skill_level': form_user_skill_level, "form_user_skill": form_user_skill})
 
 
 @login_required

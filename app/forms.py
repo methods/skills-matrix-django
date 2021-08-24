@@ -1,6 +1,6 @@
 from django import forms
 from common.widgets import CustomisedSelectWidget, GdsStyleTextInput
-from job_roles.form_utils import get_skill_level_choices
+from job_roles.form_utils import get_skill_level_choices, get_skill_choices
 
 
 class UserSkillLevelForm(forms.Form):
@@ -13,7 +13,7 @@ class UserSkillLevelForm(forms.Form):
         self.fields['user_skill_level'].choices = get_skill_level_choices()
 
     def clean_job_role_skill_level(self):
-        skill_level = self.cleaned_data.get('job_role_skill_level')
+        skill_level = self.cleaned_data.get('user_skill_level')
         if not skill_level:
             raise forms.ValidationError('Select a skill level')
         return skill_level
@@ -32,3 +32,18 @@ class UserSkillDefinitionForm(forms.Form):
         for field in self.fields:
             if field in self.errors:
                 self.fields[field].widget = GdsStyleTextInput(attrs=attrs)
+
+class UserSkillForm(forms.Form):
+    user_skill = forms.ChoiceField(choices=[], required=False,
+                                         widget=CustomisedSelectWidget(attrs={'class': 'govuk-select'},
+                                         disabled_choices=['']))
+
+    def __init__(self, *args, **kwargs):
+        super(UserSkillForm, self).__init__(*args, **kwargs)
+        self.fields['user_skill'].choices = get_skill_choices()
+
+    def clean_job_role_skill_level(self):
+        user_skill = self.cleaned_data.get('user_skill')
+        if not user_skill:
+            raise forms.ValidationError('Select a skill level')
+        return user_skill
