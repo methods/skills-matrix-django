@@ -1,6 +1,7 @@
 from django import forms
 from common.widgets import CustomisedSelectWidget, GdsStyleTextInput
-from job_roles.form_utils import get_skill_level_choices, get_skill_choices
+from job_roles.form_utils import get_skill_level_choices
+from app.form_utils import get_all_available_skills
 
 
 class UserSkillLevelForm(forms.Form):
@@ -46,7 +47,7 @@ class UserSkillForm(forms.Form):
 
     def __init__(self, *args,disabled_choices=None, **kwargs):
         super(UserSkillForm, self).__init__(*args, **kwargs)
-        self.fields['user_skill'].choices = get_skill_choices()
+        self.fields['user_skill'].choices = get_all_available_skills()
         if disabled_choices:
             self.fields['user_skill'].widget.disabled_choices = disabled_choices
         attrs = {}
