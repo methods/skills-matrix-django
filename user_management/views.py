@@ -107,7 +107,7 @@ class EditNameSignup(CustomView):
 class EditEmailAddressSignup(CustomView):
     def get(self, request):
         form = EmailForm()
-        form.fields['email_address'].initial = request.session[
+        form.fields['email'].initial = request.session[
             'email_address'] if 'email_address' in request.session else ''
         return render(request, 'user_management/email_address.html', {'form': form, 'edit': True})
 
@@ -157,13 +157,13 @@ class EditName(CustomLoginRequiredMixin, CustomView):
 class EditEmail(CustomLoginRequiredMixin, CustomView):
     def get(self, request):
         email_address = request.user.email
-        form = EmailForm(initial={'email_address': email_address})
+        form = EmailForm(initial={'email': email_address})
         return render(request, 'user_management/email_address.html', {'form': form, 'edit_profile': True})
 
     def post(self, request):
         form = EmailForm(request.POST)
         if form.is_valid():
-            form.process_profile_edit(request)
+            request.user.update_from_request(form.cleaned_data)
             return redirect('profile')
         return render(request, 'user_management/email_address.html', {'form': form, 'edit_profile': True})
 

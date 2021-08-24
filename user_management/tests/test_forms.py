@@ -18,7 +18,7 @@ class TestForms(SimpleTestCase):
 
     def test_email_form_valid_data(self):
         form = EmailForm(data={
-            'email_address': "test@methods.co.uk"
+            'email': "test@methods.co.uk"
         })
         assert form.is_valid()
 

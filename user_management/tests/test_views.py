@@ -31,7 +31,7 @@ class AddEmailSignup(TestCase):
         assert "What is your email address?" in response.content.decode()
 
     def test_email_session_storage(self):
-        self.client.post(reverse('add-email'), {'email_address': 'test@methods.co.uk'})
+        self.client.post(reverse('add-email'), {'email': 'test@methods.co.uk'})
         session = self.client.session
         assert session['email_address'] == 'test@methods.co.uk'
 
@@ -122,7 +122,7 @@ class EditEmail(TestCase):
         assert "Edit your email address" in response.content.decode()
 
     def test_edit_email_session_storage(self):
-        self.client.post(reverse('edit-email-address-signup'), {'email_address': 'test@methods.co.uk'})
+        self.client.post(reverse('edit-email-address-signup'), {'email': 'test@methods.co.uk'})
         session = self.client.session
         assert session['email_address'] == 'test@methods.co.uk'
 
@@ -195,7 +195,7 @@ class EditEmailPageTests(LoggedInUserTestCase):
         assert response.status_code == 302
 
     def test_edit_email_POST(self):
-        self.client.post(reverse('edit-email-address'), {'email_address': 'updated@methods.co.uk'})
+        self.client.post(reverse('edit-email-address'), {'email': 'updated@methods.co.uk'})
         self.user.refresh_from_db()
         assert self.user.email == 'updated@methods.co.uk'
 

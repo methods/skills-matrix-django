@@ -75,7 +75,7 @@ class JobForm(forms.Form):
 
 
 class EmailForm(forms.Form):
-    email_address = forms.EmailField(validators=[validate_domain_email], label='Email address', max_length=100,
+    email = forms.EmailField(validators=[validate_domain_email], label='Email address', max_length=100,
                                      widget=GdsStyleEmailInput(attrs={'class': 'govuk-input'}),
                                      error_messages={'required': 'Enter your email address.',
                                      'invalid': "Enter an email address in the correct format, like name@example.com"})
@@ -90,11 +90,12 @@ class EmailForm(forms.Form):
                 self.fields[field].widget = GdsStyleEmailInput(attrs=attrs)
 
     def process_in_signup(self, request):
-        request.session['email_address'] = request.POST['email_address']
+        breakpoint()
+        request.session['email_address'] = request.POST['email']
         request.session.save()
 
     def process_profile_edit(self, request):
-        request.user.email = request.POST['email_address']
+        request.user.email = request.POST['email']
         request.user.save()
 
 
