@@ -13,7 +13,7 @@ def dashboard(request):
     job_role_competency_list = Competency.objects.filter(job_role_title=Job.objects.get(job_title=request.user.job_role).id).order_by('id')
     individual_competency_list = UserCompetencies.objects.filter(job_role_related=False, user=request.user.id).order_by('id')
     user_skills = []
-    existing_skill_list=retrieve_user_skills(user_skills, request)
+    existing_skill_list = retrieve_user_skills(user_skills, request)
     for competency in job_role_competency_list:
         if UserCompetencies.objects.filter(skill=competency.job_role_skill.id,user=request.user.id,job_role_related=False).exists():
             UserCompetencies.objects.filter(skill=competency.job_role_skill.id,user=request.user.id,job_role_related=False).update(job_role_related=True)
@@ -41,6 +41,9 @@ def dashboard(request):
                 existing_skill_list = retrieve_user_skills(user_skills, request)
             elif UserCompetencies.objects.filter(skill=Skill.objects.get(id=request.POST['save']),job_role_related=True,user=request.user.id).exists():
                 UserCompetencies.objects.filter(user=request.user.id, job_role_related=True, skill=Skill.objects.get(id=request.POST['save'])).update(skill_level=SkillLevel.objects.get(name=form.cleaned_data['user_skill_level']).id)
+    if 'delete' in request.POST.keys():
+        if UserCompetencies.objects.filter(id=request.POST['delete'], user=request.user.id, job_role_related=False).exists():
+            UserCompetencies.objects.get(id=request.POST['delete'], user=request.user.id, job_role_related=False).delete()
     return render(request, "app/dashboard.html", {"job_role_competency_list": Competency.objects.filter(job_role_title=Job.objects.get(job_title=request.user.job_role).id).order_by('id'),
                                                   "individual_competency_list": individual_competency_list,
                                                   "all_user_competencies":UserCompetencies.objects.filter(user=request.user.id).order_by('id'),

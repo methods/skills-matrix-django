@@ -70,45 +70,45 @@
             </table>
             {% endif %}
           </div>
-        </form>
-        <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="additional-skills">
-          <h2 class="govuk-heading-l">Personal profile</h2>
-          {% if individual_competency_list|length > 0 %}
-          <table class="govuk-table">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Skill</th>
-                  <th scope="col" class="govuk-table__header">Skill Level</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                {% for individual_competency in individual_competency_list %}
-                <tr class="govuk-table__row">
-                  <td scope="row" class="govuk-table__header">{{individual_competency.skill.name}}</td>
-                  <td class="govuk-table__cell">{{individual_competency.skill_level.name}}</td>
-                  <td class="govuk-table-action__cell"><button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-right-2" data-module="govuk-button">Edit</button><button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button">
-              Delete
-            </button></td>
-                </tr>
-                {% endfor %}
-              </tbody>
-          </table>
-          <a class="govuk-button" data-module="govuk-button" href="/edit-skills">
-            Add skills
-          </a>
-          {% else %}
-          <table class="govuk-table">
-            <tbody class="govuk-table__body">
-              <tr class="govuk-table__row">
-                <td>If you have any other skills that you would like to add to your profile, please add them in this section .</td>
-              </tr>
-            </tbody>
-          </table>
-          <a class="govuk-button" data-module="govuk-button" href="/edit-skills">
-            Add skills
-          </a>
-          {% endif %}
-        </div>
+           <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="additional-skills">
+              <h2 class="govuk-heading-l">Personal profile</h2>
+              {% if individual_competency_list|length > 0 %}
+              <table class="govuk-table">
+                  <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                      <th scope="col" class="govuk-table__header">Skill</th>
+                      <th scope="col" class="govuk-table__header">Skill Level</th>
+                    </tr>
+                  </thead>
+                  <tbody class="govuk-table__body">
+                    {% for individual_competency in individual_competency_list %}
+                    <tr class="govuk-table__row">
+                      <td scope="row" class="govuk-table__header">{{individual_competency.skill.name}}</td>
+                      <td class="govuk-table__cell">{{individual_competency.skill_level.name}}</td>
+                      <td class="govuk-table-action__cell"><button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-right-2" data-module="govuk-button">Edit</button><button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" name='delete' value='{{individual_competency.id}}'data-module="govuk-button">
+                  Delete
+                </button></td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+              </table>
+              <a class="govuk-button" data-module="govuk-button" href="/edit-skills">
+                Add skills
+              </a>
+              {% else %}
+              <table class="govuk-table">
+                <tbody class="govuk-table__body">
+                  <tr class="govuk-table__row">
+                    <td>If you have any other skills that you would like to add to your profile, please add them in this section .</td>
+                  </tr>
+                </tbody>
+              </table>
+              <a class="govuk-button" data-module="govuk-button" href="/edit-skills">
+                Add skills
+              </a>
+              {% endif %}
+           </div>
+      </form>
       </div>
     </div>
   </div>
