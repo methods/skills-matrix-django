@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from common.custom_class_view import CustomView
+from common.user_group_check_mixins import AdminUserMixin, CustomLoginRequiredMixin
 
 
 class AddName(CustomView):
@@ -133,24 +134,23 @@ class EditJobInformationSignup(CustomView):
         return render(request, 'user_management/job_info.html', {'form': form, 'edit': True})
 
 
-@login_required
-def profile(request):
-    return render(request, 'user_management/summary.html', {"user_details": request.user})
+class Profile(CustomLoginRequiredMixin, CustomView):
+    def get(self, request):
+        return render(request, 'user_management/summary.html', {"user_details": request.user})
 
 
-@login_required
-def edit_name(request):
-    if request.method == 'POST':
-        form = NameForm(request.POST)
-        if form.is_valid():
-            request.user.first_name = request.POST['first_name']
-            request.user.surname = request.POST['surname']
-            request.user.save()
-            return redirect(profile)
-    else:
+class EditName(CustomLoginRequiredMixin, CustomView):
+    def get(self, request):
         first_name = request.user.first_name if request.user.first_name else ""
         surname = request.user.surname if request.user.surname else ""
         form = NameForm(initial={'first_name': first_name, 'surname': surname})
+        return render(request, 'user_management/name.html', {'form': form, 'edit_profile': True})
+
+    def post(self, request):
+        form = NameForm(request.POST)
+        if form.is_valid():
+            form.process_profile_edit(request)
+            return redirect('profile')
         return render(request, 'user_management/name.html', {'form': form, 'edit_profile': True})
 
 
@@ -161,7 +161,7 @@ def edit_email(request):
         if form.is_valid():
             request.user.email = request.POST['email_address']
             request.user.save()
-            return redirect(profile)
+            return redirect('profile')
     else:
         email_address = request.user.email
         form = EmailForm(initial={'email_address': email_address})
@@ -176,7 +176,7 @@ def edit_job_information(request):
             request.user.team = request.POST['team']
             request.user.job_role = request.POST['job']
             request.user.save()
-            return redirect(profile)
+            return redirect('profile')
     else:
         job = request.user.job_role
         team = request.user.team

@@ -27,6 +27,11 @@ class NameForm(forms.Form):
         request.session['surname'] = request.POST['surname']
         request.session.save()
 
+    def process_profile_edit(self, request):
+        request.user.first_name = request.POST['first_name']
+        request.user.surname = request.POST['surname']
+        request.user.save()
+
 
 class JobForm(forms.Form):
 
