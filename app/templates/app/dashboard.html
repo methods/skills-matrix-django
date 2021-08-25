@@ -5,7 +5,7 @@
 {% block content %}
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-two-thirds {% if form_user_skill and form_user_skill_level %} govuk-grid-column-three-quarters {% endif %}">
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Welcome, {{user.first_name}}</h1>
     <span class="govuk-caption-xl">{{user.job_role}} | {{user.team}}</span>
     <div class="govuk-!-margin-top-7">
@@ -16,93 +16,141 @@
         </h2>
         <ul class="govuk-tabs__list">
           <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
-            <a class="govuk-tabs__tab" href="#required-skills">
+            <a class="{% if form_user_skill_level or form_user_skill%} govuk-tabs__tab govuk-anchor-disabled {% else %} govuk-tabs__tab {% endif %}" href="#required-skills">
               Required skills
             </a>
           </li>
           <li class="govuk-tabs__list-item">
-            <a class="govuk-tabs__tab" href="#additional-skills">
+            <a class="{% if form %} govuk-tabs__tab govuk-anchor-disabled {% else %} govuk-tabs__tab {% endif %}" href="#additional-skills">
               Additional skills
             </a>
           </li>
         </ul>
-        <div class="govuk-tabs__panel" id="required-skills">
-          <h2 class="govuk-heading-l">{{user.job_role}}</h2>
-          <table class="govuk-table">
-            {% if competency_list|length > 0 %}
+        <form method="post">
+          {% csrf_token %}
+          <div class="govuk-tabs__panel" id="required-skills">
+            <h2 class="govuk-heading-l">{{user.job_role}}</h2>
+            {% if job_role_competency_list|length > 0 %}
+            <table class="govuk-table">
               <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                   <th scope="col" class="govuk-table__header">Skill</th>
-                  <th scope="col" class="govuk-table__header">Skill Level</th>
+                  <th scope="col" class="govuk-table__header">Expected - Skill Level</th>
+                  <th scope="col" class="govuk-table__header">Current - Skill Level</th>
                 </tr>
               </thead>
               <tbody class="govuk-table__body">
-                {% for competency in competency_list %}
+                {% for job_role_competency in job_role_competency_list %}
                 <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">{{competency.job_role_skill.name}}</th>
-                  <td class="govuk-table__cell">{{competency.job_role_skill_level.name}}</td>
-                </tr>
+                              <td class="govuk-table__cell">{{job_role_competency.job_role_skill.name}}</td>
+                              <td class="govuk-table__cell">{{job_role_competency.job_role_skill_level.name}}</td>
+                              {% if job_role_competency.job_role_skill.id not in user_skills %}
+                              <td class="govuk-table__cell govuk-table-cell-border">{% if form and job_role_competency.job_role_skill.id == update_existing_skill_id %} {{form.user_skill_level}} {% else %}Enter your skill level {% endif %}
+                              </td>
+                              {% else %}
+                              {% for user_competency in all_user_competencies %}
+                              {% if job_role_competency.job_role_skill == user_competency.skill %}
+                              <td class="govuk-table__cell govuk-table-cell-border">{% if form and job_role_competency.job_role_skill.id == update_existing_skill_id %} {{form.user_skill_level}} {% else %}{{user_competency.skill_level.name}} {% endif %}
+                               </td>
+                               {% endif %}
+                                {% endfor %}
+                                {% endif %}
+                              <td class="govuk-table-action__cell"><button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" {% if form and update_existing_skill_id != job_role_competency.job_role_skill.id %} disabled {% endif %} {% if form and update_existing_skill_id == job_role_competency.job_role_skill.id %} name="save" value="{{job_role_competency.job_role_skill.id}}" {% else %} name="update-competency" value="{{job_role_competency.job_role_skill.id}}" {% endif %}> {% if form and update_existing_skill_id == job_role_competency.job_role_skill.id %} Save {% else %} Edit{% endif %}</button></td>
+                            </tr>
                 {% endfor %}
               </tbody>
+            </table>
             {% else %}
-            <tbody class="govuk-table__body">
-              <tr class="govuk-table__row">
-                <td>Sorry, but at the moment this job role has no skills assigned to it.</td>
-              </tr>
-            </tbody>
-            {% endif %}
-          </table>
-          {% if competency_list|length > 0 %}
-          <a class="govuk-button" data-module="govuk-button" href="/edit-skills">
-            Edit skills
-          </a>
-          {% endif %}
-        </div>
-        <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="additional-skills">
-          <h2 class="govuk-heading-l">Personal profile</h2>
-          {% if individual_competency_list|length > 0 %}
-          <table class="govuk-table">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th scope="col" class="govuk-table__header">Skill</th>
-                  <th scope="col" class="govuk-table__header">Skill Level</th>
-                </tr>
-              </thead>
+            <table class="govuk-table">
               <tbody class="govuk-table__body">
-                {% for individual_competency in individual_competency_list %}
                 <tr class="govuk-table__row">
-                  <th scope="row" class="govuk-table__header">{{individual_competency.skill.name}}</th>
-                  <td class="govuk-table__cell">{{individual_competency.skill_level.name}}</td>
+                  <td>Sorry, but at the moment this job role has no skills assigned to it.</td>
                 </tr>
-                {% endfor %}
               </tbody>
-          </table>
-          <a class="govuk-button" data-module="govuk-button" href="/edit-skills">
-            Add skills
-          </a>
-          <a class="govuk-button" data-module="govuk-button" href="/edit-skills">
-            Edit skills
-          </a>
-          {% else %}
-          <table class="govuk-table">
-            <tbody class="govuk-table__body">
-              <tr class="govuk-table__row">
-                <td>If you have any other skills that you would like to add to your profile, please add them in this section .</td>
-              </tr>
-            </tbody>
-          </table>
-          <a class="govuk-button" data-module="govuk-button" href="/edit-skills">
-            Add skills
-          </a>
-          {% endif %}
-        </div>
+            </table>
+            {% endif %}
+          </div>
+           <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="additional-skills">
+              <h2 class="govuk-heading-l">Personal profile</h2>
+              {% if individual_competency_list|length > 0 %}
+              <table class="govuk-table">
+                  <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                      <th scope="col" class="govuk-table__header">Skill</th>
+                      <th scope="col" class="govuk-table__header">Skill Level</th>
+                    </tr>
+                  </thead>
+                  <tbody class="govuk-table__body">
+                    {% for individual_competency in individual_competency_list %}
+                    <tr class="govuk-table__row">
+                      <td scope="row" class="govuk-table__header">{{form_user_skill.non_field_errors}}
+                        {% if form_user_skill and individual_competency.id == existing_user_competency_id %}
+                          {% for field in form_user_skill %}
+                          <div class="{% if form_user_skill.errors %} govuk-form-group--error {% endif %}">
+                            <div >
+                              {% for error in field.errors %}
+                              <span id="addname-error" class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span>
+                                {{error}}
+                              </span>
+                              {% endfor %}
+                            </div>
+                            {{field}}
+                        {% endfor %}
+                          </div>
+                        {% else %}
+                        {{individual_competency.skill.name}}
+                        {% endif %}</td>
+                      <td class="govuk-table__cell">{{form_user_skill_level.non_field_errors}}
+                        {% if form_user_skill_level and individual_competency.id == existing_user_competency_id %}
+                          {% for field in form_user_skill_level %}
+                          <div class="{% if form_user_skill_level.errors %} govuk-form-group--error {% endif %}">
+                            <div >
+                              {% for error in field.errors %}
+                              <span id="addname-error" class="govuk-error-message">
+                                <span class="govuk-visually-hidden">Error:</span>
+                                {{error}}
+                              </span>
+                              {% endfor %}
+                            </div>
+                            {{field}}
+                        {% endfor %}
+                          </div>
+                        {% else %}
+                        {{individual_competency.skill_level.name}}
+                        {% endif %}</td>
+                      <td class="govuk-table-action__cell"><button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-right-2" {% if form_user_skill_level and existing_user_competency_id == individual_competency.id or form_user_skill and existing_user_competency_id == individual_competency.id %} name="save_existing_user_competency" {% else %} name="edit-user-skill" {% endif %} value='{{individual_competency.id}}' {% if existing_user_competency_id and existing_user_competency_id != individual_competency.id  %} disabled="disabled" aria-disabled="true" {% endif %} data-module="govuk-button">{% if form_user_skill_level and existing_user_competency_id == individual_competency.id or form_user_skill and existing_user_competency_id == individual_competency.id %} Save {% else %} Edit {% endif %}</button>
+                        {% if not form_user_skill_level and existing_user_competency_id != individual_competency.id or form_user_skill and existing_user_competency_id != individual_competency.id or not form_user_skill and existing_user_competency_id != individual_competency.id %}
+                      <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" name='delete' value='{{individual_competency.id}}'data-module="govuk-button" {% if form_user_skill_level or form_user_skill %} disabled="disabled" aria-disabled="true" {% endif %}>
+                  Delete
+                </button>
+                {% endif %}
+              </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+              </table>
+              {% if not form_user_skill_level and not existing_user_competency_id or not form_user_skill and not existing_user_competency_id %}
+              <a class="govuk-button" data-module="govuk-button" href="{% url 'non-admin-add-skill' %}">
+                Add skills
+              </a>
+              {% endif %}
+              {% else %}
+              <table class="govuk-table">
+                <tbody class="govuk-table__body">
+                  <tr class="govuk-table__row">
+                    <td>If you have any other skills that you would like to add to your profile, please add them in this section .</td>
+                  </tr>
+                </tbody>
+              </table>
+              <a class="govuk-button" data-module="govuk-button" href="{% url 'non-admin-add-skill' %}">
+                Add skills
+              </a>
+              {% endif %}
+           </div>
+      </form>
       </div>
     </div>
   </div>
 </div>
-
-
 {% endblock %}
-
-
-

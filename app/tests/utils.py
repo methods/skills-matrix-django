@@ -14,7 +14,7 @@ def creates_skill_instance():
 
 
 def creates_skill_level_instance():
-    test_skill_level = SkillLevel.objects.create(name='test_skill_level_1')
+    test_skill_level = SkillLevel.objects.create(name='Beginner')
     return test_skill_level
 
 

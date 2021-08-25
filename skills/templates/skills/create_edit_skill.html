@@ -6,15 +6,15 @@
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl govuk-!-margin-bottom-8">{% if form %}Edit skill{% else %}Create a skill{% endif %}</h1>
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-8">{% if edit %}Edit skill{% else %}Create a skill{% endif %}</h1>
   </div>
     <div class="govuk-grid-column-two-thirds">
-
      <form class="form" method="post">
         {% csrf_token %}
         {{form.non_field_errors}}
         {% for field in form %}
-        <div>
+        {% if field == form.user_skill_definition and form.errors  %}
+        <div class="govuk-form-group--error">
           <div>
             {% for error in field.errors %}
             <span id="addname-error" class="govuk-error-message">
@@ -23,11 +23,31 @@
             </span>
             {% endfor %}
           </div>
+         <div>
+          <label class="govuk-hint">
+            {{field.label}}
+          </label>
+          {{field}}
+         </div>
+        </div>
+        {% else %}
+        <div class="govuk-form-group">
+          <div>
+            {% for error in field.errors %}
+            <span id="addname-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span>
+              {{error}}
+            </span>
+            {% endfor %}
+          </div>
+         <div>
           <label class="govuk-hint">
             {{field.label}}
           </label>
           {{field}}
         </div>
+        </div>
+        {% endif %}
         {% endfor %}
          <div class="govuk-!-margin-top-4">
             <button class="govuk-button" data-module="govuk-button">Save</button>

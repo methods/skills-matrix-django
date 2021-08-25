@@ -13,3 +13,4 @@ class UserCompetencies(models.Model):
     user = models.ForeignKey(NewUser, on_delete=models.CASCADE)
     skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
     skill_level = models.ForeignKey(SkillLevel, on_delete=models.CASCADE)
+    job_role_related = models.BooleanField(default=True)
