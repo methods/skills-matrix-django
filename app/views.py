@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from job_roles.models import Competency, Job
 from skills.models import UserCompetencies, Skill
-from app.forms import UserSkillLevelForm, UserSkillDefinitionForm, UserSkillForm
+from app.forms import UserSkillLevelForm, UserSkillDefinitionForm, UserSkillForm,CreateUserSkillForm
 from app.view_utils import prepare_competency_update,retrieve_user_skills, prepare_non_job_related_competency_update,populate_existing_user_competencies
 from super_admin.models import SkillLevel
 from user_management.models import NewUser
@@ -93,7 +93,14 @@ def non_admin_add_skill(request):
 
 @login_required
 def user_create_skill(request):
-    return render(request, 'skills/create_edit_skill.html')
+    if request.POST:
+        form = CreateUserSkillForm(request.POST)
+        if form.is_valid():
+            Skill.objects.create(name=form.cleaned_data["user_skill_definition"], description=form.cleaned_data['skill_description'], team=None)
+            return redirect(non_admin_add_skill)
+    else:
+        form = CreateUserSkillForm()
+    return render(request, 'skills/create_edit_skill.html', {"form": form})
 
 @login_required
 def edit_skills(request, pk):

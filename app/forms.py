@@ -2,6 +2,7 @@ from django import forms
 from common.widgets import CustomisedSelectWidget, GdsStyleTextInput
 from job_roles.form_utils import get_skill_level_choices
 from app.form_utils import get_all_available_skills
+from app.widgets import GdsStyleTextarea
 
 
 class UserSkillLevelForm(forms.Form):
@@ -62,3 +63,10 @@ class UserSkillForm(forms.Form):
         if not user_skill:
             raise forms.ValidationError('Select a skill')
         return user_skill
+
+
+class CreateUserSkillForm(UserSkillDefinitionForm, forms.Form):
+    skill_description = forms.CharField(label="Skill description (optional)", max_length=400,
+                                        widget=GdsStyleTextarea,
+                                        required=False)
+
