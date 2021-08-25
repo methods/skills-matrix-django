@@ -16,7 +16,7 @@
         </h2>
         <ul class="govuk-tabs__list">
           <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
-            <a class="govuk-tabs__tab" href="#required-skills">
+            <a class="{% if form_user_skill_level or form_user_skill%} govuk-tabs__tab govuk-anchor-disabled {% else %} govuk-tabs__tab {% endif %}" href="#required-skills">
               Required skills
             </a>
           </li>
