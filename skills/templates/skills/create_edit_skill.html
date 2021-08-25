@@ -13,7 +13,8 @@
         {% csrf_token %}
         {{form.non_field_errors}}
         {% for field in form %}
-        <div>
+        {% if field == form.user_skill_definition and form.errors  %}
+        <div class="govuk-form-group--error">
           <div>
             {% for error in field.errors %}
             <span id="addname-error" class="govuk-error-message">
@@ -22,11 +23,31 @@
             </span>
             {% endfor %}
           </div>
+         <div>
+          <label class="govuk-hint">
+            {{field.label}}
+          </label>
+          {{field}}
+         </div>
+        </div>
+        {% else %}
+        <div class="govuk-form-group">
+          <div>
+            {% for error in field.errors %}
+            <span id="addname-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span>
+              {{error}}
+            </span>
+            {% endfor %}
+          </div>
+         <div>
           <label class="govuk-hint">
             {{field.label}}
           </label>
           {{field}}
         </div>
+        </div>
+        {% endif %}
         {% endfor %}
          <div class="govuk-!-margin-top-4">
             <button class="govuk-button" data-module="govuk-button">Save</button>

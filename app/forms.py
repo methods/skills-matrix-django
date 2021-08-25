@@ -30,7 +30,7 @@ class UserSkillLevelForm(forms.Form):
 class UserSkillDefinitionForm(forms.Form):
     user_skill_definition = forms.CharField(label="Enter your skill, e.g. 'Project Management'.", max_length=100,
                                             widget=GdsStyleTextInput(attrs={'class': 'govuk-input'}),
-                                            error_messages={'required': 'Enter a skill'})
+                                            error_messages={'required': 'Enter a skill name'})
 
     def __init__(self, *args, **kwargs):
         super(UserSkillDefinitionForm, self).__init__(*args, **kwargs)
