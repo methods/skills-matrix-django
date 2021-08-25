@@ -92,6 +92,10 @@ def non_admin_add_skill(request):
 
 
 @login_required
+def user_create_skill(request):
+    return render(request, 'skills/create_edit_skill.html')
+
+@login_required
 def edit_skills(request, pk):
     job_role_title = Job.objects.get(job_title=request.user.job_role)
     competency_list = Competency.objects.filter(job_role_title=job_role_title.id)
