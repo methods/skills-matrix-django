@@ -26,7 +26,7 @@ class JobTitleForm(forms.Form):
                 self.fields[field].widget = GdsStyleTextInput(attrs=attrs)
 
     def process_session_save(self):
-        self.request.session['job_role_title'] = self.request.POST['job_role_title']
+        self.request.session['job_role_title'] = self.cleaned_data['job_role_title']
         self.request.session.save()
 
     def process_edit(self, pk):
@@ -61,19 +61,19 @@ class JobSkillsAndSkillLevelForm(forms.Form):
                 self.fields[field].widget.attrs = attrs
 
     def process_session_save(self):
-        self.request.session['disabled_choices'].append(self.request.POST['job_role_skill'])
-        self.request.session['new_added_job_competencies'].append({self.request.POST['job_role_skill']:
-                                                                  self.request.POST['job_role_skill_level']})
+        self.request.session['disabled_choices'].append(self.cleaned_data['job_role_skill'])
+        self.request.session['new_added_job_competencies'].append({self.cleaned_data['job_role_skill']:
+                                                                  self.cleaned_data['job_role_skill_level']})
         self.request.session.save()
 
-    def process(self, request, job=None):
-        job_role_skill = Skill.objects.get(name=request['job_role_skill'])
-        job_role_skill_level = SkillLevel.objects.get(name=request['job_role_skill_level'])
+    def process(self, job=None):
+        job_role_skill = Skill.objects.get(name=self.cleaned_data['job_role_skill'])
+        job_role_skill_level = SkillLevel.objects.get(name=self.cleaned_data['job_role_skill_level'])
         if job:
             Competency(job_role_title=job, job_role_skill=job_role_skill,
                        job_role_skill_level=job_role_skill_level).save()
         else:
-            competency = Competency.objects.filter(id=request['save_competency'])
+            competency = Competency.objects.filter(id=self.data['save_competency'])
             competency.update(job_role_skill=job_role_skill,
                        job_role_skill_level=job_role_skill_level)
 
