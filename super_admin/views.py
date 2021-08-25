@@ -2,44 +2,50 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import user_passes_test, login_required
 from .models import SkillLevel
 from .forms import SkillLevelForm
+from common.custom_class_view import CustomView
+from common.user_group_check_mixins import CustomLoginRequiredMixin, SuperAdminUserMixin
 
 
-@login_required
-@user_passes_test(lambda u: u.groups.filter(name='Super admins').exists(),
-                  login_url='/error/forbidden')
-def view_skill_levels(request):
-    if request.POST:
+class ViewSkillLevels(CustomLoginRequiredMixin, SuperAdminUserMixin, CustomView):
+    def get(self, request):
+        skill_levels = SkillLevel.objects.all()
+        return render(request, 'super_admin/view_skill_levels.html', {'skill_levels': skill_levels})
+
+    def delete(self, request):
         SkillLevel.objects.filter(name=request.POST['delete']).delete()
-    skill_levels = SkillLevel.objects.all()
-    return render(request, 'super_admin/view_skill_levels.html', {'skill_levels': skill_levels})
+        skill_levels = SkillLevel.objects.all()
+        return render(request, 'super_admin/view_skill_levels.html', {'skill_levels': skill_levels})
 
 
-@login_required
-@user_passes_test(lambda u: u.groups.filter(name='Super admins').exists(),
-                  login_url='/error/forbidden')
-def add_skill_level(request):
-    if request.POST:
+class AddSkillLevel(CustomLoginRequiredMixin, SuperAdminUserMixin, CustomView):
+    def get(self, request):
+        form = SkillLevelForm()
+        return render(request, 'super_admin/skill_level.html', {'form': form})
+
+    def post(self, request):
         form = SkillLevelForm(request.POST)
         if form.is_valid():
-            name = request.POST['name']
-            description = request.POST['description']
+            name = form.cleaned_data['name']
+            description = form.cleaned_data['description']
             SkillLevel.objects.create(name=name, description=description)
-            return redirect(view_skill_levels)
-    form = SkillLevelForm()
-    return render(request, 'super_admin/skill_level.html', {'form': form})
+            return redirect('view-skill-levels')
 
 
-@login_required
-@user_passes_test(lambda u: u.groups.filter(name='Super admins').exists(),
-                  login_url='/error/forbidden')
-def edit_skill_level(request, pk):
-    skill_level = SkillLevel.objects.filter(pk=pk)
-    if request.POST:
+class EditSkillLevel(CustomLoginRequiredMixin, SuperAdminUserMixin, CustomView):
+    def set_form_initial_values(self, name, description):
+        form = SkillLevelForm(initial={'name': name, 'description': description})
+        return form
+
+    def get(self, request, pk):
+        skill_level = SkillLevel.objects.filter(pk=pk)
+        form = self.set_form_initial_values(skill_level[0].name, skill_level[0].description)
+        return render(request, 'super_admin/skill_level.html', {'form': form, 'edit': True})
+
+    def post(self, request, pk):
+        skill_level = SkillLevel.objects.filter(pk=pk)
         form = SkillLevelForm(request.POST)
         if form.is_valid():
-            skill_level.update(name=request.POST['name'], description=request.POST['description'])
-            return redirect(view_skill_levels)
-    form = SkillLevelForm()
-    form.fields['name'].initial = skill_level[0].name
-    form.fields['description'].initial = skill_level[0].description
-    return render(request, 'super_admin/skill_level.html', {'form': form, 'edit': True})
+            skill_level.update(name=form.cleaned_data['name'], description=form.cleaned_data['description'])
+            return redirect('view-skill-levels')
+        form = self.set_form_initial_values(skill_level[0].name, skill_level[0].description)
+        return render(request, 'super_admin/skill_level.html', {'form': form, 'edit': True})
