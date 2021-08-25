@@ -1,6 +1,54 @@
 **Skills Matrix**
 
+## About this application
+
+### Purpose of this app
+
 This is a Django application for collating and mapping employee skills, making it easier for the organisation and individuals to identify areas of strength and areas requiring further development.  The application also provides a framework for detailing skills required in specific job roles, and for grouping roles together into career paths, making progression more transparent.
+
+### Tech stack
+
+This application utilises:
+
+- Python/Django framework
+- jQuery
+- SASS
+
+## Getting Started
+
+You need to have Python (3.6.8), PIP and PostgreSQL installed. There are multiple ways to install Python, either download from the official [Python site](https://www.python.org/downloads/) or use the package manager [Homebrew](https://brew.sh/) `brew install python3`. PIP comes installed with Python 3.4(or greater) by default.
+
+To install Postgres you can also use [Homebrew](https://brew.sh/)
+
+```
+brew update
+brew doctor
+brew install postgresql
+```
+
+Create a local database
+
+```
+CREATE DATABASE skillsmatrix;
+```
+
+### Running the site
+
+Create a Python 3.6.8 virtual environment and run the following commands from the root directory of the project:
+
+```
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+```
+
+#### Initial access
+
+
+
+```
+
+```
 
 There are three user groups in the project: user, admin, and super admin.  The project is currently split into ten apps: admin_user, app, auth_processes, career_paths, common, error, job_roles, skills, super_admin, and user_management.
 
