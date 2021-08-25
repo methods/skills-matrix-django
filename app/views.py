@@ -102,18 +102,6 @@ def user_create_skill(request):
         form = CreateUserSkillForm()
     return render(request, 'skills/create_edit_skill.html', {"form": form})
 
-@login_required
-def edit_skills(request, pk):
-    job_role_title = Job.objects.get(job_title=request.user.job_role)
-    competency_list = Competency.objects.filter(job_role_title=job_role_title.id)
-    competency_object = Competency.objects.get(id=pk)
-    form = UserSkillLevelForm(initial={'user_skill_level': competency_object.job_role_skill_level.name})
-    if request.method == 'POST':
-        form = UserSkillLevelForm(request.POST)
-        if form.is_valid():
-            return redirect(dashboard)
-    return render(request, "app/edit_skills.html", {"competency_list": competency_list, "form": form})
-
 
 @login_required
 def browse_profiles(request):
