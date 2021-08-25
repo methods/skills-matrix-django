@@ -5,7 +5,7 @@
 {% block content %}
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-two-thirds {% if form_user_skill and form_user_skill_level %} govuk-grid-column-three-quarters {% endif %}">
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">Welcome, {{user.first_name}}</h1>
     <span class="govuk-caption-xl">{{user.job_role}} | {{user.team}}</span>
     <div class="govuk-!-margin-top-7">
