@@ -219,3 +219,4 @@ class AddASkill(CustomLoginRequiredMixin, AdminUserMixin, CustomView):
             return render(request, "job_roles/add_job_role_skills.html",
                           {'form': form, 'competencies': competencies_by_name,
                            'job_title': job.job_title, 'existing_role': True})
+

@@ -63,3 +63,9 @@ class NewUser(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+
+    def update_from_request(self, form_data):
+        for field_name in ['email', 'first_name', 'surname', 'team', 'job_role']:
+            if field_name in form_data:
+                setattr(self, field_name, form_data[field_name])
+        self.save()
