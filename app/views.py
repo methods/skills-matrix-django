@@ -6,6 +6,8 @@ from app.forms import UserSkillLevelForm, UserSkillDefinitionForm, UserSkillForm
 from app.view_utils import prepare_competency_update,retrieve_user_skills, prepare_non_job_related_competency_update,populate_existing_user_competencies
 from super_admin.models import SkillLevel
 from user_management.models import NewUser
+from common.user_group_check_mixins import CustomLoginRequiredMixin
+from common.custom_class_view import CustomView
 
 
 @login_required
