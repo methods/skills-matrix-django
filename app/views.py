@@ -103,6 +103,7 @@ def user_create_skill(request):
     return render(request, 'skills/create_edit_skill.html', {"form": form})
 
 
-@login_required
-def browse_profiles(request):
-    return render(request, 'app/browse_profiles.html')
+class BrowseProfiles(CustomLoginRequiredMixin, CustomView):
+    def get(self, request):
+        return render(request, 'app/browse_profiles.html')
+

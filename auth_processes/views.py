@@ -1,8 +1,9 @@
 from django.contrib.auth import views as auth_views
 from .forms import LoginForm
 from django.contrib.auth import logout as django_logout
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
+from common.custom_class_view import CustomView
+from common.user_group_check_mixins import CustomLoginRequiredMixin
 
 
 class LoginView(auth_views.LoginView):
@@ -11,9 +12,11 @@ class LoginView(auth_views.LoginView):
     redirect_authenticated_user = True
 
 
-@login_required
-def logout(request):
-    if request.method == 'POST':
+class Logout(CustomLoginRequiredMixin, CustomView):
+    def get(self, request):
+        return render(request, 'auth_processes/logout.html')
+
+    def post(self, request):
         django_logout(request)
         return redirect('/auth/login')
-    return render(request, 'auth_processes/logout.html')
+
