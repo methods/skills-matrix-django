@@ -31,3 +31,4 @@ class CustomView(View):
             if existing_competency != competency.job_role_skill.name:
                 disabled_choices.append(competency.job_role_skill.name)
         return disabled_choices
+

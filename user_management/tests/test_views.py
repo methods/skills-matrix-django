@@ -31,7 +31,7 @@ class AddEmailSignup(TestCase):
         assert "What is your email address?" in response.content.decode()
 
     def test_email_session_storage(self):
-        self.client.post(reverse('add-email'), {'email_address': 'test@methods.co.uk'})
+        self.client.post(reverse('add-email'), {'email': 'test@methods.co.uk'})
         session = self.client.session
         assert session['email_address'] == 'test@methods.co.uk'
 
@@ -57,7 +57,7 @@ class AddJobSignup(TestCase):
         job = Job()
         job.job_title = 'Junior Developer'
         job.save()
-        response = self.client.post(reverse('add-job'), {'team': 'OPC', 'job': 'Junior Developer'})
+        response = self.client.post(reverse('add-job'), {'team': 'OPC', 'job_role': 'Junior Developer'})
         self.assertRedirects(response, '/user/signup/create-password/')
 
 
@@ -122,7 +122,7 @@ class EditEmail(TestCase):
         assert "Edit your email address" in response.content.decode()
 
     def test_edit_email_session_storage(self):
-        self.client.post(reverse('edit-email-address-signup'), {'email_address': 'test@methods.co.uk'})
+        self.client.post(reverse('edit-email-address-signup'), {'email': 'test@methods.co.uk'})
         session = self.client.session
         assert session['email_address'] == 'test@methods.co.uk'
 
@@ -143,7 +143,7 @@ class EditJobInformation(TestCase):
         job = Job()
         job.job_title = 'Junior Developer'
         job.save()
-        self.client.post(reverse('edit-job-information-signup'), {'team': 'OPC', 'job': 'Junior Developer'})
+        self.client.post(reverse('edit-job-information-signup'), {'team': 'OPC', 'job_role': 'Junior Developer'})
         session = self.client.session
         assert session['job'] == 'Junior Developer'
         assert session['team'] == 'OPC'
@@ -195,7 +195,7 @@ class EditEmailPageTests(LoggedInUserTestCase):
         assert response.status_code == 302
 
     def test_edit_email_POST(self):
-        self.client.post(reverse('edit-email-address'), {'email_address': 'updated@methods.co.uk'})
+        self.client.post(reverse('edit-email-address'), {'email': 'updated@methods.co.uk'})
         self.user.refresh_from_db()
         assert self.user.email == 'updated@methods.co.uk'
 
@@ -213,7 +213,7 @@ class EditJobInformationPageTests(LoggedInUserTestCase):
         job = Job()
         job.job_title = 'Updated Job'
         job.save()
-        self.client.post(reverse('edit-job-information'), {'team': 'Updated team', 'job': 'Updated Job'})
+        self.client.post(reverse('edit-job-information'), {'team': 'Updated team', 'job_role': 'Updated Job'})
         self.user.refresh_from_db()
         assert self.user.job_role == 'Updated Job'
         assert self.user.team == 'Updated team'

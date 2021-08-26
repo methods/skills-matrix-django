@@ -121,3 +121,22 @@ $govuk-assets-path: '../assets/';
         padding-right: 0px;
     }
 }
+
+@media (min-width: 40.0625em){
+    .govuk-table-action__cell{
+    padding: 10px 0 10px 0;
+    border-bottom: 1px solid #b1b4b6;
+    text-align: right;
+    vertical-align: top;
+    border-top: 1px solid #b1b4b6;
+    }
+}
+
+.govuk-anchor-disabled {
+    pointer-events: none;
+    cursor: default;
+  }
+
+.govuk-table-cell-border{
+    border-top: 1px solid #b1b4b6
+}
