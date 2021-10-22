@@ -42,6 +42,15 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+You may need to create a secret key to run the service, in which case run the following command:
+```
+python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
+```
+Then copy the secret key generated and run the following command:
+```
+export SECRET_KEY="insert_secret_key_here"
+```
+
 #### Initial access
 
 

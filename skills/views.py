@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from common.custom_class_view import CustomView
-from common.user_group_check_mixins import SuperAdminUserMixin, AdminUserMixin
+from common.user_group_check_mixins import SuperAdminUserMixin, AdminUserMixin, CustomLoginRequiredMixin
 from .models import Skill
 from .forms import SkillForm
 
 
-class ViewSkillsView(AdminUserMixin, CustomView):
+class ViewSkillsView(CustomLoginRequiredMixin, AdminUserMixin, CustomView):
     def get(self, request):
+        print(self.mro())
         skills = Skill.objects.order_by('name')
         return render(request, 'skills/view_skills.html', {'skills': skills})
 
@@ -16,7 +17,7 @@ class ViewSkillsView(AdminUserMixin, CustomView):
         return render(request, 'skills/view_skills.html', {'skills': skills})
 
 
-class AddSkillView(AdminUserMixin, CustomView):
+class AddSkillView(CustomLoginRequiredMixin, AdminUserMixin, CustomView):
     def get(self, request):
         form = SkillForm()
         return render(request, 'skills/create_edit_skill.html', {'form': form})
@@ -28,7 +29,7 @@ class AddSkillView(AdminUserMixin, CustomView):
         return redirect('view-skills')
 
 
-class EditSkillView(AdminUserMixin, CustomView):
+class EditSkillView(CustomLoginRequiredMixin, AdminUserMixin, CustomView):
     def get(self, request, pk):
         skill = Skill.objects.get(pk=pk)
         form = SkillForm(initial={'skill_name': skill.name, 'skill_description': skill.description, 'team': skill.team})
