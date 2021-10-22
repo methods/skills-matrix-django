@@ -6,6 +6,8 @@ from app.forms import UserSkillLevelForm, UserSkillDefinitionForm, UserSkillForm
 from app.view_utils import prepare_competency_update,retrieve_user_skills, prepare_non_job_related_competency_update,populate_existing_user_competencies
 from super_admin.models import SkillLevel
 from user_management.models import NewUser
+from common.user_group_check_mixins import CustomLoginRequiredMixin
+from common.custom_class_view import CustomView
 
 
 @login_required
@@ -103,6 +105,7 @@ def user_create_skill(request):
     return render(request, 'skills/create_edit_skill.html', {"form": form})
 
 
-@login_required
-def browse_profiles(request):
-    return render(request, 'app/browse_profiles.html')
+class BrowseProfiles(CustomLoginRequiredMixin, CustomView):
+    def get(self, request):
+        return render(request, 'app/browse_profiles.html')
+
